@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>539</width>
+    <height>533</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>UAV Mission Planner</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/icons/32x32/gui/images/32x32/apps/spire.png</normaloff>:/icons/32x32/gui/images/32x32/apps/spire.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QDockWidget" name="mapLayersDockWidget">
+   <property name="windowTitle">
+    <string>Map Layers</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="CompositeTileSourceConfigurationWidget" name="mapLayersWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="planningControlDockWidget">
+   <property name="windowTitle">
+    <string>Planning Control</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="PlanningControlWidget" name="planningControlWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="paletteDockWidget">
+   <property name="windowTitle">
+    <string>Palette</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="PaletteWidget" name="paletteWidget"/>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>539</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave_Planning_Problem"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport_Solution"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuPlanning_Options">
+    <property name="title">
+     <string>Planning Options</string>
+    </property>
+    <addaction name="actionUAV_Parameters"/>
+    <addaction name="actionSensor_Parameters"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuPlanning_Options"/>
+  </widget>
+  <action name="actionSave_Planning_Problem">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/filesaveas.png</normaloff>:/icons/16x16/gui/images/16x16/actions/filesaveas.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionExport_Solution">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/fileexport.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileexport.png</iconset>
+   </property>
+   <property name="text">
+    <string>Export Solution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+E</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/exit.png</normaloff>:/icons/16x16/gui/images/16x16/actions/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionUAV_Parameters">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</iconset>
+   </property>
+   <property name="text">
+    <string>UAV Parameters</string>
+   </property>
+  </action>
+  <action name="actionSensor_Parameters">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sensor Parameters</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/filenew.png</normaloff>:/icons/16x16/gui/images/16x16/actions/filenew.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/fileclose.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileclose.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/undo.png</normaloff>:/icons/16x16/gui/images/16x16/actions/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/redo.png</normaloff>:/icons/16x16/gui/images/16x16/actions/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PlanningControlWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/PlanningControlWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PaletteWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/PaletteWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CompositeTileSourceConfigurationWidget</class>
+   <extends>QWidget</extends>
+   <header>guts/CompositeTileSourceConfigurationWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
