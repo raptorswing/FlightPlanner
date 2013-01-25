@@ -90,6 +90,8 @@ void HierarchicalPlanner::doReset()
     _tasks2areas.clear();
     _areaStartPositions.clear();
     _areaEndPositions.clear();
+    _areaStartOrientations.clear();
+    _areaEndOrientations.clear();
     _taskSubFlights.clear();
     _startTransitionSubFlights.clear();
 
@@ -166,6 +168,12 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
         _areaStartPositions.insert(area, start);
         _areaEndPositions.insert(area, end);
+
+        qreal angleRads = atan2(end.latitude() - start.latitude(),
+                                end.longitude() - start.longitude());
+        UAVOrientation orientation(angleRads);
+        _areaStartOrientations.insert(area, orientation);
+        _areaEndOrientations.insert(area, orientation);
     }
 }
 
