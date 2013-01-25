@@ -11,7 +11,7 @@ class CoverageTask : public FlightTask
 {
     Q_OBJECT
 public:
-    CoverageTask();
+    CoverageTask(qreal coverageGranularity = 100.0, qreal maxSatisfyingDistance = 50.0);
 
     virtual QString taskType() const;
 
@@ -27,7 +27,8 @@ public:
     QVector<Position> _bins;
     QVector<QVector3D> _xyzBins;
 
-    bool _debug;
+    qreal _granularity;
+    qreal _maxDistance;
     
 };
 

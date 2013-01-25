@@ -11,6 +11,8 @@
 #include "GreedyFlightPlanner.h"
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
 
+#include "guts/Conversions.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -23,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initPlanningProblem();
     this->initPaletteConnections();
     this->initPlanningControlConnections();
+
+    Conversions::test();
 }
 
 MainWindow::~MainWindow()

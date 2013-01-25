@@ -8,6 +8,8 @@
 #include "FlightTasks/FlightTask.h"
 #include "FlightTasks/CoverageTask.h"
 
+#include "guts/Conversions.h"
+
 const qreal PI = 3.1415926535;
 
 SubFlightPlanner::SubFlightPlanner(const QSharedPointer<FlightTask> &task,
@@ -42,16 +44,16 @@ void SubFlightPlanner::_greedyPlan()
 
     while (!frontier.isEmpty())
     {
+        //Find the node in the frontier with the best fitness. Grab it and remove it
         const QList<qreal> scores = frontier.uniqueKeys();
         const qreal score = scores.last();
         QList<QSharedPointer<SubFlightNode> > nodes = frontier.values(score);
 
+        //If there are several nodes with the same fitness, choose one randomly
         QSharedPointer<SubFlightNode> node = nodes[qrand() % nodes.size()];
         frontier.remove(score, node);
 
-        //qDebug() << "Chose" << node->position() << "with score " << score;
-
-        //qDebug() << score;
+        //If we've accomplished our task we can quit
         if (score >= _task->maxTaskPerformance())
         {
             qDebug() << "Done";
@@ -59,37 +61,31 @@ void SubFlightPlanner::_greedyPlan()
             _results = node->path();
             break;
         }
-        else if (node->path().size() >= 500)
+        //If our task gets to long we give up
+        else if (node->path().size() >= 1000)
         {
             qDebug() << "Failed";
             qDebug() << score;
-
-            QSharedPointer<CoverageTask> ct = _task.dynamicCast<CoverageTask>();
-            if (!ct.isNull())
-            {
-                //ct->_debug = true;
-                _task->calculateFlightPerformance(node->path(), _area->geoPoly());
-            }
-
             _results = node->path();
             qDebug() << _results.last();
             break;
         }
 
-        for (int i = -1; i <= 1; i++)
+        //Build successors to the current node. Add them to frontier.
+        for (int i = -4; i <= 4; i++)
         {
-            qreal successorRadians = node->orientation().radians() + i*(PI / 4.0);
-            QVector3D successorENU(cos(successorRadians), sin(successorRadians), 0);
-            successorENU.normalize();
-            successorENU *= 30.0;
-            Position successorPos = Position::fromENU(node->position(), successorENU);
+            qreal successorRadians = node->orientation().radians() + i*(PI / 16.0);
+            QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
+            successorVec.normalize();
+            successorVec *= 30.0;
+            Position successorPos(node->position().longitude() + Conversions::degreesLonPerMeter(node->position().latitude()) * successorVec.x(),
+                                  node->position().latitude() + Conversions::degreesLatPerMeter(node->position().latitude()) * successorVec.y());
 
             UAVOrientation successorPose(successorRadians);
             QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));
 
             qreal successorScore = _task->calculateFlightPerformance(successor->path(), _area->geoPoly());
             frontier.insert(successorScore, successor);
-            //qDebug() << successorPos << " " << successorRadians << " " << successorScore;
         }
     }
 }

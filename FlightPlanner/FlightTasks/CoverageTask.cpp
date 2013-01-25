@@ -4,11 +4,9 @@
 
 #include "guts/Conversions.h"
 
-const qreal GRANULARITY = 100.0;
-
-CoverageTask::CoverageTask()
+CoverageTask::CoverageTask(qreal coverageGranularity, qreal maxSatisfyingDistance) :
+    _granularity(coverageGranularity), _maxDistance(maxSatisfyingDistance)
 {
-    _debug = false;
 }
 
 QString CoverageTask::taskType() const
@@ -24,14 +22,12 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
     if (geoPoly != _lastGeoPoly)
         _calculateBins(geoPoly);
 
-    const qreal maxDistance = 100.0;
+    const qreal maxDistance = 50.0;
 
     QSet<int> satisfiedBins;
 
     foreach(const Position& pos, positions)
     {
-        if (_debug)
-            qDebug() << pos;
         const QVector3D xyz = Conversions::lla2xyz(pos);
         for (int i = 0; i < _bins.size(); i++)
         {
@@ -40,17 +36,7 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
             const qreal distance = (xyz - _xyzBins.value(i)).length();
             if (distance < maxDistance)
                 satisfiedBins.insert(i);
-
-            if (_debug)
-                qDebug() << i << "distance to" << _bins[i] << distance;
         }
-    }
-
-    if (_debug)
-    {
-        QList<int> satisfied = satisfiedBins.toList();
-        foreach(int i, satisfied)
-            qDebug() << i << "satisfied";
     }
 
     const qreal reward = satisfiedBins.size();
@@ -63,9 +49,7 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
             continue;
 
         const qreal distance = (lastPosXYZ - _xyzBins.value(i)).length();
-        //enticement = (1.0 - distance / 10000.0) * 0.5;
         enticement = FlightTask::normal(distance, 200.0, 10.0);
-        qDebug() << distance << QString::number(enticement,'g',10);
         break;
     }
 
@@ -84,27 +68,30 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
     _xyzBins.clear();
     _lastGeoPoly = geoPoly;
 
-    const QRectF boundingRect = geoPoly.boundingRect();
+    const QRectF boundingRect = geoPoly.boundingRect().normalized();
 
-    const Position topLeftLLA(boundingRect.topLeft());
-    const QVector3D topLeftENU(0,0,0);
-    const QVector3D topRightENU(Position::Position2ENU(Position(boundingRect.topRight()), topLeftLLA));
-    const QVector3D bottomLeftENU(Position::Position2ENU(Position(boundingRect.bottomLeft()), topLeftLLA));
+    const QVector3D topLeftXYZ(Conversions::lla2xyz(boundingRect.topRight()));
+    const QVector3D bottomLeftXYZ(Conversions::lla2xyz(boundingRect.bottomRight()));
+    const QVector3D topRightXYZ(Conversions::lla2xyz(boundingRect.topLeft()));
 
-    qreal widthMeters = (topLeftENU - topRightENU).length();
-    qreal heightMeters = (topLeftENU - bottomLeftENU).length();
+    const qreal widthMeters = (topLeftXYZ - topRightXYZ).length();
+    const qreal heightMeters = (topLeftXYZ - bottomLeftXYZ).length();
+    const qreal lonPerMeter = Conversions::degreesLonPerMeter(boundingRect.center().y());
+    const qreal latPerMeter = Conversions::degreesLatPerMeter(boundingRect.center().y());
 
-    const int offset = 0;
+    const int offset = _granularity / 2;
 
-    for (int x = offset; x < widthMeters / GRANULARITY - offset; x++)
+    for (int x = 0; x < widthMeters / _granularity; x++)
     {
-        for (int y = offset; y < heightMeters / GRANULARITY - offset; y++)
+        for (int y = 0; y < heightMeters / _granularity; y++)
         {
-            QVector3D enu(topLeftENU.x() + x * GRANULARITY,
-                          topLeftENU.y() + y * GRANULARITY,
-                          0.0);
+            qreal lon = boundingRect.topLeft().x() + x * _granularity * lonPerMeter;
+            lon += offset * lonPerMeter;
 
-            Position lla = Position::fromENU(topLeftLLA, enu);
+            qreal lat = boundingRect.topLeft().y() + y * _granularity * latPerMeter;
+            lat += offset * latPerMeter;
+
+            Position lla(lon, lat);
             if (geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
             {
                 _bins.append(lla);
