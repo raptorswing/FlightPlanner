@@ -39,3 +39,10 @@ const QList<Position> &SubFlightNode::path() const
 {
     return _path;
 }
+
+const QVector3D &SubFlightNode::xyz()
+{
+    if (_xyz.isNull())
+        _xyz = Conversions::lla2xyz(_position);
+    return _xyz;
+}

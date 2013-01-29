@@ -4,12 +4,16 @@
 
 #include "QVectorND.h"
 #include "SubFlightPlanner.h"
+#include "SubFlightNode.h"
+#include "RRTIntermediatePlanner/RRTIntermediatePlanner.h"
 
 #include <QMap>
+#include <cmath>
 
 const qreal EVERY_X_METERS = 50.0;
 const qreal AIRSPEED = 14.0; //meters per second
 const qreal TIMESLICE = 15.0; //seconds
+const qreal MAX_TURN_ANGLE = 3.14159265 / 4.0;
 
 HierarchicalPlanner::HierarchicalPlanner(QSharedPointer<PlanningProblem> prob,
                                          QObject *parent) :
@@ -36,7 +40,7 @@ void HierarchicalPlanner::doIteration()
 
     /*
      * Calculate sub-flights from the global start point to each of the tasks' start points.
-     * Also calculate sub-flights from each tasks' end point to every other tasks' start point.
+     * Also calculate sub-flights from each task's end point to every other tasks' start point.
     */
     _buildStartTransitions();
 
@@ -94,6 +98,7 @@ void HierarchicalPlanner::doReset()
     _areaEndOrientations.clear();
     _taskSubFlights.clear();
     _startTransitionSubFlights.clear();
+    _obstacles.clear();
 
     if (this->problem().isNull())
         return;
@@ -103,8 +108,14 @@ void HierarchicalPlanner::doReset()
     {
         foreach(const QSharedPointer<FlightTask>& task, area->tasks())
         {
-            _tasks.append(task);
-            _tasks2areas.insert(task, area);
+            //We treat obstacles separately in the hierarchical planner. Not as tasks.
+            if (task->taskType() == "No-Fly Zone")
+                _obstacles.append(area->geoPoly());
+            else
+            {
+                _tasks.append(task);
+                _tasks2areas.insert(task, area);
+            }
         }
     }
 }
@@ -181,12 +192,20 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 void HierarchicalPlanner::_buildStartTransitions()
 {
     const Position& globalStartPos = this->problem()->startingPosition();
+    const UAVOrientation& globalStartPose = this->problem()->startingOrientation();
 
     foreach(const QSharedPointer<FlightTask>& task, _tasks)
     {
         const QSharedPointer<FlightTaskArea>& area = _tasks2areas.value(task);
         const Position& taskStartPos = _areaStartPositions.value(area);
+        const UAVOrientation& taskStartPose = _areaStartOrientations.value(area);
 
+        QList<Position> subFlight = _generateTransitionFlight(globalStartPos,
+                                                              globalStartPose,
+                                                              taskStartPos,
+                                                              taskStartPose);
+
+        /*
         const QVector3D startXYZ = Conversions::lla2xyz(globalStartPos);
         const QVector3D endXYZ = Conversions::lla2xyz(taskStartPos);
 
@@ -196,13 +215,12 @@ void HierarchicalPlanner::_buildStartTransitions()
 
         int numPoints = distance / EVERY_X_METERS;
 
-        QList<Position> subFlight;
-
         for (int i = 0; i < numPoints; i++)
         {
             QVector3D vec = startXYZ + direction * i * EVERY_X_METERS;
             subFlight.append(Conversions::xyz2lla(vec));
         }
+        */
 
         _startTransitionSubFlights.insert(task, subFlight);
     }
@@ -300,4 +318,162 @@ void HierarchicalPlanner::_buildSchedule()
             worklist.insert(cost, newState);
         }
     }
+}
+
+//private
+bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
+                                           const UAVOrientation &startingOrientation,
+                                           qreal time,
+                                           Position *outPosition,
+                                           UAVOrientation *outOrientation)
+{
+    if (outPosition == 0 || outOrientation == 0)
+        return false;
+    else if (time < 0.0)
+        return false;
+    else if (path.isEmpty())
+        return false;
+    else if (path.size() == 1)
+    {
+        *outPosition = path[0];
+        *outOrientation = startingOrientation;
+        return true;
+    }
+
+    qreal distanceSoFar = 0.0;
+    qreal timeSoFar = 0.0;
+
+    for (int i = 1; i < path.size(); i++)
+    {
+        const Position& pos = path[i];
+        const Position& lastPos = path[i-1];
+        const qreal distance = (Conversions::lla2xyz(pos) - Conversions::lla2xyz(lastPos)).length();
+        distanceSoFar += distance;
+        timeSoFar = distanceSoFar / AIRSPEED;
+
+        if (timeSoFar >= time)
+        {
+            const qreal timeFirst = timeSoFar - distance / AIRSPEED;
+            const qreal ratio = (time - timeFirst) / (timeSoFar - timeFirst);
+            const qreal longitude = lastPos.longitude() + ratio * (pos.longitude() - lastPos.longitude());
+            const qreal latitude = lastPos.latitude() + ratio * (pos.latitude() - lastPos.latitude());
+            *outPosition = Position(longitude, latitude);
+            *outOrientation = UAVOrientation(atan2(pos.latitude() - lastPos.latitude(),
+                                                   pos.longitude() - lastPos.longitude()));
+        }
+    }
+
+    if (timeSoFar < time)
+        return false;
+    return true;
+}
+
+//private
+QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
+                                                               const UAVOrientation &startPose,
+                                                               const Position &endPos,
+                                                               const UAVOrientation &endPose)
+{
+    IntermediatePlanner * intermed = new RRTIntermediatePlanner(startPos,
+                                                                startPose,
+                                                                endPos,
+                                                                endPose,
+                                                                _obstacles);
+    intermed->plan();
+    QList<Position> toRet = intermed->results();
+    delete intermed;
+
+    return toRet;
+
+    /*
+    QList<Position> toRet;
+
+    const QVector3D endPosXYZ = Conversions::lla2xyz(endPos);
+
+    Position currentPos = startPos;
+    UAVOrientation currentPose = startPose;
+
+    //Simple greedy or A* planner to get in the ballpark
+    QMultiMap<qreal, QSharedPointer<SubFlightNode> > frontier;
+    {
+        QSharedPointer<SubFlightNode> startNode(new SubFlightNode(startPos,startPose));
+        const qreal dist = (startNode->xyz() - endPosXYZ).length();
+        frontier.insert(dist, startNode);
+    }
+
+    const qreal lonPerMeter = Conversions::degreesLonPerMeter(currentPos.latitude());
+    const qreal latPerMeter = Conversions::degreesLatPerMeter(currentPos.latitude());
+
+    int count = 0;
+    while (!frontier.isEmpty())
+    {
+        QList<qreal> keys = frontier.keys();
+        qreal bestFScore = keys[0];
+        QList<QSharedPointer<SubFlightNode> > values = frontier.values(bestFScore);
+        QSharedPointer<SubFlightNode> node = values[qrand() % values.size()];
+        frontier.remove(bestFScore,node);
+        const QVector3D& XYZ = node->xyz();
+
+        const qreal distToGoal = (XYZ - endPosXYZ).length();
+
+        if (distToGoal < 5.0 * AIRSPEED)
+        {
+            toRet = node->path();
+            currentPos = node->position();
+            currentPose = node->orientation();
+            frontier.clear();
+            break;
+        }
+        else if (count++ > 10000)
+        {
+            qDebug() << "Intermediate failed";
+            toRet = node->path();
+            break;
+        }
+
+        //closedSet.append(XYZ);
+
+        //generate successors
+        const int branches = 1;
+        for (int i = -branches; i <= branches; i++)
+        {
+            const qreal angleMod = MAX_TURN_ANGLE * ((qreal)i / (qreal)branches);
+            const qreal successorRadians = node->orientation().radians() + angleMod;
+            QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
+            successorVec.normalize();
+            successorVec *= EVERY_X_METERS;
+            const Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
+                                        node->position().latitude() + latPerMeter * successorVec.y());
+
+            //No flying through obstacles!
+            if (_collidesWithObstacle(successorPos))
+                continue;
+
+            const QVector3D successorPosXYZ = Conversions::lla2xyz(successorPos);
+
+            UAVOrientation successorPose(successorRadians);
+            QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));
+
+            const qreal heuristic = (successorPosXYZ - endPosXYZ).length();
+            const qreal costSoFar = node->path().length() * EVERY_X_METERS;
+            const qreal costToMove = EVERY_X_METERS;
+
+            frontier.insert(heuristic + costSoFar + costToMove, successor);
+        }
+    }
+
+    //RRT Planner for remainder?
+    return toRet;
+    */
+}
+
+//private
+bool HierarchicalPlanner::_collidesWithObstacle(const Position &pos)
+{
+    foreach(const QPolygonF& obstPoly, _obstacles)
+    {
+        if (obstPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
+            return true;
+    }
+    return false;
 }

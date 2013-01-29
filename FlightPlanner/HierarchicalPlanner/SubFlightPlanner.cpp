@@ -71,6 +71,9 @@ void SubFlightPlanner::_greedyPlan()
             break;
         }
 
+        const qreal lonPerMeter = Conversions::degreesLonPerMeter(node->position().latitude());
+        const qreal latPerMeter = Conversions::degreesLatPerMeter(node->position().latitude());
+
         //Build successors to the current node. Add them to frontier.
         for (int i = -4; i <= 4; i++)
         {
@@ -78,8 +81,8 @@ void SubFlightPlanner::_greedyPlan()
             QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
             successorVec.normalize();
             successorVec *= 30.0;
-            Position successorPos(node->position().longitude() + Conversions::degreesLonPerMeter(node->position().latitude()) * successorVec.x(),
-                                  node->position().latitude() + Conversions::degreesLatPerMeter(node->position().latitude()) * successorVec.y());
+            Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
+                                  node->position().latitude() + latPerMeter * successorVec.y());
 
             UAVOrientation successorPose(successorRadians);
             QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));

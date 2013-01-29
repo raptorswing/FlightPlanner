@@ -128,10 +128,10 @@ qreal QVectorND::val(int index) const
         return 0.0;
     }
 
-    return _data[index];
+    return _data.at(index);
 }
 
-const QList<qreal> &QVectorND::values() const
+const QVector<qreal> &QVectorND::values() const
 {
     return _data;
 }
@@ -218,13 +218,10 @@ qreal &QVectorND::operator [](int index)
     return _data[index];
 }
 
-qreal QVectorND::operator [](int index) const
+const qreal QVectorND::operator [](int index) const
 {
     if (index < 0 || index >= _dimensions)
-    {
-        qWarning() << "Index out of bounds:" << index;
-        return 0.0;
-    }
+        qCritical("Index out of bounds");
 
     return _data[index];
 }

@@ -31,10 +31,11 @@ SOURCES += main.cpp\
     FlightTasks/NoFlyFlightTask.cpp \
     DummyPlanner.cpp \
     HierarchicalPlanner/HierarchicalPlanner.cpp \
-    QVectorND.cpp \
     HierarchicalPlanner/SubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightNode.cpp \
-    FlightTasks/CoverageTask.cpp
+    FlightTasks/CoverageTask.cpp \
+    HierarchicalPlanner/IntermediatePlanner.cpp \
+    HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -57,10 +58,11 @@ HEADERS  += \
     FlightTasks/NoFlyFlightTask.h \
     DummyPlanner.h \
     HierarchicalPlanner/HierarchicalPlanner.h \
-    QVectorND.h \
     HierarchicalPlanner/SubFlightPlanner.h \
     HierarchicalPlanner/SubFlightNode.h \
-    FlightTasks/CoverageTask.h
+    FlightTasks/CoverageTask.h \
+    HierarchicalPlanner/IntermediatePlanner.h \
+    HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -79,3 +81,11 @@ else:unix: LIBS += -L$$OUT_PWD/../MapGraphics/ -lMapGraphics
 
 INCLUDEPATH += $$PWD/../MapGraphics
 DEPENDPATH += $$PWD/../MapGraphics
+
+#Linkage for QVectorND library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QVectorND/release/ -lQVectorND
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QVectorND/debug/ -lQVectorND
+else:unix: LIBS += -L$$OUT_PWD/../QVectorND/ -lQVectorND
+
+INCLUDEPATH += $$PWD/../QVectorND
+DEPENDPATH += $$PWD/../QVectorND

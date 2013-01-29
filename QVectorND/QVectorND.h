@@ -8,8 +8,11 @@
 #include <QVector3D>
 #include <QVector4D>
 #include <QtDebug>
+#include <QVector>
 
-class QVectorND
+#include "QVectorND_global.h"
+
+class QVECTORNDSHARED_EXPORT QVectorND
 {
 public:
     QVectorND(int dimensions);
@@ -32,7 +35,7 @@ public:
 
     void setVal(int index, qreal value);
     qreal val(int index) const;
-    const QList<qreal>& values() const;
+    const QVector<qreal> &values() const;
 
 
     QVectorND& operator*= (qreal factor);
@@ -45,17 +48,18 @@ public:
     bool operator!=(const QVectorND& other) const;
 
     qreal& operator[](int index);
-    qreal operator[](int index) const;
+    const qreal operator[](int index) const;
 
 private:
     int _dimensions;
-    QList<qreal> _data;
+    QVector<qreal> _data;
+
 };
 
 //non-members
-uint qHash(const QVectorND& vec);
-QDebug operator<<(QDebug dbg, const QVectorND& vec);
-const QVectorND operator-(const QVectorND& v1, const QVectorND& v2);
-const QVectorND operator-(const QVectorND& v);
+QVECTORNDSHARED_EXPORT uint qHash(const QVectorND& vec);
+QVECTORNDSHARED_EXPORT QDebug operator<<(QDebug dbg, const QVectorND& vec);
+QVECTORNDSHARED_EXPORT const QVectorND operator-(const QVectorND& v1, const QVectorND& v2);
+QVECTORNDSHARED_EXPORT const QVectorND operator-(const QVectorND& v);
 
 #endif // QVECTORND_H

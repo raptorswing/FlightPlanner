@@ -6,6 +6,7 @@
 
 #include "Position.h"
 #include "UAVOrientation.h"
+#include "guts/Conversions.h"
 
 class SubFlightNode
 {
@@ -23,12 +24,16 @@ public:
 
     const QList<Position>& path() const;
 
+    const QVector3D& xyz();
+
 private:
     Position _position;
     UAVOrientation _orientation;
     QSharedPointer<SubFlightNode> _parent;
 
     QList<Position> _path;
+
+    QVector3D _xyz;
 };
 
 #endif // SUBFLIGHTNODE_H
