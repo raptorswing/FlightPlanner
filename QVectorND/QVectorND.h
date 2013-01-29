@@ -15,7 +15,7 @@
 class QVECTORNDSHARED_EXPORT QVectorND
 {
 public:
-    QVectorND(int dimensions);
+    QVectorND(int dimensions=2);
     QVectorND(const QList<qreal>& values);
     QVectorND(const QPoint& point);
     QVectorND(const QPointF& point);
