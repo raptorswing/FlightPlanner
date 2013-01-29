@@ -3,6 +3,8 @@
 
 #include "HierarchicalPlanner/IntermediatePlanner.h"
 
+#include "QVectorND.h"
+
 class RRTIntermediatePlanner : public IntermediatePlanner
 {
 public:
@@ -16,10 +18,9 @@ public:
     virtual QList<Position> results() const;
 
 private:
-    static QVector3D _toVec(const Position& pos, const UAVOrientation& pose);
-    static qreal _distance(const QVector3D& a, const QVector3D& b);
-    static UAVOrientation _toOrientation(const QVector3D& vec);
-    static Position _toPosition(const QVector3D& vec);
+    static QVectorND _toVec(const Position& pos, const UAVOrientation& pose);
+    static UAVOrientation _toOrientation(const QVectorND &vec);
+    static Position _toPosition(const QVectorND& vec);
 
     bool _collidesWithObstacle(const Position& pos) const;
 

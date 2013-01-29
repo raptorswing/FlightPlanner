@@ -4,6 +4,8 @@
 #include <cmath>
 
 #include "guts/Conversions.h"
+#include "QKDTree.h"
+#include "RRTDistanceMetric.h"
 
 const qreal EVERY_X_METERS = 50.0;
 const qreal AIRSPEED = 14.0; //meters per second
@@ -23,11 +25,13 @@ bool RRTIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const QVector3D goal = _toVec(this->endPos(), this->endPose());
+    const QVectorND goal = _toVec(this->endPos(), this->endPose());
 
-    QList<QVector3D> nodes;
-    QHash<QVector3D, QVector3D> parents;
-    nodes.append(_toVec(this->startPos(), this->startPose()));
+    QKDTree kdtree(3);
+    kdtree.setDistanceMetric(new RRTDistanceMetric());
+
+    QHash<QVectorND, QVectorND> parents;
+    kdtree.add(_toVec(this->startPos(), this->startPose()), 1);
 
     const quint32 squareSize = 5000;
     const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->startPos().latitude());
@@ -44,23 +48,14 @@ bool RRTIntermediatePlanner::plan()
                                (qreal)qrand()/((qreal)RAND_MAX/(2.0*3.14159265)));
 
         //Find nearest existing node
-        QVector3D nearestExisting;
-        qreal nearestExistingDist = std::numeric_limits<qreal>::max();
-        foreach(const QVector3D& existing, nodes)
-        {
-            qreal dist = _distance(existing, random);
-            if (dist < nearestExistingDist)
-            {
-                nearestExistingDist = dist;
-                nearestExisting = existing;
-            }
-        }
+        QVectorND nearestExisting;
+        kdtree.nearest(random, &nearestExisting);
 
         //Generate step towards random from nearestExisting
         const Position existingPos = _toPosition(nearestExisting);
         const UAVOrientation existingPose = _toOrientation(nearestExisting);
 
-        QVector3D bestNew;
+        QVectorND bestNew(kdtree.dimension());
         qreal bestNewDist = std::numeric_limits<qreal>::max();
 
         const int branches = 1;
@@ -74,13 +69,13 @@ bool RRTIntermediatePlanner::plan()
             const Position successorPos(existingPos.longitude() + lonPerMeter * translateVec.x(),
                                         existingPos.latitude() + latPerMeter * translateVec.y());
             const UAVOrientation successorPose(successorRadians);
-            const QVector3D vec = _toVec(successorPos, successorPose);
+            const QVectorND vec = _toVec(successorPos, successorPose);
 
             //No flying through obstacles!
             if (_collidesWithObstacle(successorPos))
                 continue;
 
-            const qreal dist = _distance(random, vec);
+            const qreal dist = kdtree.distanceMetric()->distance(random, vec);
             if (dist < bestNewDist)
             {
                 bestNewDist = dist;
@@ -90,14 +85,14 @@ bool RRTIntermediatePlanner::plan()
 
         if (bestNew.isNull())
             continue;
-        nodes.append(bestNew);
+        kdtree.add(bestNew,2);
         parents.insert(bestNew, nearestExisting);
 
-        const qreal distToGoal = _distance(goal, bestNew);
-        if (distToGoal < 50.0)
+        const qreal distToGoal = kdtree.distanceMetric()->distance(goal, bestNew);
+        if (distToGoal < 50.0 * 50.0)
         {
             qDebug() << "Solution found - trace back";
-            QVector3D current = bestNew;
+            QVectorND current = bestNew;
             while (true)
             {
                 _results.prepend(_toPosition(current));
@@ -121,35 +116,25 @@ QList<Position> RRTIntermediatePlanner::results() const
 }
 
 //private static
-QVector3D RRTIntermediatePlanner::_toVec(const Position &pos,
+QVectorND RRTIntermediatePlanner::_toVec(const Position &pos,
                                          const UAVOrientation &pose)
 {
-    return QVector3D(pos.longitude(), pos.latitude(), pose.radians());
+    return QVectorND(QVector3D(pos.longitude(), pos.latitude(), pose.radians()));
 }
 
 //private static
-qreal RRTIntermediatePlanner::_distance(const QVector3D &a, const QVector3D &b)
+UAVOrientation RRTIntermediatePlanner::_toOrientation(const QVectorND &vec)
 {
-    const qreal angleFactor = 500.0;
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(a.y());
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(a.y());
-    qreal toRet = sqrt(pow((a.x() - b.x()) / lonPerMeter, 2.0)
-                       + pow((a.y() - b.y()) / latPerMeter, 2.0)
-                       + angleFactor * pow(a.z() - b.z(), 2.0));
+    return UAVOrientation(vec.val(2));
+}
 
+//private static
+Position RRTIntermediatePlanner::_toPosition(const QVectorND &vec)
+{
+    Position toRet;
+    toRet.setLongitude(vec.val(0));
+    toRet.setLatitude(vec.val(1));
     return toRet;
-}
-
-//private static
-UAVOrientation RRTIntermediatePlanner::_toOrientation(const QVector3D &vec)
-{
-    return UAVOrientation(vec.z());
-}
-
-//private static
-Position RRTIntermediatePlanner::_toPosition(const QVector3D &vec)
-{
-    return Position(vec.toPointF());
 }
 
 //private
