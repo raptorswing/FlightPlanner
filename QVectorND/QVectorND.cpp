@@ -92,6 +92,14 @@ qreal QVectorND::lengthSquared() const
     return toRet;
 }
 
+qreal QVectorND::manhattanDistance() const
+{
+    qreal toRet = 0.0;
+    for (int i = 0; i < _dimensions; i++)
+        toRet += qAbs<qreal>(_data[i]);
+    return toRet;
+}
+
 void QVectorND::normalize()
 {
     const qreal length = this->length();

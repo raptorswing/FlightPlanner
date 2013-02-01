@@ -29,6 +29,7 @@ public:
     bool isNull() const;
     qreal length() const;
     qreal lengthSquared() const;
+    qreal manhattanDistance() const;
 
     void normalize();
     QVectorND normalized() const;
