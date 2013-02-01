@@ -32,14 +32,16 @@ private:
                               const UAVOrientation& startingOrientation,
                               qreal time,
                               Position * outPosition,
-                              UAVOrientation * outOrientation);
+                              UAVOrientation * outOrientation) const;
 
     QList<Position> _generateTransitionFlight(const Position& startPos,
                                               const UAVOrientation& startPose,
                                               const Position& endPos,
                                               const UAVOrientation& endPose);
 
-    bool _collidesWithObstacle(const Position& pos);
+    QList<Position> _getPathPortion(const QList<Position>& path,
+                                    qreal portionStartTime,
+                                    qreal portionEndTime) const;
 
     QList<QSharedPointer<FlightTask> > _tasks;
     QHash<QSharedPointer<FlightTask>, QSharedPointer<FlightTaskArea> > _tasks2areas;
@@ -48,7 +50,7 @@ private:
     QHash<QSharedPointer<FlightTaskArea>, UAVOrientation> _areaStartOrientations;
     QHash<QSharedPointer<FlightTaskArea>, UAVOrientation> _areaEndOrientations;
     QHash<QSharedPointer<FlightTask>, QList<Position> > _taskSubFlights;
-    QHash<QSharedPointer<FlightTask>, QList<Position> > _startTransitionSubFlights;
+    QHash<QSharedPointer<FlightTaskArea>, QList<Position> > _startTransitionSubFlights;
     QList<QPolygonF> _obstacles;
     
 };

@@ -9,10 +9,13 @@
 const QString ERR_STRING_BAD_DIM = "Dimension of position does not match that of tree.";
 const QString ERR_STRING_BAD_OUTPTR = "You didn't provide a pointer for output.";
 
-QKDTree::QKDTree(uint dimension) :
-    _dimension(dimension), _size(0), _root(0)
+QKDTree::QKDTree(uint dimension, bool allowDuplicates, QKDTreeDistanceMetric *distanceMetric) :
+    _dimension(dimension), _size(0), _root(0), _allowDuplicates(allowDuplicates)
 {
-    _distanceMetric = new QKDTreeDistanceMetric();
+    //If they don't give us a distance metric, just use the default
+    _distanceMetric = distanceMetric;
+    if (_distanceMetric == 0)
+        _distanceMetric = new QKDTreeDistanceMetric();
 }
 
 QKDTree::~QKDTree()
@@ -76,7 +79,13 @@ bool QKDTree::add(QKDTreeNode *node, QString *resultOut)
     while (true)
     {
         const int divDim = potentialParent->dividingDimension();
-        if (node->position().val(divDim) <= potentialParent->position().val(divDim))
+        if (!_allowDuplicates && node->position() == potentialParent->position())
+        {
+            if (resultOut)
+                *resultOut = "Cannot add duplicate";
+            return false;
+        }
+        else if (node->position().val(divDim) <= potentialParent->position().val(divDim))
         {
             if (potentialParent->left() != 0)
                 potentialParent = potentialParent->left();
@@ -106,13 +115,6 @@ bool QKDTree::add(QKDTreeNode *node, QString *resultOut)
 
 bool QKDTree::add(const QVectorND &position, const QVariant &value, QString *resultOut)
 {
-    if (position.dimension() != this->dimension())
-    {
-        if (resultOut)
-            *resultOut = ERR_STRING_BAD_DIM;
-        return false;
-    }
-
     QKDTreeNode * node = new QKDTreeNode(position, value);
 
     return this->add(node, resultOut);
@@ -120,20 +122,13 @@ bool QKDTree::add(const QVectorND &position, const QVariant &value, QString *res
 
 bool QKDTree::add(const QPointF &position, const QVariant &value, QString *resultOut)
 {
-    if (this->dimension() != 2)
-    {
-        if (resultOut)
-            *resultOut = ERR_STRING_BAD_DIM;
-        return false;
-    }
-
     QKDTreeNode * node = new QKDTreeNode(QVectorND(position), value);
 
     return this->add(node, resultOut);
 }
 
 
-bool QKDTree::nearest(const QVectorND &searchPos, QKDTreeNode *output, QString *resultOut)
+bool QKDTree::nearestNode(const QVectorND &searchPos, QKDTreeNode *output, QString *resultOut)
 {
     if (output == 0)
     {
@@ -233,19 +228,17 @@ bool QKDTree::nearest(const QVectorND &searchPos, QKDTreeNode *output, QString *
     return true;
 }
 
-bool QKDTree::nearest(QKDTreeNode *node, QKDTreeNode *output, QString *resultOut)
+bool QKDTree::nearestNode(const QPointF &position, QKDTreeNode *output, QString *resultOut)
 {
-    if (output == 0)
-    {
-        if (resultOut)
-            *resultOut = ERR_STRING_BAD_OUTPTR;
-        return false;
-    }
-
-    return this->nearest(node->position(), output, resultOut);
+    return this->nearestNode(QVectorND(position), output, resultOut);
 }
 
-bool QKDTree::nearest(const QVectorND &position, QVectorND *output, QString *resultOut)
+bool QKDTree::nearestNode(QKDTreeNode *node, QKDTreeNode *output, QString *resultOut)
+{
+    return this->nearestNode(node->position(), output, resultOut);
+}
+
+bool QKDTree::nearestKey(const QVectorND &position, QVectorND *output, QString *resultOut)
 {
     if (output == 0)
     {
@@ -255,7 +248,7 @@ bool QKDTree::nearest(const QVectorND &position, QVectorND *output, QString *res
     }
 
     QKDTreeNode nearestNode;
-    if (!this->nearest(position, &nearestNode, resultOut))
+    if (!this->nearestNode(position, &nearestNode, resultOut))
         return false;
 
     *output = nearestNode.position();
@@ -263,7 +256,7 @@ bool QKDTree::nearest(const QVectorND &position, QVectorND *output, QString *res
     return true;
 }
 
-bool QKDTree::contains(const QVectorND &position)
+bool QKDTree::containsKey(const QVectorND &position)
 {
     if (position.dimension() != this->dimension())
         return false;
@@ -286,28 +279,61 @@ bool QKDTree::contains(const QVectorND &position)
     return false;
 }
 
-bool QKDTree::contains(QKDTreeNode *node)
+bool QKDTree::containsKey(QKDTreeNode *node)
 {
     if (node == 0)
         return false;
 
-    return this->contains(node->position());
+    return this->containsKey(node->position());
 }
 
-bool QKDTree::setDistanceMetric(QKDTreeDistanceMetric *nMetric, QString *resultOut)
+bool QKDTree::value(const QVectorND &positionKey, QVariant *output, QString *resultOut)
 {
-    if (nMetric == 0)
+    const QString errStringNotFound = "Key not found";
+
+    if (output == 0)
     {
         if (resultOut)
-            *resultOut = "Can't set null distance metric.";
+            *resultOut = ERR_STRING_BAD_OUTPTR;
+        return false;
+    }
+    else if (this->size() <= 0)
+    {
+        if (resultOut)
+            *resultOut = errStringNotFound;
+        return false;
+    }
+    else if (positionKey.dimension() != this->dimension())
+    {
+        if (resultOut)
+            *resultOut = ERR_STRING_BAD_DIM;
         return false;
     }
 
-    //Delete old, set new
-    delete _distanceMetric;
-    _distanceMetric = nMetric;
+    QKDTreeNode * current = _root;
+    while (current != 0)
+    {
+        const int divDim = current->dividingDimension();
 
-    return true;
+        if (current->position() == positionKey)
+        {
+            *output = current->value();
+            return true;
+        }
+        else if (positionKey.val(divDim) <= current->position().val(divDim))
+            current = current->left();
+        else
+            current = current->right();
+    }
+
+    if (resultOut)
+        *resultOut = errStringNotFound;
+    return false;
+}
+
+bool QKDTree::value(const QPointF &positionKey, QVariant *output, QString *resultOut)
+{
+    return this->value(QVectorND(positionKey), output, resultOut);
 }
 
 QKDTreeDistanceMetric *QKDTree::distanceMetric() const

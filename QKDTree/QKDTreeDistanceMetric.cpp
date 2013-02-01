@@ -1,6 +1,7 @@
 #include "QKDTreeDistanceMetric.h"
 
 #include <QtGlobal>
+#include <QtDebug>
 #include <cmath>
 
 QKDTreeDistanceMetric::QKDTreeDistanceMetric()
@@ -19,11 +20,5 @@ qreal QKDTreeDistanceMetric::distance(const QKDTreeNode *const a, const QKDTreeN
 //virtual - this one returns euclidean distance
 qreal QKDTreeDistanceMetric::distance(const QVectorND &a, const QVectorND &b)
 {
-    qreal toRet = 0.0;
-    for (int i = 0; i < qMin<int>(a.dimension(), b.dimension()); i++)
-    {
-        const qreal diff = a[i] - b[i];
-        toRet += diff * diff;
-    }
-    return toRet;
+    return (a - b).lengthSquared();
 }

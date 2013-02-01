@@ -2,12 +2,13 @@
 
 #include <limits>
 #include <cmath>
+#include <QVector2D>
 
 #include "guts/Conversions.h"
 #include "QKDTree.h"
 #include "RRTDistanceMetric.h"
 
-const qreal EVERY_X_METERS = 50.0;
+const qreal EVERY_X_METERS = 30.0;
 const qreal AIRSPEED = 14.0; //meters per second
 const qreal TIMESLICE = 15.0; //seconds
 const qreal MAX_TURN_ANGLE = 3.14159265 / 4.0;
@@ -27,8 +28,7 @@ bool RRTIntermediatePlanner::plan()
 
     const QVectorND goal = _toVec(this->endPos(), this->endPose());
 
-    QKDTree kdtree(3);
-    kdtree.setDistanceMetric(new RRTDistanceMetric());
+    QKDTree kdtree(3, false, new RRTDistanceMetric(this->endPos().latitude()));
 
     QHash<QVectorND, QVectorND> parents;
     kdtree.add(_toVec(this->startPos(), this->startPose()), 1);
@@ -49,7 +49,9 @@ bool RRTIntermediatePlanner::plan()
 
         //Find nearest existing node
         QVectorND nearestExisting;
-        kdtree.nearest(random, &nearestExisting);
+        kdtree.nearestKey(random, &nearestExisting);
+        if (nearestExisting == random)
+            continue;
 
         //Generate step towards random from nearestExisting
         const Position existingPos = _toPosition(nearestExisting);
@@ -63,7 +65,7 @@ bool RRTIntermediatePlanner::plan()
         {
             const qreal angleMod = MAX_TURN_ANGLE * ((qreal)i / (qreal)branches);
             const qreal successorRadians = existingPose.radians() + angleMod;
-            QVector3D translateVec(cos(successorRadians), sin(successorRadians), 0);
+            QVector2D translateVec(cos(successorRadians), sin(successorRadians));
             translateVec.normalize();
             translateVec *= EVERY_X_METERS;
             const Position successorPos(existingPos.longitude() + lonPerMeter * translateVec.x(),
@@ -89,7 +91,7 @@ bool RRTIntermediatePlanner::plan()
         parents.insert(bestNew, nearestExisting);
 
         const qreal distToGoal = kdtree.distanceMetric()->distance(goal, bestNew);
-        if (distToGoal < 50.0 * 50.0)
+        if (distToGoal < 50.0)
         {
             qDebug() << "Solution found - trace back";
             QVectorND current = bestNew;

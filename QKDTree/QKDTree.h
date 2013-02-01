@@ -14,8 +14,11 @@ public:
      * @brief QKDTree constructs a kd-tree that takes positions of the given dimension.
      * e.g., to store 2d points, set dimension = 2.
      * @param dimension
+     * @param allowDuplocates whether or not you can add multiple nodes with the same key
+     * @param distanceMetric the custom distance metric object you would like to use. If 0 euclidean
+     * distance squared is used.
      */
-    QKDTree(uint dimension);
+    QKDTree(uint dimension, bool allowDuplicates = false, QKDTreeDistanceMetric * distanceMetric = 0);
     ~QKDTree();
 
     /**
@@ -34,15 +37,25 @@ public:
     bool add(const QVectorND& position, const QVariant& value, QString * resultOut = 0);
     bool add(const QPointF& position, const QVariant& value, QString * resultOut = 0);
 
-    bool nearest(const QVectorND& position, QKDTreeNode * output, QString * resultOut = 0);
-    bool nearest(QKDTreeNode * node, QKDTreeNode * output, QString * resultOut = 0);
+    bool nearestNode(const QVectorND& position, QKDTreeNode * output, QString * resultOut = 0);
+    bool nearestNode(const QPointF& position, QKDTreeNode * output, QString * resultOut = 0);
+    bool nearestNode(QKDTreeNode * node, QKDTreeNode * output, QString * resultOut = 0);
 
-    bool nearest(const QVectorND& position, QVectorND * output, QString * resultOut = 0);
+    bool nearestKey(const QVectorND& position, QVectorND * output, QString * resultOut = 0);
 
-    bool contains(const QVectorND& position);
-    bool contains(QKDTreeNode * node);
+    bool containsKey(const QVectorND& position);
+    bool containsKey(QKDTreeNode * node);
 
-    bool setDistanceMetric(QKDTreeDistanceMetric * nMetric, QString * resultOut = 0);
+    /**
+     * @brief value returns the value of the first node found with the given key
+     * @param positionKey
+     * @param output
+     * @param resultOut
+     * @return
+     */
+    bool value(const QVectorND& positionKey, QVariant * output, QString * resultOut = 0);
+    bool value(const QPointF& positionKey, QVariant * output, QString * resultOut = 0);
+
     QKDTreeDistanceMetric * distanceMetric() const;
 
     /**
@@ -56,6 +69,7 @@ private:
 
     QKDTreeNode * _root;
 
+    bool _allowDuplicates;
     QKDTreeDistanceMetric * _distanceMetric;
 };
 

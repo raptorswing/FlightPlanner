@@ -31,12 +31,14 @@ SOURCES += main.cpp\
     FlightTasks/NoFlyFlightTask.cpp \
     DummyPlanner.cpp \
     HierarchicalPlanner/HierarchicalPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightNode.cpp \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp \
     FlightTasks/CoverageTask.cpp \
     HierarchicalPlanner/IntermediatePlanner.cpp \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp
+    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
+    HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.cpp \
+    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -59,12 +61,14 @@ HEADERS  += \
     FlightTasks/NoFlyFlightTask.h \
     DummyPlanner.h \
     HierarchicalPlanner/HierarchicalPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightNode.h \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h \
     FlightTasks/CoverageTask.h \
     HierarchicalPlanner/IntermediatePlanner.h \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h
+    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
+    HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h \
+    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
