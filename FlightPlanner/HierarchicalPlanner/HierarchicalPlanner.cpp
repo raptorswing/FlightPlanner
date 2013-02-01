@@ -308,7 +308,7 @@ void HierarchicalPlanner::_buildSchedule()
              * The cost is the distance in the state space (draw us toward end node)
              * plus transition penalties ("context switching")
              */
-            qreal cost = (endState - state).length();
+            qreal cost = (endState - state).manhattanDistance();
             if (!lastTasks.contains(state))
                 cost += _startTransitionSubFlights.value(_tasks2areas[_tasks[i]]).length() * EVERY_X_METERS / AIRSPEED;
             else if (lastTasks.value(state) == i)
