@@ -8,7 +8,6 @@
 #include "MapGraphicsScene.h"
 #include "tileSources/OSMTileSource.h"
 
-#include "GreedyFlightPlanner.h"
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
 
 MainWindow::MainWindow(QWidget *parent) :

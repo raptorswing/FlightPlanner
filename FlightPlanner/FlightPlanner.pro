@@ -21,15 +21,14 @@ SOURCES += main.cpp\
     FlightTaskArea.cpp \
     FlightTasks/FlyThroughTask.cpp \
     ProblemViewAdapter.cpp \
-    GreedyFlightPlanner.cpp \
+    GreedyPlanner/GreedyFlightPlanner.cpp \
     MapObjects/StartPosMapObject.cpp \
     MapObjects/FlightTaskAreaMapObject.cpp \
     gui/FlightTaskAreaObjectEditWidget.cpp \
     gui/FlightTaskAreaListModel.cpp \
-    GreedyPlanningNode.cpp \
+    GreedyPlanner/GreedyPlanningNode.cpp \
     Fitness.cpp \
     FlightTasks/NoFlyFlightTask.cpp \
-    DummyPlanner.cpp \
     HierarchicalPlanner/HierarchicalPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp \
@@ -51,15 +50,14 @@ HEADERS  += \
     FlightTaskArea.h \
     FlightTasks/FlyThroughTask.h \
     ProblemViewAdapter.h \
-    GreedyFlightPlanner.h \
+    GreedyPlanner/GreedyFlightPlanner.h \
     MapObjects/StartPosMapObject.h \
     MapObjects/FlightTaskAreaMapObject.h \
     gui/FlightTaskAreaObjectEditWidget.h \
     gui/FlightTaskAreaListModel.h \
-    GreedyPlanningNode.h \
+    GreedyPlanner/GreedyPlanningNode.h \
     Fitness.h \
     FlightTasks/NoFlyFlightTask.h \
-    DummyPlanner.h \
     HierarchicalPlanner/HierarchicalPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h \
