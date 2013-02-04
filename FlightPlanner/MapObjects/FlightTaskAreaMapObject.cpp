@@ -5,7 +5,7 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 
-#include "FlightTaskAreaObjectEditWidget.h"
+#include "gui/FlightTaskAreaObjectEditWidget.h"
 #include "FlightTasks/CoverageTask.h"
 
 //We take the planning problem as input so that we can delete the area from within it when needed

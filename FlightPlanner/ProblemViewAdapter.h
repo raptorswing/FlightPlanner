@@ -7,8 +7,8 @@
 
 #include "PlanningProblem.h"
 #include "MapGraphicsScene.h"
-#include "gui/StartPosMapObject.h"
-#include "gui/FlightTaskAreaMapObject.h"
+#include "MapObjects/StartPosMapObject.h"
+#include "MapObjects/FlightTaskAreaMapObject.h"
 
 class ProblemViewAdapter : public QObject
 {

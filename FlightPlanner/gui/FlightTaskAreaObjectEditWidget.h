@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QPointer>
 
-#include "FlightTaskAreaMapObject.h"
+#include "MapObjects/FlightTaskAreaMapObject.h"
 
 namespace Ui {
 class FlightTaskAreaObjectEditWidget;

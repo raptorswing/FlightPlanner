@@ -36,7 +36,7 @@
      <item>
       <widget class="QPushButton" name="coverageButton">
        <property name="text">
-        <string>Coverage</string>
+        <string>Add Coverage</string>
        </property>
       </widget>
      </item>

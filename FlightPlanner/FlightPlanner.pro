@@ -22,8 +22,8 @@ SOURCES += main.cpp\
     FlightTasks/FlyThroughTask.cpp \
     ProblemViewAdapter.cpp \
     GreedyFlightPlanner.cpp \
-    gui/StartPosMapObject.cpp \
-    gui/FlightTaskAreaMapObject.cpp \
+    MapObjects/StartPosMapObject.cpp \
+    MapObjects/FlightTaskAreaMapObject.cpp \
     gui/FlightTaskAreaObjectEditWidget.cpp \
     gui/FlightTaskAreaListModel.cpp \
     GreedyPlanningNode.cpp \
@@ -52,8 +52,8 @@ HEADERS  += \
     FlightTasks/FlyThroughTask.h \
     ProblemViewAdapter.h \
     GreedyFlightPlanner.h \
-    gui/StartPosMapObject.h \
-    gui/FlightTaskAreaMapObject.h \
+    MapObjects/StartPosMapObject.h \
+    MapObjects/FlightTaskAreaMapObject.h \
     gui/FlightTaskAreaObjectEditWidget.h \
     gui/FlightTaskAreaListModel.h \
     GreedyPlanningNode.h \
