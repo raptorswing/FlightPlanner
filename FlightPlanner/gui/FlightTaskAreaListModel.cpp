@@ -6,6 +6,15 @@ FlightTaskAreaListModel::FlightTaskAreaListModel(QWeakPointer<FlightTaskArea> ar
     QSharedPointer<FlightTaskArea> strong = area.toStrongRef();
     if (strong.isNull())
         return;
+
+    connect(strong.data(),
+            SIGNAL(taskAboutToAdd()),
+            this,
+            SLOT(handleRowsAboutToAdd()));
+    connect(strong.data(),
+            SIGNAL(taskAdded(QSharedPointer<FlightTask>)),
+            this,
+            SLOT(handleRowsAdded()));
 }
 
 int FlightTaskAreaListModel::rowCount(const QModelIndex &parent) const
@@ -31,7 +40,7 @@ QVariant FlightTaskAreaListModel::data(const QModelIndex &index, int role) const
     if (index.row() >= strong->numTasks())
         return QVariant("Row out of bounds");
 
-    QList<QSharedPointer<FlightTask> > tasks = strong->tasks().toList();
+    const QList<QSharedPointer<FlightTask> >& tasks = strong->tasks();
     if (role == Qt::DisplayRole)
     {
         return QVariant(tasks[index.row()]->taskType());
@@ -47,4 +56,17 @@ Qt::ItemFlags FlightTaskAreaListModel::flags(const QModelIndex &index) const
     if (!index.isValid() || strong.isNull() || index.row() >= strong->numTasks())
         return Qt::NoItemFlags;
     return (Qt::ItemIsSelectable| Qt::ItemIsEnabled);
+}
+
+//public slot
+void FlightTaskAreaListModel::handleRowsAboutToAdd()
+{
+    const int count = this->rowCount();
+    this->beginInsertRows(QModelIndex(), count, count);
+}
+
+//public slot
+void FlightTaskAreaListModel::handleRowsAdded()
+{
+    this->endInsertRows();
 }

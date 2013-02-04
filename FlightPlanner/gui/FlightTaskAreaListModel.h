@@ -23,6 +23,8 @@ private:
 signals:
     
 public slots:
+    void handleRowsAboutToAdd();
+    void handleRowsAdded();
     
 };
 

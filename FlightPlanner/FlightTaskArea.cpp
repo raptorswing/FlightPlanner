@@ -24,7 +24,7 @@ void FlightTaskArea::setGeoPoly(const QPolygonF &nPoly)
     this->flightTaskAreaChanged();
 }
 
-const QSet<QSharedPointer<FlightTask> > &FlightTaskArea::tasks() const
+const QList<QSharedPointer<FlightTask> > &FlightTaskArea::tasks() const
 {
     return _tasks;
 }
@@ -34,7 +34,9 @@ void FlightTaskArea::addTask(QSharedPointer<FlightTask> task)
     if (_tasks.contains(task) && !task.isNull())
         return;
 
-    _tasks.insert(task);
+    this->taskAboutToAdd();
+
+    _tasks.append(task);
 
     this->taskAdded(task);
     this->flightTaskAreaChanged();
@@ -45,7 +47,7 @@ void FlightTaskArea::removeTask(QSharedPointer<FlightTask> task)
     if (!_tasks.contains(task) || task.isNull())
         return;
 
-    _tasks.remove(task);
+    _tasks.removeOne(task);
 
     this->taskRemoved(task);
     this->flightTaskAreaChanged();

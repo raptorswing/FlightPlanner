@@ -17,7 +17,7 @@ public:
 
     const QPolygonF& geoPoly() const;
 
-    const QSet<QSharedPointer<FlightTask> >& tasks() const;
+    const QList<QSharedPointer<FlightTask> >& tasks() const;
     void addTask(QSharedPointer<FlightTask> task);
     void removeTask(QSharedPointer<FlightTask> task);
     int numTasks() const;
@@ -27,6 +27,7 @@ signals:
     void flightTaskAreaChanged();
     void geoPolyChanged(const QPolygonF& geoPoly);
     void taskChanged(QSharedPointer<FlightTask> task);
+    void taskAboutToAdd();
     void taskAdded(QSharedPointer<FlightTask> task);
     void taskRemoved(QSharedPointer<FlightTask> task);
     
@@ -35,7 +36,7 @@ public slots:
 
 private:
     QPolygonF _geoPoly;
-    QSet<QSharedPointer<FlightTask> > _tasks;
+    QList<QSharedPointer<FlightTask> > _tasks;
     
 };
 

@@ -49,10 +49,10 @@ void FlightTaskAreaMapObject::paint(QPainter *painter, const QStyleOptionGraphic
         PolygonObject::paint(painter, option, widget);
     else if (area->tasks().isEmpty())
         PolygonObject::paint(painter, option, widget);
-    else if (area->tasks().toList()[0]->taskType() == "Coverage")
+    else if (area->tasks()[0]->taskType() == "Coverage")
     {
         PolygonObject::paint(painter, option, widget);
-        QSharedPointer<CoverageTask> task = area->tasks().toList()[0].dynamicCast<CoverageTask>();
+        QSharedPointer<CoverageTask> task = area->tasks()[0].dynamicCast<CoverageTask>();
         task->_calculateBins(area->geoPoly());
 
         Position bbCenter(area->geoPoly().boundingRect().center(), 0.0);
