@@ -37,7 +37,9 @@ SOURCES += main.cpp\
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
     HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.cpp \
-    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp
+    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp \
+    gui/FlightTaskDelegate.cpp \
+    gui/FlightTaskRowEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -66,12 +68,15 @@ HEADERS  += \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
     HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h \
-    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h
+    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h \
+    gui/FlightTaskDelegate.h \
+    gui/FlightTaskRowEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
     gui/PlanningControlWidget.ui \
-    gui/FlightTaskAreaObjectEditWidget.ui
+    gui/FlightTaskAreaObjectEditWidget.ui \
+    gui/FlightTaskRowEditor.ui
 
 RESOURCES += \
     resources.qrc

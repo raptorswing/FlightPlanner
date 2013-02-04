@@ -19,6 +19,8 @@
         <file>gui/images/16x16/actions/player_pause.png</file>
         <file>gui/images/16x16/actions/player_play.png</file>
         <file>gui/images/16x16/actions/player_stop.png</file>
+        <file>gui/images/16x16/actions/edit.png</file>
+        <file>gui/images/16x16/actions/editdelete.png</file>
     </qresource>
     <qresource prefix="/icons/32x32">
         <file>gui/images/32x32/apps/spire.png</file>

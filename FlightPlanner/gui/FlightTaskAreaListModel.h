@@ -25,6 +25,9 @@ signals:
 public slots:
     void handleRowsAboutToAdd();
     void handleRowsAdded();
+
+    void handleRowAboutToRemove(int index);
+    void handleRowRemoved();
     
 };
 

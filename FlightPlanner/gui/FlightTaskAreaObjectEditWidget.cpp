@@ -5,6 +5,7 @@
 #include "FlightTasks/FlyThroughTask.h"
 #include "FlightTasks/NoFlyFlightTask.h"
 #include "FlightTasks/CoverageTask.h"
+#include "FlightTaskDelegate.h"
 
 FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTaskAreaMapObject> flightTaskAreaObj,
                                                                QWidget *parent) :
@@ -23,8 +24,13 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
             this,
             SLOT(deleteLater()));
 
-    FlightTaskAreaListModel * model = new FlightTaskAreaListModel(flightTaskAreaObj->flightTaskArea(),this);
+    FlightTaskAreaListModel * model = new FlightTaskAreaListModel(flightTaskAreaObj->flightTaskArea(),
+                                                                  this->ui->taskListView);
     this->ui->taskListView->setModel(model);
+    FlightTaskDelegate * delegate = new FlightTaskDelegate(flightTaskAreaObj->flightTaskArea(),
+                                                           this->ui->taskListView);
+    this->ui->taskListView->setItemDelegate(delegate);
+    this->ui->taskListView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 }
 
 FlightTaskAreaObjectEditWidget::~FlightTaskAreaObjectEditWidget()

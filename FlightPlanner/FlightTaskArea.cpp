@@ -44,12 +44,17 @@ void FlightTaskArea::addTask(QSharedPointer<FlightTask> task)
 
 void FlightTaskArea::removeTask(QSharedPointer<FlightTask> task)
 {
-    if (!_tasks.contains(task) || task.isNull())
+    if (task.isNull())
         return;
 
-    _tasks.removeOne(task);
+    const int index = _tasks.indexOf(task);
+    if (index <= -1)
+        return;
 
+    this->taskAboutToRemove(index);
+    _tasks.removeOne(task);
     this->taskRemoved(task);
+
     this->flightTaskAreaChanged();
 }
 

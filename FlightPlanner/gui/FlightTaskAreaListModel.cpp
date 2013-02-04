@@ -15,6 +15,14 @@ FlightTaskAreaListModel::FlightTaskAreaListModel(QWeakPointer<FlightTaskArea> ar
             SIGNAL(taskAdded(QSharedPointer<FlightTask>)),
             this,
             SLOT(handleRowsAdded()));
+    connect(strong.data(),
+            SIGNAL(taskAboutToRemove(int)),
+            this,
+            SLOT(handleRowAboutToRemove(int)));
+    connect(strong.data(),
+            SIGNAL(taskRemoved(QSharedPointer<FlightTask>)),
+            this,
+            SLOT(handleRowRemoved()));
 }
 
 int FlightTaskAreaListModel::rowCount(const QModelIndex &parent) const
@@ -55,7 +63,7 @@ Qt::ItemFlags FlightTaskAreaListModel::flags(const QModelIndex &index) const
 
     if (!index.isValid() || strong.isNull() || index.row() >= strong->numTasks())
         return Qt::NoItemFlags;
-    return (Qt::ItemIsSelectable| Qt::ItemIsEnabled);
+    return (Qt::ItemIsSelectable| Qt::ItemIsEnabled | Qt::ItemIsEditable);
 }
 
 //public slot
@@ -69,4 +77,16 @@ void FlightTaskAreaListModel::handleRowsAboutToAdd()
 void FlightTaskAreaListModel::handleRowsAdded()
 {
     this->endInsertRows();
+}
+
+//public slot
+void FlightTaskAreaListModel::handleRowAboutToRemove(int index)
+{
+    this->beginRemoveRows(QModelIndex(), index, index);
+}
+
+//public slot
+void FlightTaskAreaListModel::handleRowRemoved()
+{
+    this->endRemoveRows();
 }

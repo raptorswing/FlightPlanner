@@ -29,6 +29,7 @@ signals:
     void taskChanged(QSharedPointer<FlightTask> task);
     void taskAboutToAdd();
     void taskAdded(QSharedPointer<FlightTask> task);
+    void taskAboutToRemove(int index);
     void taskRemoved(QSharedPointer<FlightTask> task);
     
 public slots:
