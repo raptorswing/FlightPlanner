@@ -24,8 +24,8 @@ SOURCES += main.cpp\
     GreedyPlanner/GreedyFlightPlanner.cpp \
     MapObjects/StartPosMapObject.cpp \
     MapObjects/FlightTaskAreaMapObject.cpp \
-    gui/FlightTaskAreaObjectEditWidget.cpp \
-    gui/FlightTaskAreaListModel.cpp \
+    gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.cpp \
+    gui/FlightTaskAreaEditor/FlightTaskAreaListModel.cpp \
     GreedyPlanner/GreedyPlanningNode.cpp \
     Fitness.cpp \
     FlightTasks/NoFlyFlightTask.cpp \
@@ -38,8 +38,8 @@ SOURCES += main.cpp\
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
     HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.cpp \
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp \
-    gui/FlightTaskDelegate.cpp \
-    gui/FlightTaskRowEditor.cpp
+    gui/FlightTaskAreaEditor/FlightTaskDelegate.cpp \
+    gui/FlightTaskAreaEditor/FlightTaskRowEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -55,8 +55,8 @@ HEADERS  += \
     GreedyPlanner/GreedyFlightPlanner.h \
     MapObjects/StartPosMapObject.h \
     MapObjects/FlightTaskAreaMapObject.h \
-    gui/FlightTaskAreaObjectEditWidget.h \
-    gui/FlightTaskAreaListModel.h \
+    gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.h \
+    gui/FlightTaskAreaEditor/FlightTaskAreaListModel.h \
     GreedyPlanner/GreedyPlanningNode.h \
     Fitness.h \
     FlightTasks/NoFlyFlightTask.h \
@@ -69,14 +69,14 @@ HEADERS  += \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
     HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h \
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h \
-    gui/FlightTaskDelegate.h \
-    gui/FlightTaskRowEditor.h
+    gui/FlightTaskAreaEditor/FlightTaskDelegate.h \
+    gui/FlightTaskAreaEditor/FlightTaskRowEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
     gui/PlanningControlWidget.ui \
-    gui/FlightTaskAreaObjectEditWidget.ui \
-    gui/FlightTaskRowEditor.ui
+    gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.ui \
+    gui/FlightTaskAreaEditor/FlightTaskRowEditor.ui
 
 RESOURCES += \
     resources.qrc

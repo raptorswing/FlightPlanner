@@ -46,6 +46,7 @@ QWidget *FlightTaskDelegate::createEditor(QWidget *parent,
                                           const QStyleOptionViewItem &option,
                                           const QModelIndex &index) const
 {
+    Q_UNUSED(option)
     QSharedPointer<FlightTaskArea> area = _area.toStrongRef();
     if (!area)
         return 0;
