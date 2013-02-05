@@ -10,6 +10,8 @@
 
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
 
+#include "UAVParametersWidget.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -100,7 +102,9 @@ void MainWindow::on_actionExit_triggered()
 //private slot
 void MainWindow::on_actionUAV_Parameters_triggered()
 {
-
+    UAVParametersWidget * configWidget = new UAVParametersWidget();
+    configWidget->setAttribute(Qt::WA_DeleteOnClose);
+    configWidget->show();
 }
 
 //private slot

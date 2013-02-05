@@ -159,9 +159,6 @@
    </property>
   </action>
   <action name="actionUAV_Parameters">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</normaloff>:/icons/16x16/gui/images/16x16/actions/tooloptions.png</iconset>
