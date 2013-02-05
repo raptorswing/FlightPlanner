@@ -46,9 +46,7 @@ private:
     QList<QSharedPointer<FlightTask> > _tasks;
     QHash<QSharedPointer<FlightTask>, QSharedPointer<FlightTaskArea> > _tasks2areas;
     QHash<QSharedPointer<FlightTaskArea>, Position> _areaStartPositions;
-    QHash<QSharedPointer<FlightTaskArea>, Position> _areaEndPositions;
     QHash<QSharedPointer<FlightTaskArea>, UAVOrientation> _areaStartOrientations;
-    QHash<QSharedPointer<FlightTaskArea>, UAVOrientation> _areaEndOrientations;
     QHash<QSharedPointer<FlightTask>, QList<Position> > _taskSubFlights;
     QHash<QSharedPointer<FlightTaskArea>, QList<Position> > _startTransitionSubFlights;
     QList<QPolygonF> _obstacles;

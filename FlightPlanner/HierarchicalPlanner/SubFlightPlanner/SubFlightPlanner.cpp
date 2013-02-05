@@ -15,10 +15,8 @@ const qreal PI = 3.1415926535;
 SubFlightPlanner::SubFlightPlanner(const QSharedPointer<FlightTask> &task,
                                    const QSharedPointer<FlightTaskArea> &area,
                                    const Position &startPos,
-                                   const Position &endPos,
-                                   const UAVOrientation &startPose,
-                                   const UAVOrientation &endPose) :
-    _task(task), _area(area), _startPos(startPos), _endPos(endPos), _startPose(startPose), _endPose(endPose)
+                                   const UAVOrientation &startPose) :
+    _task(task), _area(area), _startPos(startPos), _startPose(startPose)
 {
 }
 

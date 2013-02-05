@@ -66,9 +66,7 @@ void HierarchicalPlanner::doReset()
     _tasks.clear();
     _tasks2areas.clear();
     _areaStartPositions.clear();
-    _areaEndPositions.clear();
     _areaStartOrientations.clear();
-    _areaEndOrientations.clear();
     _taskSubFlights.clear();
     _startTransitionSubFlights.clear();
     _obstacles.clear();
@@ -177,13 +175,11 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         }
 
         _areaStartPositions.insert(area, start);
-        _areaEndPositions.insert(area, end);
 
         qreal angleRads = atan2(end.latitude() - start.latitude(),
                                 end.longitude() - start.longitude());
         UAVOrientation orientation(angleRads);
         _areaStartOrientations.insert(area, orientation);
-        _areaEndOrientations.insert(area, orientation);
     }
 }
 
@@ -217,11 +213,9 @@ void HierarchicalPlanner::_buildSubFlights()
     {
         const QSharedPointer<FlightTaskArea>& area = _tasks2areas.value(task);
         const Position& start = _areaStartPositions.value(area);
-        const Position& end = _areaEndPositions.value(area);
+        const UAVOrientation& startPose = _areaStartOrientations.value(area);
 
-        UAVOrientation tempPose(0);
-
-        SubFlightPlanner planner(task, area, start, end, tempPose, tempPose);
+        SubFlightPlanner planner(task, area, start, startPose);
         planner.plan();
 
         _taskSubFlights.insert(task, planner.results());

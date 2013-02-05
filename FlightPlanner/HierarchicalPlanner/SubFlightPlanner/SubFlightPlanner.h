@@ -15,9 +15,7 @@ public:
     SubFlightPlanner(const QSharedPointer<FlightTask>& task,
                      const QSharedPointer<FlightTaskArea>& area,
                      const Position& startPos,
-                     const Position& endPos,
-                     const UAVOrientation& startPose,
-                     const UAVOrientation& endPose);
+                     const UAVOrientation& startPose);
 
     void plan();
     const QList<Position> &results() const;
@@ -27,9 +25,7 @@ private:
     const QSharedPointer<FlightTask>& _task;
     const QSharedPointer<FlightTaskArea>& _area;
     const Position& _startPos;
-    const Position& _endPos;
     const UAVOrientation& _startPose;
-    const UAVOrientation& _endPose;
 
     QList<Position> _results;
 };
