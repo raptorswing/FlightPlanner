@@ -1,6 +1,8 @@
 #include "FlightTaskRowEditor.h"
 #include "ui_FlightTaskRowEditor.h"
 
+#include "gui/FlightTaskEditors/FlightTaskEditorFactory.h"
+
 #include <QtDebug>
 
 FlightTaskRowEditor::FlightTaskRowEditor(QWeakPointer<FlightTaskArea> area,
@@ -45,7 +47,8 @@ void FlightTaskRowEditor::on_editTaskButton_clicked()
     if (task.isNull())
         return;
 
-    qDebug() << "EDIT!";
+    QWidget * widget = FlightTaskEditorFactory::getEditor(task);
+    widget->show();
 }
 
 void FlightTaskRowEditor::on_deleteTaskButton_clicked()

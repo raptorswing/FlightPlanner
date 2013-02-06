@@ -19,6 +19,12 @@ public:
                                              const QPolygonF& geoPoly);
 
     virtual qreal maxTaskPerformance() const;
+
+    qreal granularity() const;
+    void setGranularity(qreal nGran);
+
+    qreal maxDistance() const;
+    void setMaxDistance(qreal maxDist);
     
 //private:
     void _calculateBins(const QPolygonF& geoPoly);

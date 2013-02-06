@@ -4,8 +4,10 @@
 #include <QtGlobal>
 #include <QObject>
 #include <QPolygonF>
+#include <QList>
 
 #include "Position.h"
+#include "TimingConstraint.h"
 
 class FlightTask : public QObject
 {
@@ -25,11 +27,21 @@ public:
 
     virtual qreal maxTaskPerformance() const;
 
+    const QList<TimingConstraint>& timingConstraints() const;
+    void setTimingConstraints(const QList<TimingConstraint>& nConstraints);
+
+    void addTimingConstraint(const TimingConstraint& nConstraint);
+    void removeTimingConstraint(const TimingConstraint& nConstraint);
+    void removeTimingConstraintAt(int index);
+
 signals:
     void flightTaskChanged();
 
 protected:
     static qreal normal(qreal x, qreal stdDev, qreal scaleFactor=1000.0);
+
+private:
+    QList<TimingConstraint> _timingConstraints;
 };
 
 #endif // FLIGHTTASK_H

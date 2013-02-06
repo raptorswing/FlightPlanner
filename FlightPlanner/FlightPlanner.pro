@@ -40,7 +40,12 @@ SOURCES += main.cpp\
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp \
     gui/FlightTaskAreaEditor/FlightTaskDelegate.cpp \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.cpp \
-    gui/UAVParametersWidget.cpp
+    gui/UAVParametersWidget.cpp \
+    gui/FlightTaskEditors/TimingConstraintSliders.cpp \
+    gui/FlightTaskEditors/TimingConstraintEditor.cpp \
+    FlightTasks/TimingConstraint.cpp \
+    gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
+    gui/FlightTaskEditors/CoverageTaskEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -72,14 +77,22 @@ HEADERS  += \
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h \
     gui/FlightTaskAreaEditor/FlightTaskDelegate.h \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.h \
-    gui/UAVParametersWidget.h
+    gui/UAVParametersWidget.h \
+    gui/FlightTaskEditors/TimingConstraintSliders.h \
+    gui/FlightTaskEditors/TimingConstraintEditor.h \
+    FlightTasks/TimingConstraint.h \
+    gui/FlightTaskEditors/FlightTaskEditorFactory.h \
+    gui/FlightTaskEditors/CoverageTaskEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
     gui/PlanningControlWidget.ui \
     gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.ui \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.ui \
-    gui/UAVParametersWidget.ui
+    gui/UAVParametersWidget.ui \
+    gui/FlightTaskEditors/TimingConstraintSliders.ui \
+    gui/FlightTaskEditors/TimingConstraintEditor.ui \
+    gui/FlightTaskEditors/CoverageTaskEditor.ui
 
 RESOURCES += \
     resources.qrc

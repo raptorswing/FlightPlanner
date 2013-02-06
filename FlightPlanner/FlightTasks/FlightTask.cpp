@@ -29,6 +29,35 @@ qreal FlightTask::maxTaskPerformance() const
     return 100.0;
 }
 
+const QList<TimingConstraint> &FlightTask::timingConstraints() const
+{
+    return _timingConstraints;
+}
+
+void FlightTask::setTimingConstraints(const QList<TimingConstraint> &nConstraints)
+{
+    _timingConstraints = nConstraints;
+    this->flightTaskChanged();
+}
+
+void FlightTask::addTimingConstraint(const TimingConstraint &nConstraint)
+{
+    _timingConstraints.append(nConstraint);
+    this->flightTaskChanged();
+}
+
+void FlightTask::removeTimingConstraint(const TimingConstraint &nConstraint)
+{
+    _timingConstraints.removeAll(nConstraint);
+    this->flightTaskChanged();
+}
+
+void FlightTask::removeTimingConstraintAt(int index)
+{
+    _timingConstraints.removeAt(index);
+    this->flightTaskChanged();
+}
+
 //protected static
 qreal FlightTask::normal(qreal x, qreal stdDev, qreal scaleFactor)
 {

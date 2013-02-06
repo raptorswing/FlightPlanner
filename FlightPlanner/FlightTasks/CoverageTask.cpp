@@ -61,6 +61,28 @@ qreal CoverageTask::maxTaskPerformance() const
     return (qreal) _bins.size();
 }
 
+qreal CoverageTask::granularity() const
+{
+    return _granularity;
+}
+
+void CoverageTask::setGranularity(qreal nGran)
+{
+    _granularity = qBound<qreal>(1.0, nGran, 1000.0);
+    this->flightTaskChanged();
+}
+
+qreal CoverageTask::maxDistance() const
+{
+    return _maxDistance;
+}
+
+void CoverageTask::setMaxDistance(qreal maxDist)
+{
+    _maxDistance = qBound<qreal>(1.0, maxDist, 1000.0);
+    this->flightTaskChanged();
+}
+
 //private
 void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 {
