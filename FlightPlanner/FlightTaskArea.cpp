@@ -40,6 +40,11 @@ void FlightTaskArea::addTask(QSharedPointer<FlightTask> task)
 
     this->taskAdded(task);
     this->flightTaskAreaChanged();
+
+    connect(task.data(),
+            SIGNAL(flightTaskChanged()),
+            this,
+            SIGNAL(flightTaskAreaChanged()));
 }
 
 void FlightTaskArea::removeTask(QSharedPointer<FlightTask> task)
