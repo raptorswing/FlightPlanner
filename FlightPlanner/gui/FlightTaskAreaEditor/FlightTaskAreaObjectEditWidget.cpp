@@ -19,10 +19,14 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
     if (flightTaskAreaObj.isNull())
         return;
 
-    connect(flightTaskAreaObj.data(),
+    connect(flightTaskAreaObj->flightTaskArea().data(),
             SIGNAL(destroyed()),
             this,
             SLOT(deleteLater()));
+    connect(flightTaskAreaObj->flightTaskArea().data(),
+            SIGNAL(flightTaskAreaChanged()),
+            this,
+            SLOT(persistentEditorHack()));
 
     FlightTaskAreaListModel * model = new FlightTaskAreaListModel(flightTaskAreaObj->flightTaskArea(),
                                                                   this->ui->taskListView);
@@ -30,12 +34,25 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
     FlightTaskDelegate * delegate = new FlightTaskDelegate(flightTaskAreaObj->flightTaskArea(),
                                                            this->ui->taskListView);
     this->ui->taskListView->setItemDelegate(delegate);
-    this->ui->taskListView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
+    this->persistentEditorHack();
 }
 
 FlightTaskAreaObjectEditWidget::~FlightTaskAreaObjectEditWidget()
 {
     delete ui;
+}
+
+//private slot
+void FlightTaskAreaObjectEditWidget::persistentEditorHack()
+{
+    QAbstractItemModel * model = this->ui->taskListView->model();
+
+    for (int i = 0; i < model->rowCount(); i++)
+    {
+        QModelIndex index = model->index(i, 0);
+        this->ui->taskListView->openPersistentEditor(index);
+    }
 }
 
 

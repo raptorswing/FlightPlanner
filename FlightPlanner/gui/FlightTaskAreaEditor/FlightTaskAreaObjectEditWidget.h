@@ -20,6 +20,7 @@ public:
     ~FlightTaskAreaObjectEditWidget();
     
 private slots:
+    void persistentEditorHack();
 
     void on_AddFlyThruButton_clicked();
 
