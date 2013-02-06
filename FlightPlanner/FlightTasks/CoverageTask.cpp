@@ -22,7 +22,7 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
     if (geoPoly != _lastGeoPoly)
         _calculateBins(geoPoly);
 
-    const qreal maxDistance = 50.0;
+    const qreal maxDistance = _maxDistance;
 
     QSet<int> satisfiedBins;
 
