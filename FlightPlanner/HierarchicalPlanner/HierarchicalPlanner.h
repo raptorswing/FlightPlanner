@@ -26,7 +26,7 @@ private:
     void _buildStartAndEndPositions();
     void _buildStartTransitions();
     void _buildSubFlights();
-    void _buildSchedule();
+    bool _buildSchedule();
 
     bool _interpolatePath(const QList<Position>& path,
                               const UAVOrientation& startingOrientation,

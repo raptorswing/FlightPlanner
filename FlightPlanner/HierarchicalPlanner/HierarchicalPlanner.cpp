@@ -52,7 +52,8 @@ void HierarchicalPlanner::doIteration()
     /*
      * Build and solve scheduling problem.
     */
-    _buildSchedule();
+    if (!_buildSchedule())
+        qDebug() << "Scheduling failed";
     this->pausePlanning();
 }
 
@@ -220,7 +221,7 @@ void HierarchicalPlanner::_buildSubFlights()
 }
 
 //private
-void HierarchicalPlanner::_buildSchedule()
+bool HierarchicalPlanner::_buildSchedule()
 {
     const UAVParameters& params = this->problem()->uavParameters();
 
@@ -259,6 +260,7 @@ void HierarchicalPlanner::_buildSchedule()
 
     QList<QVectorND> schedule;
 
+    bool solutionFound = false;
     while (!worklist.isEmpty())
     {
         const qreal costKey = worklist.keys().first();
@@ -271,6 +273,7 @@ void HierarchicalPlanner::_buildSchedule()
         if (state == endState)
         {
             qDebug() << "Done scheduling - traceback.";
+            solutionFound = true;
             QVectorND current = state;
             while (true)
             {
@@ -381,6 +384,9 @@ void HierarchicalPlanner::_buildSchedule()
         } // Done generating transitions
     } // Done building schedule
 
+    if (!solutionFound)
+        return false;
+
     QVectorND prevInterval = schedule[0];
     schedule.removeFirst();
 
@@ -408,6 +414,7 @@ void HierarchicalPlanner::_buildSchedule()
     }
 
     this->setBestFlightSoFar(path);
+    return true;
 }
 
 //private
