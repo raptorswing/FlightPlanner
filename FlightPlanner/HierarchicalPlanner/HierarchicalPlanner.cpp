@@ -11,10 +11,7 @@
 #include <QMap>
 #include <cmath>
 
-const qreal EVERY_X_METERS = 30.0;
-const qreal AIRSPEED = 14.0; //meters per second
 const qreal TIMESLICE = 15.0; //seconds
-const qreal MAX_TURN_ANGLE = 3.14159265 / 4.0;
 
 HierarchicalPlanner::HierarchicalPlanner(QSharedPointer<PlanningProblem> prob,
                                          QObject *parent) :
@@ -225,6 +222,8 @@ void HierarchicalPlanner::_buildSubFlights()
 //private
 void HierarchicalPlanner::_buildSchedule()
 {
+    const UAVParameters& params = this->problem()->uavParameters();
+
     //First we need to know how long each of our sub-flights takes
     QList<qreal> taskTimes;
     foreach(const QSharedPointer<FlightTask>& task, _tasks)
@@ -232,7 +231,7 @@ void HierarchicalPlanner::_buildSchedule()
         const QList<Position>& subFlight = _taskSubFlights.value(task);
 
         //Time required is estimated to be the length of the path in meters divided by airspeed
-        qreal timeRequired = subFlight.length() * EVERY_X_METERS / AIRSPEED;
+        qreal timeRequired = subFlight.length() * params.waypointInterval() / params.airspeed();
         taskTimes.append(timeRequired);
     }
 
@@ -304,7 +303,7 @@ void HierarchicalPlanner::_buildSchedule()
              */
             qreal cost = (endState - state).manhattanDistance();
             if (!lastTasks.contains(state))
-                cost += _startTransitionSubFlights.value(_tasks2areas[_tasks[i]]).length() * EVERY_X_METERS / AIRSPEED;
+                cost += _startTransitionSubFlights.value(_tasks2areas[_tasks[i]]).length() * params.waypointInterval() / params.airspeed();
             else if (lastTasks.value(state) == i)
                 cost += 0.0;
             else
@@ -334,7 +333,7 @@ void HierarchicalPlanner::_buildSchedule()
                 //Plan intermediate flight
                 QList<Position> intermed = _generateTransitionFlight(startPos, startPose,
                                                                      endPos, endPose);
-                cost += intermed.length() * EVERY_X_METERS / AIRSPEED;
+                cost += intermed.length() * params.waypointInterval() / params.airspeed();
                 transitionFlights.insert(newState, intermed);
             }
 
@@ -399,6 +398,8 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
         return true;
     }
 
+    const UAVParameters& params = this->problem()->uavParameters();
+
     //qDebug() << "Interpolate path of size" << path.size() << "to time" << goalTime;
 
     qreal distanceSoFar = 0.0;
@@ -409,9 +410,9 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
         const Position& pos = path[i];
         const Position& lastPos = path[i-1];
         //const qreal distance = (Conversions::lla2xyz(pos) - Conversions::lla2xyz(lastPos)).length();
-        const qreal intervalDistance = EVERY_X_METERS;
+        const qreal intervalDistance = params.waypointInterval();
         distanceSoFar += intervalDistance;
-        timeSoFar = distanceSoFar / AIRSPEED;
+        timeSoFar = distanceSoFar / params.airspeed();
 
         //qDebug() << "step" << i << "time" << timeSoFar << "position" << pos << "last position" << lastPos << "distance" << intervalDistance << "overall" << distanceSoFar;
 
@@ -419,11 +420,11 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
         {
             const qreal lonPerMeter = Conversions::degreesLonPerMeter(pos.latitude());
             const qreal latPerMeter = Conversions::degreesLatPerMeter(pos.latitude());
-            const qreal lastTime = timeSoFar - intervalDistance / AIRSPEED;
+            const qreal lastTime = timeSoFar - intervalDistance / params.airspeed();
             const qreal ratio = (goalTime - lastTime) / (timeSoFar - lastTime);
             QVector2D dirVecMeters((pos.longitude() - lastPos.longitude()) / lonPerMeter,
                                    (pos.latitude() - lastPos.latitude()) / latPerMeter);
-            const qreal distToGo = EVERY_X_METERS * ratio;
+            const qreal distToGo = params.waypointInterval() * ratio;
             dirVecMeters.normalize();
             const qreal longitude = lastPos.longitude() + distToGo * dirVecMeters.x() * lonPerMeter;
             const qreal latitude = lastPos.latitude() + distToGo * dirVecMeters.y() * latPerMeter;
@@ -452,13 +453,15 @@ QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &s
     //Adjust the positions backwards a little bit along their angles?
 
     /*
-    IntermediatePlanner * intermed = new RRTIntermediatePlanner(startPos,
+    IntermediatePlanner * intermed = new RRTIntermediatePlanner(this->problem()->uavParameters(),
+                                                                startPos,
                                                                 startPose,
                                                                 endPos,
                                                                 endPose,
                                                                 _obstacles);
                                                                 */
-    IntermediatePlanner * intermed = new PhonyIntermediatePlanner(startPos, startPose,
+    IntermediatePlanner * intermed = new PhonyIntermediatePlanner(this->problem()->uavParameters(),
+                                                                  startPos, startPose,
                                                                   endPos, endPose,
                                                                   _obstacles);
     intermed->plan();
@@ -475,8 +478,9 @@ QList<Position> HierarchicalPlanner::_getPathPortion(const QList<Position> &path
 {
     QList<Position> toRet;
 
-    const int startingIndex = portionStartTime * AIRSPEED / EVERY_X_METERS;
-    const int endingIndex = portionEndTime * AIRSPEED / EVERY_X_METERS;
+    const UAVParameters& params = this->problem()->uavParameters();
+    const int startingIndex = portionStartTime * params.airspeed() / params.waypointInterval();
+    const int endingIndex = portionEndTime * params.airspeed() / params.waypointInterval();
     //const int count = endingIndex - startingIndex;
 
     for (int i = startingIndex; i < endingIndex; i++)

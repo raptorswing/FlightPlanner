@@ -1,5 +1,7 @@
 #include "UAVParameters.h"
 
+#include <cmath>
+
 
 UAVParameters::UAVParameters(qreal airspeed, qreal minTurningRadius, qreal waypointInterval) :
     _airspeed(airspeed), _minTurningRadius(minTurningRadius), _waypointInterval(waypointInterval)
@@ -34,4 +36,9 @@ void UAVParameters::setMinTurningRadius(qreal nRad)
 void UAVParameters::setWaypointInterval(qreal interval)
 {
     _waypointInterval = interval;
+}
+
+qreal UAVParameters::maxTurnAngle() const
+{
+    return _waypointInterval / _minTurningRadius;
 }

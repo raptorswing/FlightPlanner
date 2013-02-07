@@ -5,12 +5,13 @@
 
 #include "guts/Conversions.h"
 
-PhonyIntermediatePlanner::PhonyIntermediatePlanner(const Position &startPos,
+PhonyIntermediatePlanner::PhonyIntermediatePlanner(const UAVParameters& uavParams,
+                                                   const Position &startPos,
                                                    const UAVOrientation &startPose,
                                                    const Position &endPos,
                                                    const UAVOrientation &endPose,
                                                    const QList<QPolygonF> &obstacles) :
-    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles)
+    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles), _uavParams(uavParams)
 {
 }
 
@@ -26,10 +27,10 @@ bool PhonyIntermediatePlanner::plan()
     const qreal distMeters = dirVec.length();
     dirVec.normalize();
 
-    const int intervals = qCeil(distMeters / 30);
+    const int intervals = qCeil(distMeters / _uavParams.waypointInterval());
     for (int i = 0; i < intervals; i++)
     {
-        const QVector2D moveVec = dirVec * 30 * i;
+        const QVector2D moveVec = dirVec * _uavParams.waypointInterval() * i;
         const Position newPos(this->startPos().longitude() + moveVec.x() * lonPerMeter,
                               this->startPos().latitude() + moveVec.y() * latPerMeter);
         _results.append(newPos);

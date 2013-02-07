@@ -6,7 +6,7 @@
 class UAVParameters
 {
 public:
-    UAVParameters(qreal airspeed = 14.0, qreal minTurningRadius = 15.0, qreal waypointInterval = 30.0);
+    UAVParameters(qreal airspeed = 14.0, qreal minTurningRadius = 38.0, qreal waypointInterval = 30.0);
 
     qreal airspeed() const;
     qreal minTurningRadius() const;
@@ -15,6 +15,13 @@ public:
     void setAirspeed(qreal nSpeed);
     void setMinTurningRadius(qreal nRad);
     void setWaypointInterval(qreal interval);
+
+    /**
+     * @brief maxTurnAngle returns the maximum turn angle (in radians) that can be achieved in the distance
+     * of the waypoint interval. Calculated using the minimum turning radius.
+     * @return
+     */
+    qreal maxTurnAngle() const;
 
 private:
     qreal _airspeed;

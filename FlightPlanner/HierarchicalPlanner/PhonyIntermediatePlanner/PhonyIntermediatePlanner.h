@@ -2,11 +2,13 @@
 #define PHONYINTERMEDIATEPLANNER_H
 
 #include "HierarchicalPlanner/IntermediatePlanner.h"
+#include "UAVParameters.h"
 
 class PhonyIntermediatePlanner : public IntermediatePlanner
 {
 public:
-    PhonyIntermediatePlanner(const Position& startPos,
+    PhonyIntermediatePlanner(const UAVParameters &uavParams,
+                             const Position& startPos,
                              const UAVOrientation& startPose,
                              const Position& endPos,
                              const UAVOrientation& endPose,
@@ -16,6 +18,7 @@ public:
     virtual QList<Position> results() const;
 
 private:
+    UAVParameters _uavParams;
     QList<Position> _results;
 };
 

@@ -8,17 +8,13 @@
 #include "QKDTree.h"
 #include "RRTDistanceMetric.h"
 
-const qreal EVERY_X_METERS = 30.0;
-const qreal AIRSPEED = 14.0; //meters per second
-const qreal TIMESLICE = 15.0; //seconds
-const qreal MAX_TURN_ANGLE = 3.14159265 / 4.0;
-
-RRTIntermediatePlanner::RRTIntermediatePlanner(const Position &startPos,
+RRTIntermediatePlanner::RRTIntermediatePlanner(const UAVParameters& uavParams,
+                                               const Position &startPos,
                                                const UAVOrientation &startPose,
                                                const Position &endPos,
                                                const UAVOrientation &endPose,
                                                const QList<QPolygonF> &obstacles) :
-    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles)
+    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles), _uavParameters(uavParams)
 {
 }
 
@@ -63,11 +59,11 @@ bool RRTIntermediatePlanner::plan()
         const int branches = 1;
         for (int i = -branches; i <= branches; i++)
         {
-            const qreal angleMod = MAX_TURN_ANGLE * ((qreal)i / (qreal)branches);
+            const qreal angleMod = _uavParameters.maxTurnAngle() * ((qreal)i / (qreal)branches);
             const qreal successorRadians = existingPose.radians() + angleMod;
             QVector2D translateVec(cos(successorRadians), sin(successorRadians));
             translateVec.normalize();
-            translateVec *= EVERY_X_METERS;
+            translateVec *= _uavParameters.waypointInterval();
             const Position successorPos(existingPos.longitude() + lonPerMeter * translateVec.x(),
                                         existingPos.latitude() + latPerMeter * translateVec.y());
             const UAVOrientation successorPose(successorRadians);

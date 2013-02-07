@@ -2,13 +2,14 @@
 #define RRTINTERMEDIATEPLANNER_H
 
 #include "HierarchicalPlanner/IntermediatePlanner.h"
-
+#include "UAVParameters.h"
 #include "QVectorND.h"
 
 class RRTIntermediatePlanner : public IntermediatePlanner
 {
 public:
-    RRTIntermediatePlanner(const Position& startPos,
+    RRTIntermediatePlanner(const UAVParameters& uavParams,
+                           const Position& startPos,
                            const UAVOrientation& startPose,
                            const Position& endPos,
                            const UAVOrientation& endPose,
@@ -25,6 +26,8 @@ private:
     bool _collidesWithObstacle(const Position& pos) const;
 
     QList<Position> _results;
+
+    UAVParameters _uavParameters;
 };
 
 #endif // RRTINTERMEDIATEPLANNER_H
