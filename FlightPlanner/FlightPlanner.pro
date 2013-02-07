@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/TimingConstraintEditor.cpp \
     FlightTasks/TimingConstraint.cpp \
     gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
-    gui/FlightTaskEditors/CoverageTaskEditor.cpp
+    gui/FlightTaskEditors/CoverageTaskEditor.cpp \
+    UAVParameters.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -82,7 +83,8 @@ HEADERS  += \
     gui/FlightTaskEditors/TimingConstraintEditor.h \
     FlightTasks/TimingConstraint.h \
     gui/FlightTaskEditors/FlightTaskEditorFactory.h \
-    gui/FlightTaskEditors/CoverageTaskEditor.h
+    gui/FlightTaskEditors/CoverageTaskEditor.h \
+    UAVParameters.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \

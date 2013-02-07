@@ -1,6 +1,8 @@
 #ifndef UAVPARAMETERSWIDGET_H
 #define UAVPARAMETERSWIDGET_H
 
+#include "UAVParameters.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -13,6 +15,9 @@ class UAVParametersWidget : public QWidget
 public:
     explicit UAVParametersWidget(QWidget *parent = 0);
     ~UAVParametersWidget();
+
+    void setParameters(const UAVParameters& params);
+    UAVParameters parameters() const;
     
 signals:
     
