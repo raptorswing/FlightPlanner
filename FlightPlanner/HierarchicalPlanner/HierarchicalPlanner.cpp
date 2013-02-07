@@ -250,20 +250,20 @@ void HierarchicalPlanner::_buildSchedule()
     //This hash stores node:(transition flight to reach node) relationships
     QHash<QVectorND, QList<Position> > transitionFlights;
 
+    QHash<QVectorND, qreal> actualCosts;
+
     QMultiMap<qreal, QVectorND> worklist;
     QSet<QVectorND> closedSet;
-    worklist.insert(0, startState);
+    worklist.insert((startState - endState).manhattanDistance(), startState);
+    actualCosts.insert(startState, 0);
 
     QList<QVectorND> schedule;
 
     while (!worklist.isEmpty())
     {
-        QMutableMapIterator<qreal, QVectorND> iter(worklist);
-        iter.next();
-        const qreal costKey = iter.key();
-        const QVectorND state = iter.value();
-        closedSet.insert(state);
-        iter.remove();
+        const qreal costKey = worklist.keys().first();
+        const QVectorND state = worklist.value(costKey);
+        worklist.remove(costKey, state);
 
         qDebug() << "At:" << state << "with cost" << costKey;
 
@@ -282,16 +282,17 @@ void HierarchicalPlanner::_buildSchedule()
             break;
         }
 
+        closedSet.insert(state);
+
         //Generate possible transitions
         for (int i = 0; i < state.dimension(); i++)
         {
             QVectorND newState = state;
             newState[i] = qMin<qreal>(taskTimes[i], newState[i] + TIMESLICE);
+            if (newState[i] == state[i])
+                continue;
             if (closedSet.contains(newState))
                 continue;
-
-            //Add newState to closed list so it is never regenerated
-            closedSet.insert(newState);
 
             //newState's parent is state
             parents.insert(newState, state);
@@ -301,7 +302,7 @@ void HierarchicalPlanner::_buildSchedule()
              * The cost is the distance in the state space (draw us toward end node)
              * plus transition penalties ("context switching")
              */
-            qreal cost = (endState - state).manhattanDistance();
+            qreal cost = (endState - newState).manhattanDistance();
             if (!lastTasks.contains(state))
                 cost += _startTransitionSubFlights.value(_tasks2areas[_tasks[i]]).length() * params.waypointInterval() / params.airspeed();
             else if (lastTasks.value(state) == i)
