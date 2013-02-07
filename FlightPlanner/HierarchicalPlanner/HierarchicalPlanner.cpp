@@ -274,7 +274,7 @@ void HierarchicalPlanner::_buildSchedule()
             QVectorND current = state;
             while (true)
             {
-                qDebug() << current;
+                qDebug() << current << actualCosts.value(current);
                 schedule.prepend(current);
                 if (!parents.contains(current))
                     break;
@@ -348,6 +348,24 @@ void HierarchicalPlanner::_buildSchedule()
             endTime = startTime + newState[i] - state[i];
             const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
 
+            //If the newstate violates timing constraints then we won't generate it
+            bool timingViolation = false;
+            foreach(const TimingConstraint& constraint, task->timingConstraints())
+            {
+                if (startTime <= constraint.start() && endTime >= constraint.end())
+                    timingViolation = true;
+                else if (startTime >= constraint.start() && startTime <= constraint.end())
+                    timingViolation = true;
+                else if (endTime >= constraint.start() && endTime <= constraint.end())
+                    timingViolation = true;
+
+                if (timingViolation)
+                    break;
+            }
+            if (timingViolation)
+                continue;
+
+            //If we have found a better way to reach a state then we'll replace the current information
             if (!actualCosts.contains(newState) || actualCosts.value(newState) > tentativeCostToMove)
             {
                 //newState's parent is state
