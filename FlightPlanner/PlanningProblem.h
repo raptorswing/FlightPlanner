@@ -9,6 +9,7 @@
 #include "Position.h"
 #include "FlightTaskArea.h"
 #include "Fitness.h"
+#include "UAVParameters.h"
 
 class PlanningProblem : public QObject
 {
@@ -31,6 +32,9 @@ public:
     Fitness calculateFlightPerformance(const QList<Position>& positions) const;
 
     const QSet<QSharedPointer<FlightTaskArea> >& areas() const;
+
+    const UAVParameters& uavParameters() const;
+    void setUAVParameters(const UAVParameters& nParams);
     
 signals:
     void planningProblemChanged();
@@ -52,6 +56,8 @@ private:
     Position _startingPosition;
 
     QSet<QSharedPointer<FlightTaskArea> > _areas;
+
+    UAVParameters _uavParameters;
     
 };
 

@@ -108,3 +108,15 @@ const QSet<QSharedPointer<FlightTaskArea> > &PlanningProblem::areas() const
 {
     return _areas;
 }
+
+const UAVParameters &PlanningProblem::uavParameters() const
+{
+    return _uavParameters;
+}
+
+void PlanningProblem::setUAVParameters(const UAVParameters &nParams)
+{
+    _uavParameters = nParams;
+
+    this->planningProblemChanged();
+}
