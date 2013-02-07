@@ -264,6 +264,7 @@ void HierarchicalPlanner::_buildSchedule()
         const qreal costKey = worklist.keys().first();
         const QVectorND state = worklist.value(costKey);
         worklist.remove(costKey, state);
+        closedSet.insert(state);
 
         qDebug() << "At:" << state << "with cost" << costKey;
 
@@ -282,8 +283,6 @@ void HierarchicalPlanner::_buildSchedule()
             break;
         }
 
-        closedSet.insert(state);
-
         //Generate possible transitions
         for (int i = 0; i < state.dimension(); i++)
         {
@@ -294,30 +293,37 @@ void HierarchicalPlanner::_buildSchedule()
             if (closedSet.contains(newState))
                 continue;
 
-            //newState's parent is state
-            parents.insert(newState, state);
-            lastTasks.insert(newState, i);
+            const QSharedPointer<FlightTask>& task = _tasks.value(i);
+            const QSharedPointer<FlightTaskArea>& area = _tasks2areas.value(task);
+
+            //The time at which the subflight flying begins and ends.
+            qreal startTime;
+            qreal endTime;
+
+            QList<Position> transitionFlight;
 
             /*
-             * The cost is the distance in the state space (draw us toward end node)
-             * plus transition penalties ("context switching")
+             * The heuristic is the amount of time to fly all remaining tasks assuming no-cost
+             * transitions and no obstacles.
              */
-            qreal cost = (endState - newState).manhattanDistance();
+            qreal heuristic = (endState - newState).manhattanDistance();
             if (!lastTasks.contains(state))
-                cost += _startTransitionSubFlights.value(_tasks2areas[_tasks[i]]).length() * params.waypointInterval() / params.airspeed();
+                transitionFlight = _startTransitionSubFlights.value(area);
             else if (lastTasks.value(state) == i)
-                cost += 0.0;
+            {
+                //Nothing to do here?
+            }
             else
             {
                 //The task we're coming from and the task we're going to
                 const QSharedPointer<FlightTask>& prevTask = _tasks.value(lastTasks.value(state));
-                const QSharedPointer<FlightTask>& nextTask = _tasks.value(lastTasks.value(newState));
+                const QSharedPointer<FlightTaskArea>& prevArea = _tasks2areas.value(prevTask);
 
                 //Get current position and pose
                 Position startPos;
                 UAVOrientation startPose;
                 _interpolatePath(_taskSubFlights.value(prevTask),
-                                 _areaStartOrientations.value(_tasks2areas.value(prevTask)),
+                                 _areaStartOrientations.value(prevArea),
                                  state[_tasks.indexOf(prevTask)],
                         &startPos,
                         &startPose);
@@ -325,20 +331,35 @@ void HierarchicalPlanner::_buildSchedule()
                 //Get position/pose of context switch destination
                 Position endPos;
                 UAVOrientation endPose;
-                _interpolatePath(_taskSubFlights.value(nextTask),
-                                 _areaStartOrientations.value(_tasks2areas.value(nextTask)),
+                _interpolatePath(_taskSubFlights.value(task),
+                                 _areaStartOrientations.value(area),
                                  state[i],
                                  &endPos,
                                  &endPose);
 
                 //Plan intermediate flight
-                QList<Position> intermed = _generateTransitionFlight(startPos, startPose,
+                transitionFlight = _generateTransitionFlight(startPos, startPose,
                                                                      endPos, endPose);
-                cost += intermed.length() * params.waypointInterval() / params.airspeed();
-                transitionFlights.insert(newState, intermed);
             }
 
-            worklist.insert(cost, newState);
+            //The time (if any) needed to fly the transition flight to this task
+            const qreal transitionTime = transitionFlight.length() * params.waypointInterval() / params.airspeed();
+            startTime = actualCosts.value(state) + transitionTime;
+            endTime = startTime + newState[i] - state[i];
+            const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
+
+            if (!actualCosts.contains(newState) || actualCosts.value(newState) > tentativeCostToMove)
+            {
+                //newState's parent is state
+                parents.insert(newState, state);
+
+                actualCosts.insert(newState, tentativeCostToMove);
+                lastTasks.insert(newState, i);
+
+                transitionFlights.insert(newState, transitionFlight);
+
+                worklist.insert(tentativeCostToMove + heuristic, newState);
+            }
         } // Done generating transitions
     } // Done building schedule
 
@@ -354,7 +375,8 @@ void HierarchicalPlanner::_buildSchedule()
 
         if (prevInterval == startState)
             path.append(_startTransitionSubFlights.value(area));
-        else if (lastTasks.value(prevInterval) != taskIndex)
+        else if (prevInterval == startState
+                 || lastTasks.value(prevInterval) != taskIndex)
             path.append(transitionFlights.value(interval));
 
         //Add the portion of the sub-flight that we care about
