@@ -102,8 +102,12 @@ void MainWindow::on_actionExit_triggered()
 //private slot
 void MainWindow::on_actionUAV_Parameters_triggered()
 {
-    UAVParametersWidget * configWidget = new UAVParametersWidget();
+    UAVParametersWidget * configWidget = new UAVParametersWidget(_problem);
     configWidget->setAttribute(Qt::WA_DeleteOnClose);
+    connect(this,
+            SIGNAL(destroyed()),
+            configWidget,
+            SLOT(deleteLater()));
     configWidget->show();
 }
 

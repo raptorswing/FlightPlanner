@@ -213,8 +213,11 @@ void HierarchicalPlanner::_buildSubFlights()
         const Position& start = _areaStartPositions.value(area);
         const UAVOrientation& startPose = _areaStartOrientations.value(area);
 
-        SubFlightPlanner planner(task, area, start, startPose);
+        qDebug() << "Build sub-flight for" << task.data() << area.data() << start << startPose;
+
+        SubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
         planner.plan();
+        qDebug() << planner.results() << "waypoints in length";
 
         _taskSubFlights.insert(task, planner.results());
     }
@@ -268,7 +271,7 @@ bool HierarchicalPlanner::_buildSchedule()
         worklist.remove(costKey, state);
         closedSet.insert(state);
 
-        qDebug() << "At:" << state << "with cost" << costKey;
+        //qDebug() << "At:" << state << "with cost" << costKey;
 
         if (state == endState)
         {
@@ -462,7 +465,6 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
         distanceSoFar += intervalDistance;
         timeSoFar = distanceSoFar / params.airspeed();
 
-        //qDebug() << "step" << i << "time" << timeSoFar << "position" << pos << "last position" << lastPos << "distance" << intervalDistance << "overall" << distanceSoFar;
 
         if (timeSoFar >= goalTime || i == path.size() - 1)
         {
@@ -485,7 +487,7 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
 
     if (timeSoFar < goalTime)
     {
-        qDebug() << "Can't interpolate into future. Goal time" << goalTime << "but only reached" << timeSoFar;
+        //qDebug() << "Can't interpolate into future. Goal time" << goalTime << "but only reached" << timeSoFar;
         //return false;
     }
     return true;
@@ -497,7 +499,7 @@ QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &s
                                                                const Position &endPos,
                                                                const UAVOrientation &endPose)
 {
-    qDebug() << "Intermediate from" << startPos << startPose.radians() << "to" << endPos << endPose.radians();
+    //qDebug() << "Intermediate from" << startPos << startPose.radians() << "to" << endPos << endPose.radians();
     //Adjust the positions backwards a little bit along their angles?
 
     /*

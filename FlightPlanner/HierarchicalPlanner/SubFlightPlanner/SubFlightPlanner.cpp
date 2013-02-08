@@ -12,11 +12,12 @@
 
 const qreal PI = 3.1415926535;
 
-SubFlightPlanner::SubFlightPlanner(const QSharedPointer<FlightTask> &task,
+SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
+                                   const QSharedPointer<FlightTask> &task,
                                    const QSharedPointer<FlightTaskArea> &area,
                                    const Position &startPos,
                                    const UAVOrientation &startPose) :
-    _task(task), _area(area), _startPos(startPos), _startPose(startPose)
+    _uavParams(uavParams), _task(task), _area(area), _startPos(startPos), _startPose(startPose)
 {
 }
 
@@ -54,8 +55,7 @@ void SubFlightPlanner::_greedyPlan()
         //If we've accomplished our task we can quit
         if (score >= _task->maxTaskPerformance())
         {
-            qDebug() << "Done";
-            qDebug() << score;
+            qDebug() << "Done. Performance of" << score << "on sub flight";
             _results = node->path();
             break;
         }
@@ -73,12 +73,13 @@ void SubFlightPlanner::_greedyPlan()
         const qreal latPerMeter = Conversions::degreesLatPerMeter(node->position().latitude());
 
         //Build successors to the current node. Add them to frontier.
-        for (int i = -4; i <= 4; i++)
+        const int branches = 4;
+        for (int i = -branches; i <= branches; i++)
         {
-            qreal successorRadians = node->orientation().radians() + i*(PI / 16.0);
+            qreal successorRadians = node->orientation().radians() + _uavParams.maxTurnAngle() * ((qreal)i / (qreal) branches);
             QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
             successorVec.normalize();
-            successorVec *= 30.0;
+            successorVec *= _uavParams.airspeed();
             Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
                                   node->position().latitude() + latPerMeter * successorVec.y());
 
