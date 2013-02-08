@@ -97,6 +97,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
     QPointF avgLonLat(0.0,0.0);
     foreach(const QSharedPointer<FlightTaskArea>& area, _tasks2areas.values())
         avgLonLat += area->geoPoly().boundingRect().center();
+    avgLonLat += this->problem()->startingPosition().lonLat();
     if (_tasks2areas.values().size() > 0)
         avgLonLat /= _tasks2areas.values().size();
     const QVector3D avgXYZ = Conversions::lla2xyz(Position(avgLonLat));
