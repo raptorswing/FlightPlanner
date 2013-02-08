@@ -58,6 +58,8 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
 
 qreal CoverageTask::maxTaskPerformance() const
 {
+    if (_bins.size() == 0)
+        return FlightTask::maxTaskPerformance();
     return (qreal) _bins.size();
 }
 
