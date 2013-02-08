@@ -46,7 +46,9 @@ SOURCES += main.cpp\
     FlightTasks/TimingConstraint.cpp \
     gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
     gui/FlightTaskEditors/CoverageTaskEditor.cpp \
-    UAVParameters.cpp
+    UAVParameters.cpp \
+    Exporters/Exporter.cpp \
+    Exporters/GPXExporter.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -84,7 +86,9 @@ HEADERS  += \
     FlightTasks/TimingConstraint.h \
     gui/FlightTaskEditors/FlightTaskEditorFactory.h \
     gui/FlightTaskEditors/CoverageTaskEditor.h \
-    UAVParameters.h
+    UAVParameters.h \
+    Exporters/Exporter.h \
+    Exporters/GPXExporter.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -124,3 +128,11 @@ else:unix: LIBS += -L$$OUT_PWD/../QKDTree/ -lQKDTree
 
 INCLUDEPATH += $$PWD/../QKDTree
 DEPENDPATH += $$PWD/../QKDTree
+
+#Linkage for GPX library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../GPX/release/ -lGPX
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../GPX/debug/ -lGPX
+else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
+
+INCLUDEPATH += $$PWD/../GPX
+DEPENDPATH += $$PWD/../GPX

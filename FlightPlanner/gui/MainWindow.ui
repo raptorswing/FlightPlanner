@@ -117,9 +117,6 @@
    </property>
   </action>
   <action name="actionExport_Solution">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/16x16/gui/images/16x16/actions/fileexport.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileexport.png</iconset>

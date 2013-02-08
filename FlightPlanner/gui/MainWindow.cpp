@@ -3,6 +3,7 @@
 
 #include <QtDebug>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "MapGraphicsView.h"
 #include "MapGraphicsScene.h"
@@ -11,6 +12,8 @@
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
 
 #include "UAVParametersWidget.h"
+
+#include "Exporters/GPXExporter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -78,7 +81,46 @@ void MainWindow::on_actionClose_triggered()
 //private slot
 void MainWindow::on_actionExport_Solution_triggered()
 {
+    const QString fileToWrite = QFileDialog::getSaveFileName(this,
+                                                             "Select destination",
+                                                             QString(),
+                                                             "GPX (*.gpx);;");
+    if (fileToWrite.isEmpty())
+        return;
 
+    const QFileInfo info(fileToWrite);
+    const QString suffix = info.suffix().toLower();
+    const QList<Position>& solution = _planner->bestFlightSoFar();
+
+    Exporter * exporter = 0;
+    if (suffix == "gpx")
+        exporter = new GPXExporter(solution);
+    else
+    {
+        QMessageBox::warning(this, "Invalid File Type", "Can't export to " + suffix + " file");
+        return;
+    }
+
+    QByteArray outBytes;
+    if (!exporter->doExport(&outBytes))
+    {
+        QMessageBox::warning(this, "Export Failed", "Unable to export due to unknown error.");
+        return;
+    }
+
+
+    QFile fp(fileToWrite);
+    if (!fp.open(QFile::WriteOnly))
+    {
+        QMessageBox::warning(this,"Export Failed", "Failed to open export file for writing.");
+        return;
+    }
+    const qint64 written = fp.write(outBytes);
+    if (written != outBytes.size())
+    {
+        QMessageBox::warning(this, "Export Failed", "Failed to write all bytes.");
+        return;
+    }
 }
 
 //private slot
