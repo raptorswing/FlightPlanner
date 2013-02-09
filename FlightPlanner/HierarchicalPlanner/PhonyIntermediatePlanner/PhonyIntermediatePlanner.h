@@ -18,7 +18,6 @@ public:
     virtual QList<Position> results() const;
 
 private:
-    UAVParameters _uavParams;
     QList<Position> _results;
 };
 

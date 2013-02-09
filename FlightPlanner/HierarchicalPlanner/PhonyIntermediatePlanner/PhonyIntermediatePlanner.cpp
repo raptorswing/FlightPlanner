@@ -11,7 +11,7 @@ PhonyIntermediatePlanner::PhonyIntermediatePlanner(const UAVParameters& uavParam
                                                    const Position &endPos,
                                                    const UAVOrientation &endPose,
                                                    const QList<QPolygonF> &obstacles) :
-    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles), _uavParams(uavParams)
+    IntermediatePlanner(uavParams, startPos, startPose, endPos, endPose, obstacles)
 {
 }
 
@@ -27,10 +27,10 @@ bool PhonyIntermediatePlanner::plan()
     const qreal distMeters = dirVec.length();
     dirVec.normalize();
 
-    const int intervals = qCeil(distMeters / _uavParams.waypointInterval());
+    const int intervals = qCeil(distMeters / this->uavParams().waypointInterval());
     for (int i = 0; i < intervals; i++)
     {
-        const QVector2D moveVec = dirVec * _uavParams.waypointInterval() * i;
+        const QVector2D moveVec = dirVec * this->uavParams().waypointInterval() * i;
         const Position newPos(this->startPos().longitude() + moveVec.x() * lonPerMeter,
                               this->startPos().latitude() + moveVec.y() * latPerMeter);
         _results.append(newPos);

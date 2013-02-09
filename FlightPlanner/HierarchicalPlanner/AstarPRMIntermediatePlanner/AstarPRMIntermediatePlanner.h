@@ -2,11 +2,13 @@
 #define ASTARPRMINTERMEDIATEPLANNER_H
 
 #include "HierarchicalPlanner/IntermediatePlanner.h"
+#include "UAVParameters.h"
 
 class AstarPRMIntermediatePlanner : public IntermediatePlanner
 {
 public:
-    AstarPRMIntermediatePlanner(const Position& startPos,
+    AstarPRMIntermediatePlanner(const UAVParameters& uavParams,
+                                const Position& startPos,
                                 const UAVOrientation& startPose,
                                 const Position& endPos,
                                 const UAVOrientation& endPose,

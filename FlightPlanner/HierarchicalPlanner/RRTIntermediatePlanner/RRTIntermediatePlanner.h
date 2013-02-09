@@ -26,8 +26,6 @@ private:
     bool _collidesWithObstacle(const Position& pos) const;
 
     QList<Position> _results;
-
-    UAVParameters _uavParameters;
 };
 
 #endif // RRTINTERMEDIATEPLANNER_H

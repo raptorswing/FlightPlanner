@@ -14,7 +14,7 @@ RRTIntermediatePlanner::RRTIntermediatePlanner(const UAVParameters& uavParams,
                                                const Position &endPos,
                                                const UAVOrientation &endPose,
                                                const QList<QPolygonF> &obstacles) :
-    IntermediatePlanner(startPos, startPose, endPos, endPose, obstacles), _uavParameters(uavParams)
+    IntermediatePlanner(uavParams, startPos, startPose, endPos, endPose, obstacles)
 {
 }
 
@@ -59,11 +59,11 @@ bool RRTIntermediatePlanner::plan()
         const int branches = 1;
         for (int i = -branches; i <= branches; i++)
         {
-            const qreal angleMod = _uavParameters.maxTurnAngle() * ((qreal)i / (qreal)branches);
+            const qreal angleMod = this->uavParams().maxTurnAngle() * ((qreal)i / (qreal)branches);
             const qreal successorRadians = existingPose.radians() + angleMod;
             QVector2D translateVec(cos(successorRadians), sin(successorRadians));
             translateVec.normalize();
-            translateVec *= _uavParameters.waypointInterval();
+            translateVec *= this->uavParams().waypointInterval();
             const Position successorPos(existingPos.longitude() + lonPerMeter * translateVec.x(),
                                         existingPos.latitude() + latPerMeter * translateVec.y());
             const UAVOrientation successorPose(successorRadians);

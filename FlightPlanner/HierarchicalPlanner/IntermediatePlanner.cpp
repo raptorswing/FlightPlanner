@@ -1,16 +1,22 @@
 #include "IntermediatePlanner.h"
 
-IntermediatePlanner::IntermediatePlanner(const Position &startPos,
+IntermediatePlanner::IntermediatePlanner(const UAVParameters &uavParams,
+                                         const Position &startPos,
                                          const UAVOrientation &startPose,
                                          const Position &endPos,
                                          const UAVOrientation &endPose,
                                          const QList<QPolygonF> &obstacles) :
-    _startPos(startPos), _startPose(startPose), _endPos(endPos), _endPose(endPose), _obstacles(obstacles)
+    _uavParams(uavParams), _startPos(startPos), _startPose(startPose), _endPos(endPos), _endPose(endPose), _obstacles(obstacles)
 {
 }
 
 IntermediatePlanner::~IntermediatePlanner()
 {
+}
+
+const UAVParameters &IntermediatePlanner::uavParams() const
+{
+    return _uavParams;
 }
 
 const Position &IntermediatePlanner::startPos() const
