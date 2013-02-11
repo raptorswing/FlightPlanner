@@ -16,6 +16,8 @@ UAVParametersWidget::UAVParametersWidget(const QSharedPointer<PlanningProblem> &
             SIGNAL(destroyed()),
             this,
             SLOT(deleteLater()));
+
+    this->setParameters(problem->uavParameters());
 }
 
 UAVParametersWidget::~UAVParametersWidget()
