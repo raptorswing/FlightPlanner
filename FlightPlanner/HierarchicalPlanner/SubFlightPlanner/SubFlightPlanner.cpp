@@ -79,7 +79,7 @@ void SubFlightPlanner::_greedyPlan()
             qreal successorRadians = node->orientation().radians() + _uavParams.maxTurnAngle() * ((qreal)i / (qreal) branches);
             QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
             successorVec.normalize();
-            successorVec *= _uavParams.airspeed();
+            successorVec *= _uavParams.waypointInterval();
             Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
                                   node->position().latitude() + latPerMeter * successorVec.y());
 
