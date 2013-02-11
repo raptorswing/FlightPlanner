@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     UAVParameters.cpp \
     Exporters/Exporter.cpp \
     Exporters/GPXExporter.cpp \
-    FlightTasks/SamplingTask.cpp
+    FlightTasks/SamplingTask.cpp \
+    gui/FlightTaskEditors/SamplingTaskEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -90,7 +91,8 @@ HEADERS  += \
     UAVParameters.h \
     Exporters/Exporter.h \
     Exporters/GPXExporter.h \
-    FlightTasks/SamplingTask.h
+    FlightTasks/SamplingTask.h \
+    gui/FlightTaskEditors/SamplingTaskEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -100,7 +102,8 @@ FORMS    += gui/MainWindow.ui \
     gui/UAVParametersWidget.ui \
     gui/FlightTaskEditors/TimingConstraintSliders.ui \
     gui/FlightTaskEditors/TimingConstraintEditor.ui \
-    gui/FlightTaskEditors/CoverageTaskEditor.ui
+    gui/FlightTaskEditors/CoverageTaskEditor.ui \
+    gui/FlightTaskEditors/SamplingTaskEditor.ui
 
 RESOURCES += \
     resources.qrc
