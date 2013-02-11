@@ -99,8 +99,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         avgLonLat += area->geoPoly().boundingRect().center();
     avgLonLat += this->problem()->startingPosition().lonLat();
     if (_tasks2areas.values().size() > 0)
-        avgLonLat /= _tasks2areas.values().size();
-    const QVector3D avgXYZ = Conversions::lla2xyz(Position(avgLonLat));
+        avgLonLat /= (_tasks2areas.values().size() + 1);
 
     //Then loop through all of the areas and find good points that could be start or end
     //Make the start point the one that is closest to the average computed above
@@ -502,14 +501,10 @@ QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &s
     //qDebug() << "Intermediate from" << startPos << startPose.radians() << "to" << endPos << endPose.radians();
     //Adjust the positions backwards a little bit along their angles?
 
-    /*
-    IntermediatePlanner * intermed = new RRTIntermediatePlanner(this->problem()->uavParameters(),
-                                                                startPos,
-                                                                startPose,
-                                                                endPos,
-                                                                endPose,
-                                                                _obstacles);
-                                                                */
+//    IntermediatePlanner * intermed = new RRTIntermediatePlanner(this->problem()->uavParameters(),
+//                                                                startPos, startPose,
+//                                                                endPos, endPose,
+//                                                                _obstacles);
     IntermediatePlanner * intermed = new PhonyIntermediatePlanner(this->problem()->uavParameters(),
                                                                   startPos, startPose,
                                                                   endPos, endPose,
