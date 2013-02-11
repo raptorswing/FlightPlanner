@@ -17,7 +17,9 @@ QString NoFlyFlightTask::taskType() const
 }
 
 //pure-virtual from FlightTask
-qreal NoFlyFlightTask::calculateFlightPerformance(const QList<Position> &positions, const QPolygonF &geoPoly)
+qreal NoFlyFlightTask::calculateFlightPerformance(const QList<Position> &positions,
+                                                  const QPolygonF &geoPoly,
+                                                  const UAVParameters &)
 {
     qreal fitness = this->maxTaskPerformance();
 

@@ -1,24 +1,30 @@
-#ifndef NOFLYFLIGHTTASK_H
-#define NOFLYFLIGHTTASK_H
+#ifndef SAMPLINGTASK_H
+#define SAMPLINGTASK_H
 
 #include "FlightTask.h"
 
-class NoFlyFlightTask : public FlightTask
+class SamplingTask : public FlightTask
 {
     Q_OBJECT
 public:
-    NoFlyFlightTask();
+    explicit SamplingTask(const qreal timeRequired);
 
-    //virtual from FlightTask
     virtual bool shortnessRewardApplies() const;
 
-    //pure-virtual from FlightTask
     virtual QString taskType() const;
 
-    //pure-virtual from FlightTask
     virtual qreal calculateFlightPerformance(const QList<Position>& positions,
                                              const QPolygonF& geoPoly,
                                              const UAVParameters& uavParams);
+
+    virtual qreal maxTaskPerformance() const;
+
+    qreal timeRequired() const;
+    void setTimeRequired(qreal nTime);
+    
+private:
+    qreal _timeRequired;
+    
 };
 
-#endif // NOFLYFLIGHTTASK_H
+#endif // SAMPLINGTASK_H

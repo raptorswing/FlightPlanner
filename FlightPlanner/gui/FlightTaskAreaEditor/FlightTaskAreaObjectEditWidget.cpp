@@ -5,6 +5,7 @@
 #include "FlightTasks/FlyThroughTask.h"
 #include "FlightTasks/NoFlyFlightTask.h"
 #include "FlightTasks/CoverageTask.h"
+#include "FlightTasks/SamplingTask.h"
 #include "FlightTaskDelegate.h"
 
 FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTaskAreaMapObject> flightTaskAreaObj,
@@ -95,5 +96,19 @@ void FlightTaskAreaObjectEditWidget::on_coverageButton_clicked()
         return;
 
     QSharedPointer<CoverageTask> task(new CoverageTask());
+    flightTaskArea->addTask(task);
+}
+
+//private slot
+void FlightTaskAreaObjectEditWidget::on_addSamplingButton_clicked()
+{
+    if (_flightTaskAreaMapObj.isNull())
+        return;
+
+    QSharedPointer<FlightTaskArea> flightTaskArea = _flightTaskAreaMapObj->flightTaskArea().toStrongRef();
+    if (flightTaskArea.isNull())
+        return;
+
+    QSharedPointer<SamplingTask> task(new SamplingTask(30.0));
     flightTaskArea->addTask(task);
 }

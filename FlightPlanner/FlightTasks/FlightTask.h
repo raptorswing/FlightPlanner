@@ -8,6 +8,7 @@
 
 #include "Position.h"
 #include "TimingConstraint.h"
+#include "UAVParameters.h"
 
 class FlightTask : public QObject
 {
@@ -21,7 +22,8 @@ public:
     virtual QString taskType() const=0;
 
     virtual qreal calculateFlightPerformance(const QList<Position>& positions,
-                                             const QPolygonF& geoPoly)=0;
+                                             const QPolygonF& geoPoly,
+                                             const UAVParameters& uavParams)=0;
 
     virtual qreal priority() const;
 

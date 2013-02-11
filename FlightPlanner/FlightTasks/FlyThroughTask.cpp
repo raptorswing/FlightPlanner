@@ -14,7 +14,8 @@ QString FlyThroughTask::taskType() const
 }
 
 qreal FlyThroughTask::calculateFlightPerformance(const QList<Position> &positions,
-                                                 const QPolygonF &geoPoly)
+                                                 const QPolygonF &geoPoly,
+                                                 const UAVParameters &)
 {
     //First, see if one of the points is within the polygon
     foreach(const Position& pos, positions)

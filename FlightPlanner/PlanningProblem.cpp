@@ -94,7 +94,7 @@ Fitness PlanningProblem::calculateFlightPerformance(const QList<Position> &posit
         const QPolygonF& geoPoly = area->geoPoly();
         foreach(const QSharedPointer<FlightTask>& task, area->tasks())
         {
-            const qreal subScore = task->calculateFlightPerformance(positions, geoPoly);
+            const qreal subScore = task->calculateFlightPerformance(positions, geoPoly, _uavParameters);
             if (task->shortnessRewardApplies() && subScore >= task->maxTaskPerformance())
                 efficiencyScore += subScore / positions.size();
             taskScore += subScore;

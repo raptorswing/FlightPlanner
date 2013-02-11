@@ -86,7 +86,7 @@ void SubFlightPlanner::_greedyPlan()
             UAVOrientation successorPose(successorRadians);
             QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));
 
-            const qreal successorScore = _task->calculateFlightPerformance(successor->path(), _area->geoPoly());
+            const qreal successorScore = _task->calculateFlightPerformance(successor->path(), _area->geoPoly(), _uavParams);
             frontier.insert(successorScore, successor);
         }
     }

@@ -16,7 +16,8 @@ public:
     virtual QString taskType() const;
 
     virtual qreal calculateFlightPerformance(const QList<Position>& positions,
-                                             const QPolygonF& geoPoly);
+                                             const QPolygonF& geoPoly,
+                                             const UAVParameters& uavParams);
 
     virtual qreal maxTaskPerformance() const;
 

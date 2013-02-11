@@ -28,6 +28,8 @@ private slots:
 
     void on_coverageButton_clicked();
 
+    void on_addSamplingButton_clicked();
+
 private:
     Ui::FlightTaskAreaObjectEditWidget *ui;
 

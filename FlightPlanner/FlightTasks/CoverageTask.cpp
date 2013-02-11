@@ -14,7 +14,9 @@ QString CoverageTask::taskType() const
     return "Coverage";
 }
 
-qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions, const QPolygonF &geoPoly)
+qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
+                                               const QPolygonF &geoPoly,
+                                               const UAVParameters &)
 {
     if (positions.isEmpty())
         return 0.0;

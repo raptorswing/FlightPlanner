@@ -12,7 +12,8 @@ public:
     virtual QString taskType() const;
 
     virtual qreal calculateFlightPerformance(const QList<Position>& positions,
-                                             const QPolygonF& geoPoly);
+                                             const QPolygonF& geoPoly,
+                                             const UAVParameters& uavParams);
     
 signals:
     

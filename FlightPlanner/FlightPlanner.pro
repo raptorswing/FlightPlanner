@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/CoverageTaskEditor.cpp \
     UAVParameters.cpp \
     Exporters/Exporter.cpp \
-    Exporters/GPXExporter.cpp
+    Exporters/GPXExporter.cpp \
+    FlightTasks/SamplingTask.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -88,7 +89,8 @@ HEADERS  += \
     gui/FlightTaskEditors/CoverageTaskEditor.h \
     UAVParameters.h \
     Exporters/Exporter.h \
-    Exporters/GPXExporter.h
+    Exporters/GPXExporter.h \
+    FlightTasks/SamplingTask.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
