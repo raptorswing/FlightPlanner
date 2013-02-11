@@ -218,7 +218,6 @@ void HierarchicalPlanner::_buildSubFlights()
 
         SubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
         planner.plan();
-        qDebug() << planner.results() << "waypoints in length";
 
         _taskSubFlights.insert(task, planner.results());
     }
