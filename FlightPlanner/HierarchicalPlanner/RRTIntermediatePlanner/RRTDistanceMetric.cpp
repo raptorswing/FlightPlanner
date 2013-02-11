@@ -4,9 +4,10 @@
 
 #include "guts/Conversions.h"
 
-RRTDistanceMetric::RRTDistanceMetric(qreal latitude) :
+RRTDistanceMetric::RRTDistanceMetric(qreal latitude, qreal minTurnRadius) :
     _lonPerMeter(Conversions::degreesLonPerMeter(latitude)),
-    _latPerMeter(Conversions::degreesLatPerMeter(latitude))
+    _latPerMeter(Conversions::degreesLatPerMeter(latitude)),
+    _minTurnRadius(minTurnRadius)
 {
 }
 
@@ -27,8 +28,7 @@ qreal RRTDistanceMetric::distance(const QVectorND &a, const QVectorND &b)
     const qreal degreeDiff = radianDiff * (180.0 / 3.14159265);
 
     qreal totalCost = distanceInMeters;
-    //if (distanceInMeters < 100.0)
-    totalCost += 0.5 * degreeDiff;
+    totalCost += qMax<qreal>(_minTurnRadius * 2 - distanceInMeters, 0) * 0.5 * degreeDiff;
 
     return totalCost;
 }

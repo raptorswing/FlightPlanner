@@ -6,7 +6,7 @@
 class RRTDistanceMetric : public QKDTreeDistanceMetric
 {
 public:
-    RRTDistanceMetric(qreal latitude);
+    RRTDistanceMetric(qreal latitude, qreal minTurnRadius);
 
     //virtual from QKDTreeDistanceMetric
     virtual qreal distance(const QVectorND& a, const QVectorND& b);
@@ -14,6 +14,7 @@ public:
 private:
     const qreal _lonPerMeter;
     const qreal _latPerMeter;
+    const qreal _minTurnRadius;
 };
 
 #endif // RRTDISTANCEMETRIC_H

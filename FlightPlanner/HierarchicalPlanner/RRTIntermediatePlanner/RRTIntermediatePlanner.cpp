@@ -24,16 +24,19 @@ bool RRTIntermediatePlanner::plan()
 
     const QVectorND goal = _toVec(this->endPos(), this->endPose());
 
-    QKDTree kdtree(3, false, new RRTDistanceMetric(this->endPos().latitude()));
+    QKDTree kdtree(3, false,
+                   new RRTDistanceMetric(this->endPos().latitude(),
+                                         this->uavParams().minTurningRadius()));
 
     QHash<QVectorND, QVectorND> parents;
     kdtree.add(_toVec(this->startPos(), this->startPose()), 1);
 
-    const quint32 squareSize = 5000;
+    const quint32 squareSize = 3.0 * (Conversions::lla2xyz(this->startPos()) - Conversions::lla2xyz(this->endPos())).length();
     const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->startPos().latitude());
     const qreal latPerMeter = Conversions::degreesLatPerMeter(this->startPos().latitude());
 
     int count = 0;
+    qreal bestDistToGoal = std::numeric_limits<qreal>::max();
     while (count++ < 50000)
     {
         //Generate random place in state space
@@ -56,7 +59,7 @@ bool RRTIntermediatePlanner::plan()
         QVectorND bestNew(kdtree.dimension());
         qreal bestNewDist = std::numeric_limits<qreal>::max();
 
-        const int branches = 1;
+        const int branches = 3;
         for (int i = -branches; i <= branches; i++)
         {
             const qreal angleMod = this->uavParams().maxTurnAngle() * ((qreal)i / (qreal)branches);
@@ -87,7 +90,12 @@ bool RRTIntermediatePlanner::plan()
         parents.insert(bestNew, nearestExisting);
 
         const qreal distToGoal = kdtree.distanceMetric()->distance(goal, bestNew);
-        if (distToGoal < 50.0)
+        if (distToGoal < bestDistToGoal)
+        {
+            bestDistToGoal = distToGoal;
+            qDebug() << distToGoal;
+        }
+        if (distToGoal < 1.8 * this->uavParams().waypointInterval())
         {
             qDebug() << "Solution found - trace back";
             QVectorND current = bestNew;
