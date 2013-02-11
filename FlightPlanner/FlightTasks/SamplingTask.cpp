@@ -4,27 +4,19 @@ SamplingTask::SamplingTask(const qreal timeRequired) : _timeRequired(timeRequire
 {
 }
 
+//virtual from FlightTask
 bool SamplingTask::shortnessRewardApplies() const
 {
     return true;
 }
 
-qreal SamplingTask::maxTaskPerformance() const
+//virtual from FlightTask
+QString SamplingTask::taskType() const
 {
-    return _timeRequired;
+    return "Sampling";
 }
 
-qreal SamplingTask::timeRequired() const
-{
-    return _timeRequired;
-}
-
-void SamplingTask::setTimeRequired(qreal nTime)
-{
-    _timeRequired = nTime;
-    this->flightTaskChanged();
-}
-
+//virtual from FlightTask
 qreal SamplingTask::calculateFlightPerformance(const QList<Position> &positions,
                                                const QPolygonF &geoPoly,
                                                const UAVParameters &uavParams)
@@ -43,7 +35,19 @@ qreal SamplingTask::calculateFlightPerformance(const QList<Position> &positions,
     return toRet;
 }
 
-QString SamplingTask::taskType() const
+//virtual from FlightTask
+qreal SamplingTask::maxTaskPerformance() const
 {
-    return "Sampling";
+    return _timeRequired;
+}
+
+qreal SamplingTask::timeRequired() const
+{
+    return _timeRequired;
+}
+
+void SamplingTask::setTimeRequired(qreal nTime)
+{
+    _timeRequired = nTime;
+    this->flightTaskChanged();
 }
