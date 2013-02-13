@@ -50,7 +50,9 @@ SOURCES += main.cpp\
     Exporters/Exporter.cpp \
     Exporters/GPXExporter.cpp \
     FlightTasks/SamplingTask.cpp \
-    gui/FlightTaskEditors/SamplingTaskEditor.cpp
+    gui/FlightTaskEditors/SamplingTaskEditor.cpp \
+    HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.cpp \
+    HierarchicalPlanner/DubinsIntermediate/dubins.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -92,7 +94,9 @@ HEADERS  += \
     Exporters/Exporter.h \
     Exporters/GPXExporter.h \
     FlightTasks/SamplingTask.h \
-    gui/FlightTaskEditors/SamplingTaskEditor.h
+    gui/FlightTaskEditors/SamplingTaskEditor.h \
+    HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h \
+    HierarchicalPlanner/DubinsIntermediate/dubins.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
