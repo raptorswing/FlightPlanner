@@ -318,6 +318,7 @@ void MainWindow::updateDisplayedFlight()
     {
         CircleObject * obj = new CircleObject(5.0, true, QColor(255,255,0));
         obj->setPos(pos.lonLat());
+        obj->setZValue(100.0);
         _scene->addObject(obj);
         _displayedPathObjects.append(obj);
     }
