@@ -51,8 +51,9 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
             continue;
 
         const qreal distance = (lastPosXYZ - _xyzBins.value(i)).length();
-        enticement = FlightTask::normal(distance, 200.0, 10.0);
-        break;
+        const qreal currentEnticement = FlightTask::normal(distance, 200.0, 10.0);
+        if (currentEnticement > enticement)
+            enticement = currentEnticement;
     }
 
     return reward + enticement;
