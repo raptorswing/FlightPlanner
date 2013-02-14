@@ -19,12 +19,17 @@ GPX::~GPX()
 
 void GPX::setPoints(QList<GPXPoint> nPoints)
 {
-    this->points = nPoints;
+    _points = nPoints;
+}
+
+const QList<GPXPoint> &GPX::points() const
+{
+    return _points;
 }
 
 void GPX::appendPoint(GPXPoint point)
 {
-    this->points.append(point);
+    _points.append(point);
 }
 
 bool GPX::toXML(QByteArray *dest, QString *)
@@ -46,7 +51,7 @@ bool GPX::toXML(QByteArray *dest, QString *)
     track.appendChild(segment);
 
 
-    foreach(GPXPoint point, this->points)
+    foreach(GPXPoint point, _points)
     {
         QDomElement trackPoint = doc.createElement("trkpt");
         trackPoint.setAttribute("lat",point.latitude);

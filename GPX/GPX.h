@@ -23,6 +23,12 @@ public:
     void setPoints(QList<GPXPoint>);
 
     /**
+     * @brief points returns the list of points within this GPX object.
+     * @return
+     */
+    const QList<GPXPoint>& points() const;
+
+    /**
      * @brief Append a single point to the GPX track
      *
      * @param GPXPoint
@@ -54,7 +60,7 @@ public:
     static bool parseGPXFile(QString filePath, GPX * output, QString * messages =0);
 
 private:
-    QList<GPXPoint> points;
+    QList<GPXPoint> _points;
 };
 
 #endif // GPX_H
