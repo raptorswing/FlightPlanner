@@ -26,7 +26,7 @@ bool DubinsIntermediatePlanner::plan()
     DubinsPath path;
 
     //Some added noise to start so that start pos != end pos, which breaks the dubin solver
-    qreal start[3] = {0.001, 0.001, this->startPose().radians()};
+    qreal start[3] = {0.0001, 0.0001, this->startPose().radians()};
     qreal end[3] = {(this->endPos().longitude() - this->startPos().longitude()) / lonPerMeter,
                     (this->endPos().latitude() - this->startPos().latitude()) / latPerMeter,
                    this->endPose().radians()};
