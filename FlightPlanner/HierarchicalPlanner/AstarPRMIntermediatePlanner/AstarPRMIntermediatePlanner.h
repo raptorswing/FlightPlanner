@@ -18,6 +18,8 @@ public:
     virtual QList<Position> results() const;
 
 private:
+    void _toRealPath(const QList<Position> &metaPlan);
+
     QList<Position> _results;
 
 };

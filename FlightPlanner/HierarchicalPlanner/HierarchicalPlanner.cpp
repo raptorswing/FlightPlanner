@@ -5,8 +5,7 @@
 #include "QVectorND.h"
 #include "SubFlightPlanner/SubFlightPlanner.h"
 #include "SubFlightPlanner/SubFlightNode.h"
-#include "RRTIntermediatePlanner/RRTIntermediatePlanner.h"
-#include "PhonyIntermediatePlanner/PhonyIntermediatePlanner.h"
+#include "AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h"
 #include "DubinsIntermediate/DubinsIntermediatePlanner.h"
 
 #include <QMap>
@@ -502,18 +501,14 @@ QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &s
     //qDebug() << "Intermediate from" << startPos << startPose.radians() << "to" << endPos << endPose.radians();
     //Adjust the positions backwards a little bit along their angles?
 
-    //    IntermediatePlanner * intermed = new RRTIntermediatePlanner(this->problem()->uavParameters(),
-    //                                                                startPos, startPose,
-    //                                                                endPos, endPose,
-    //                                                                _obstacles);
-    //    IntermediatePlanner * intermed = new PhonyIntermediatePlanner(this->problem()->uavParameters(),
-    //                                                                  startPos, startPose,
-    //                                                                  endPos, endPose,
-    //                                                                  _obstacles);
-    DubinsIntermediatePlanner * intermed = new DubinsIntermediatePlanner(this->problem()->uavParameters(),
-                                                                         startPos, startPose,
-                                                                         endPos, endPose,
-                                                                         _obstacles);
+    //    DubinsIntermediatePlanner * intermed = new DubinsIntermediatePlanner(this->problem()->uavParameters(),
+    //                                                                         startPos, startPose,
+    //                                                                         endPos, endPose,
+    //                                                                         _obstacles);
+    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
+                                                                             startPos, startPose,
+                                                                             endPos, endPose,
+                                                                             _obstacles);
     intermed->plan();
     QList<Position> toRet = intermed->results();
     delete intermed;
