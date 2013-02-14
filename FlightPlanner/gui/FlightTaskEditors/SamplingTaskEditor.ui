@@ -19,6 +19,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="TaskNameEditor" name="taskNameEditor" native="true"/>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Sampling Configuration</string>
@@ -93,6 +96,12 @@
    <class>TimingConstraintEditor</class>
    <extends>QWidget</extends>
    <header location="global">gui/FlightTaskEditors/TimingConstraintEditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TaskNameEditor</class>
+   <extends>QWidget</extends>
+   <header location="global">gui/FlightTaskEditors/TaskNameEditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

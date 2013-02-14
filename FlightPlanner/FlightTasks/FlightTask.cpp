@@ -7,6 +7,7 @@ const qreal SQRT2PI = sqrt(2.0*PI);
 
 FlightTask::FlightTask()
 {
+    _taskName = "Untitled";
 }
 
 FlightTask::~FlightTask()
@@ -55,6 +56,17 @@ void FlightTask::removeTimingConstraint(const TimingConstraint &nConstraint)
 void FlightTask::removeTimingConstraintAt(int index)
 {
     _timingConstraints.removeAt(index);
+    this->flightTaskChanged();
+}
+
+const QString &FlightTask::taskName() const
+{
+    return _taskName;
+}
+
+void FlightTask::setTaskName(const QString &nName)
+{
+    _taskName = nName;
     this->flightTaskChanged();
 }
 

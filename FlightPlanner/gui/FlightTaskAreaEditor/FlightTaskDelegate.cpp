@@ -27,7 +27,7 @@ void FlightTaskDelegate::paint(QPainter *painter,
         backgroundBrush = option.palette.highlight();
     painter->fillRect(option.rect, backgroundBrush);
 
-    painter->drawText(option.rect, Qt::AlignVCenter | Qt::AlignLeft, task->taskType());
+    painter->drawText(option.rect, Qt::AlignVCenter | Qt::AlignLeft, task->taskType() + " - " + task->taskName());
 
     painter->restore();
 }

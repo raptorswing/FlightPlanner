@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPolygonF>
 #include <QList>
+#include <QString>
 
 #include "Position.h"
 #include "TimingConstraint.h"
@@ -36,6 +37,9 @@ public:
     void removeTimingConstraint(const TimingConstraint& nConstraint);
     void removeTimingConstraintAt(int index);
 
+    const QString& taskName() const;
+    void setTaskName(const QString& nName);
+
 signals:
     void flightTaskChanged();
 
@@ -44,6 +48,7 @@ protected:
 
 private:
     QList<TimingConstraint> _timingConstraints;
+    QString _taskName;
 };
 
 #endif // FLIGHTTASK_H

@@ -39,6 +39,7 @@ void CoverageTaskEditor::loadState()
     this->ui->granularitySpinbox->setValue(task->granularity());
     this->ui->maxDistanceSpinbox->setValue(task->maxDistance());
     this->ui->timingConstraintEditor->setTimingConstraints(task->timingConstraints());
+    this->ui->taskNameEditor->setName(task->taskName());
 }
 
 //private slot
@@ -51,6 +52,7 @@ void CoverageTaskEditor::saveState()
     task->setGranularity(this->ui->granularitySpinbox->value());
     task->setMaxDistance(this->ui->maxDistanceSpinbox->value());
     task->setTimingConstraints(this->ui->timingConstraintEditor->timingConstraints());
+    task->setTaskName(this->ui->taskNameEditor->name());
 }
 
 //private slot

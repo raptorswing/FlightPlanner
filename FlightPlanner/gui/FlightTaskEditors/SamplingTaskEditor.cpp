@@ -36,6 +36,7 @@ void SamplingTaskEditor::saveState()
 
     task->setTimeRequired(this->ui->samplingTimeSpinbox->value());
     task->setTimingConstraints(this->ui->timingConstraintEditor->timingConstraints());
+    task->setTaskName(this->ui->taskNameEditor->name());
 }
 
 //private slot
@@ -47,6 +48,7 @@ void SamplingTaskEditor::loadState()
 
     this->ui->samplingTimeSpinbox->setValue(task->timeRequired());
     this->ui->timingConstraintEditor->setTimingConstraints(task->timingConstraints());
+    this->ui->taskNameEditor->setName(task->taskName());
 }
 
 //private slot

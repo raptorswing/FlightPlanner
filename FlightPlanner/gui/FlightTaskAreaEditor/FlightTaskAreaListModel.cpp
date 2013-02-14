@@ -51,7 +51,8 @@ QVariant FlightTaskAreaListModel::data(const QModelIndex &index, int role) const
     const QList<QSharedPointer<FlightTask> >& tasks = strong->tasks();
     if (role == Qt::DisplayRole)
     {
-        return QVariant(tasks[index.row()]->taskType());
+        const QSharedPointer<FlightTask>& task = tasks.at(index.row());
+        return QVariant(task->taskType() + " - " + task->taskName());
     }
     else
         return QVariant();

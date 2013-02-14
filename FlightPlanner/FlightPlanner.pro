@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     FlightTasks/SamplingTask.cpp \
     gui/FlightTaskEditors/SamplingTaskEditor.cpp \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.cpp \
-    HierarchicalPlanner/DubinsIntermediate/dubins.cpp
+    HierarchicalPlanner/DubinsIntermediate/dubins.cpp \
+    gui/FlightTaskEditors/TaskNameEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -96,7 +97,8 @@ HEADERS  += \
     FlightTasks/SamplingTask.h \
     gui/FlightTaskEditors/SamplingTaskEditor.h \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h \
-    HierarchicalPlanner/DubinsIntermediate/dubins.h
+    HierarchicalPlanner/DubinsIntermediate/dubins.h \
+    gui/FlightTaskEditors/TaskNameEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -107,7 +109,8 @@ FORMS    += gui/MainWindow.ui \
     gui/FlightTaskEditors/TimingConstraintSliders.ui \
     gui/FlightTaskEditors/TimingConstraintEditor.ui \
     gui/FlightTaskEditors/CoverageTaskEditor.ui \
-    gui/FlightTaskEditors/SamplingTaskEditor.ui
+    gui/FlightTaskEditors/SamplingTaskEditor.ui \
+    gui/FlightTaskEditors/TaskNameEditor.ui
 
 RESOURCES += \
     resources.qrc
