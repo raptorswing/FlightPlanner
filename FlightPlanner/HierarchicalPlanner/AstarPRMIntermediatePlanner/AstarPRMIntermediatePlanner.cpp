@@ -1,6 +1,6 @@
 #include "AstarPRMIntermediatePlanner.h"
 
-const qreal GRANULARITY = 150.0;
+const qreal GRANULARITY = 300.0;
 
 #include <QMultiMap>
 #include <QSet>
@@ -48,6 +48,7 @@ bool AstarPRMIntermediatePlanner::plan()
         if (current.flatDistanceEstimate(this->endPos()) < GRANULARITY)
         {
             QList<Position> metaPlan;
+            metaPlan.append(this->endPos());
 
             //Trace back
             Position trace = current;
@@ -120,9 +121,9 @@ void AstarPRMIntermediatePlanner::_toRealPath(const QList<Position>& metaPlan)
         const Position& current = metaPlan.at(i);
         const Position& next = metaPlan.at(i+1);
 
-        const qreal prevAngle = prev.angleTo(current);
-        const qreal nextAngle = current.angleTo(next);
-        const qreal avg = (prevAngle + nextAngle) / 2.0;
+        const UAVOrientation prevAngle(prev.angleTo(current));
+        const UAVOrientation nextAngle(current.angleTo(next));
+        const UAVOrientation avg = UAVOrientation::average(prevAngle, nextAngle);
 
         orientations.append(UAVOrientation(avg));
     }
@@ -142,12 +143,4 @@ void AstarPRMIntermediatePlanner::_toRealPath(const QList<Position>& metaPlan)
         _results.append(intermed->results());
         delete intermed;
     }
-
-    IntermediatePlanner * intermed = new DubinsIntermediatePlanner(this->uavParams(),
-                                                                   metaPlan.last(), orientations.last(),
-                                                                   this->endPos(), this->endPose(),
-                                                                   this->obstacles());
-    intermed->plan();
-    _results.append(intermed->results());
-    delete intermed;
 }
