@@ -46,30 +46,35 @@ void FlightTaskAreaMapObject::paint(QPainter *painter, const QStyleOptionGraphic
 {
     QSharedPointer<FlightTaskArea> area = _area.toStrongRef();
     if (area.isNull())
-        PolygonObject::paint(painter, option, widget);
-    else if (area->tasks().isEmpty())
-        PolygonObject::paint(painter, option, widget);
-    else if (area->tasks()[0]->taskType() == "Coverage")
-    {
-        PolygonObject::paint(painter, option, widget);
-        QSharedPointer<CoverageTask> task = area->tasks()[0].dynamicCast<CoverageTask>();
-        task->_calculateBins(area->geoPoly());
+        return;
 
-        Position bbCenter(area->geoPoly().boundingRect().center(), 0.0);
-
-        int count = 0;
-        foreach(const Position& pos, task->_bins)
-        {
-            QVector3D enuPos = Position::Position2ENU(bbCenter, pos);
-            QPoint center(enuPos.x(), enuPos.y());
-            painter->drawEllipse(center,3, 3);
-            painter->drawText(center, QString::number(count++));
-        }
-    }
+    if (area->tasks().isEmpty())
+        PolygonObject::paint(painter, option, widget);
     else
     {
-        PolygonObject::paint(painter, option, widget);
+        QString taskType = "";
+        foreach(const QSharedPointer<FlightTask>& task, area->tasks())
+        {
+            if (taskType.isEmpty())
+                taskType = task->taskType();
+            else if (task->taskType() != taskType)
+            {
+                taskType = "Mixed";
+                break;
+            }
+        }
+
+        QColor fillColor(255, 255, 255, 100);
+        if (taskType == "No-Fly Zone")
+            fillColor = QColor(255, 0, 0, 100);
+        else if (taskType == "Coverage")
+            fillColor = QColor(0, 255, 0, 100);
+        else if (taskType == "Sampling")
+            fillColor = QColor(0, 0, 255, 100);
+        this->setFillColor(fillColor);
     }
+
+    PolygonObject::paint(painter, option, widget);
 
 }
 
