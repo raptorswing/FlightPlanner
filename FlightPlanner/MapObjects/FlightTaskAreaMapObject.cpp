@@ -34,6 +34,8 @@ FlightTaskAreaMapObject::FlightTaskAreaMapObject(QWeakPointer<PlanningProblem> p
 
     //Use these to force initialization
     this->handleFlightAreaGeoPolyChanged(strong->geoPoly());
+
+    this->setZValue(1.0);
 }
 
 QWeakPointer<FlightTaskArea> FlightTaskAreaMapObject::flightTaskArea() const
