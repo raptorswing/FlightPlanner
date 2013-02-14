@@ -37,7 +37,7 @@ bool DubinsIntermediatePlanner::plan()
         return false;
 
     const qreal lengthMeters = dubins_path_length(&path);
-    const int numSamples = qCeil(lengthMeters / this->uavParams().waypointInterval());
+    const int numSamples = qRound(lengthMeters / this->uavParams().waypointInterval());
 
     //Convert back to lat/lon
     for (int i = 0; i < numSamples; i++)
