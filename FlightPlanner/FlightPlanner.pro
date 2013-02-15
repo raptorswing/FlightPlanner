@@ -41,8 +41,8 @@ SOURCES += main.cpp\
     gui/FlightTaskAreaEditor/FlightTaskDelegate.cpp \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.cpp \
     gui/UAVParametersWidget.cpp \
-    gui/FlightTaskEditors/TimingConstraintSliders.cpp \
-    gui/FlightTaskEditors/TimingConstraintEditor.cpp \
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintSliders.cpp \
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.cpp \
     FlightTasks/TimingConstraint.cpp \
     gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
     gui/FlightTaskEditors/CoverageTaskEditor.cpp \
@@ -50,10 +50,13 @@ SOURCES += main.cpp\
     Exporters/Exporter.cpp \
     Exporters/GPXExporter.cpp \
     FlightTasks/SamplingTask.cpp \
-    gui/FlightTaskEditors/SamplingTaskEditor.cpp \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.cpp \
     HierarchicalPlanner/DubinsIntermediate/dubins.cpp \
-    gui/FlightTaskEditors/TaskNameEditor.cpp
+    gui/FlightTaskEditors/SubWidgets/TaskNameEditor.cpp \
+    gui/FlightTaskEditors/FlightTaskEditor.cpp \
+    gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.cpp \
+    gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.cpp \
+    gui/FlightTaskEditors/SamplingTaskEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -86,8 +89,8 @@ HEADERS  += \
     gui/FlightTaskAreaEditor/FlightTaskDelegate.h \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.h \
     gui/UAVParametersWidget.h \
-    gui/FlightTaskEditors/TimingConstraintSliders.h \
-    gui/FlightTaskEditors/TimingConstraintEditor.h \
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintSliders.h \
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.h \
     FlightTasks/TimingConstraint.h \
     gui/FlightTaskEditors/FlightTaskEditorFactory.h \
     gui/FlightTaskEditors/CoverageTaskEditor.h \
@@ -95,10 +98,13 @@ HEADERS  += \
     Exporters/Exporter.h \
     Exporters/GPXExporter.h \
     FlightTasks/SamplingTask.h \
-    gui/FlightTaskEditors/SamplingTaskEditor.h \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h \
     HierarchicalPlanner/DubinsIntermediate/dubins.h \
-    gui/FlightTaskEditors/TaskNameEditor.h
+    gui/FlightTaskEditors/SubWidgets/TaskNameEditor.h \
+    gui/FlightTaskEditors/FlightTaskEditor.h \
+    gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.h \
+    gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.h \
+    gui/FlightTaskEditors/SamplingTaskEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -106,11 +112,12 @@ FORMS    += gui/MainWindow.ui \
     gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.ui \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.ui \
     gui/UAVParametersWidget.ui \
-    gui/FlightTaskEditors/TimingConstraintSliders.ui \
-    gui/FlightTaskEditors/TimingConstraintEditor.ui \
-    gui/FlightTaskEditors/CoverageTaskEditor.ui \
-    gui/FlightTaskEditors/SamplingTaskEditor.ui \
-    gui/FlightTaskEditors/TaskNameEditor.ui
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintSliders.ui \
+    gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.ui \
+    gui/FlightTaskEditors/SubWidgets/TaskNameEditor.ui \
+    gui/FlightTaskEditors/FlightTaskEditor.ui \
+    gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.ui \
+    gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.ui
 
 RESOURCES += \
     resources.qrc

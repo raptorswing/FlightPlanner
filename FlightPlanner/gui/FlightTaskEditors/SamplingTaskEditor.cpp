@@ -1,65 +1,31 @@
 #include "SamplingTaskEditor.h"
-#include "ui_SamplingTaskEditor.h"
 
 SamplingTaskEditor::SamplingTaskEditor(const QSharedPointer<SamplingTask> task, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::SamplingTaskEditor),
+    FlightTaskEditor(task, parent),
     _task(task)
 {
-    ui->setupUi(this);
+    _myWidgets = new SamplingTaskEditorWidgets(this);
+    this->addEditorWidget(_myWidgets);
 
-    if (_task.isNull())
-    {
-        this->deleteLater();
-        return;
-    }
-
-    connect(task.data(),
-            SIGNAL(destroyed()),
-            this,
-            SLOT(deleteLater()));
-
-    this->loadState();
+    this->setWindowTitle("Edit Sampling Task");
 }
 
-SamplingTaskEditor::~SamplingTaskEditor()
+//protected slot
+void SamplingTaskEditor::loadSub()
 {
-    delete ui;
-}
-
-//private slot
-void SamplingTaskEditor::saveState()
-{
-    QSharedPointer<SamplingTask> task = _task.toStrongRef();
-    if (task.isNull())
+    QSharedPointer<SamplingTask> strong = _task.toStrongRef();
+    if (strong.isNull())
         return;
 
-    task->setTimeRequired(this->ui->samplingTimeSpinbox->value());
-    task->setTimingConstraints(this->ui->timingConstraintEditor->timingConstraints());
-    task->setTaskName(this->ui->taskNameEditor->name());
+    _myWidgets->setMinimumSamplingTime(strong->timeRequired());
 }
 
-//private slot
-void SamplingTaskEditor::loadState()
+//protected slot
+void SamplingTaskEditor::saveSub()
 {
-    QSharedPointer<SamplingTask> task = _task.toStrongRef();
-    if (task.isNull())
+    QSharedPointer<SamplingTask> strong = _task.toStrongRef();
+    if (strong.isNull())
         return;
 
-    this->ui->samplingTimeSpinbox->setValue(task->timeRequired());
-    this->ui->timingConstraintEditor->setTimingConstraints(task->timingConstraints());
-    this->ui->taskNameEditor->setName(task->taskName());
-}
-
-//private slot
-void SamplingTaskEditor::on_cancelButton_clicked()
-{
-    this->deleteLater();
-}
-
-//private slot
-void SamplingTaskEditor::on_okButton_clicked()
-{
-    this->saveState();
-    this->deleteLater();
+    strong->setTimeRequired(_myWidgets->minimumSamplingTime());
 }

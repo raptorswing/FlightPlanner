@@ -5,12 +5,11 @@
 #include <QSharedPointer>
 
 #include "FlightTasks/CoverageTask.h"
+#include "FlightTaskEditor.h"
 
-namespace Ui {
-class CoverageTaskEditor;
-}
+#include "SubWidgets/CoverageTaskEditorWidgets.h"
 
-class CoverageTaskEditor : public QWidget
+class CoverageTaskEditor : public FlightTaskEditor
 {
     Q_OBJECT
     
@@ -18,18 +17,14 @@ public:
     explicit CoverageTaskEditor(const QSharedPointer<CoverageTask> task, QWidget *parent = 0);
     ~CoverageTaskEditor();
 
-private slots:
-    void loadState();
-    void saveState();
-    
-    void on_cancelButton_clicked();
-
-    void on_okButton_clicked();
+protected slots:
+    void loadSub();
+    void saveSub();
 
 private:
-    Ui::CoverageTaskEditor *ui;
-
     QWeakPointer<CoverageTask> _task;
+
+    CoverageTaskEditorWidgets * _myWidgets;
 };
 
 #endif // COVERAGETASKEDITOR_H

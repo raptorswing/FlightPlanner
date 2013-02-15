@@ -1,0 +1,53 @@
+#ifndef FLIGHTTASKEDITOR_H
+#define FLIGHTTASKEDITOR_H
+
+#include <QWidget>
+#include <QSharedPointer>
+
+#include "FlightTasks/FlightTask.h"
+
+#include "SubWidgets/TaskNameEditor.h"
+#include "SubWidgets/TimingConstraintEditor.h"
+
+namespace Ui {
+class FlightTaskEditor;
+}
+
+class FlightTaskEditor : public QWidget
+{
+    Q_OBJECT
+    
+public:
+    explicit FlightTaskEditor(QSharedPointer<FlightTask> task, QWidget *parent = 0);
+    virtual ~FlightTaskEditor();
+
+protected:
+    /**
+     * @brief addEditorWidget is a method for subclasses to add their custom GUI elements to the layout.
+     * Widgets will be added vertically top-to-bottom, first-come, first-served.
+     * @param widget
+     */
+    void addEditorWidget(QWidget * widget);
+
+public slots:
+    void load();
+    void save();
+
+protected slots:
+    virtual void loadSub()=0;
+    virtual void saveSub()=0;
+    
+private slots:
+    void on_cancelButton_clicked();
+
+    void on_okButton_clicked();
+
+private:
+    Ui::FlightTaskEditor *ui;
+    QWeakPointer<FlightTask> _baseTask;
+
+    TaskNameEditor * _taskNameEditor;
+    TimingConstraintEditor * _timingConstraintsEditor;
+};
+
+#endif // FLIGHTTASKEDITOR_H

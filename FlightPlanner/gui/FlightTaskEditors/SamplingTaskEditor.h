@@ -1,34 +1,32 @@
 #ifndef SAMPLINGTASKEDITOR_H
 #define SAMPLINGTASKEDITOR_H
 
-#include <QWidget>
+#include "FlightTaskEditor.h"
+
 #include <QSharedPointer>
 
 #include "FlightTasks/SamplingTask.h"
+#include "SubWidgets/SamplingTaskEditorWidgets.h"
 
-namespace Ui {
-class SamplingTaskEditor;
-}
-
-class SamplingTaskEditor : public QWidget
+class SamplingTaskEditor : public FlightTaskEditor
 {
     Q_OBJECT
-    
 public:
     explicit SamplingTaskEditor(const QSharedPointer<SamplingTask> task, QWidget *parent = 0);
-    ~SamplingTaskEditor();
     
-private slots:
-    void saveState();
-    void loadState();
-    void on_cancelButton_clicked();
+signals:
+    
+public slots:
 
-    void on_okButton_clicked();
+protected slots:
+    virtual void loadSub();
+    virtual void saveSub();
 
 private:
-    Ui::SamplingTaskEditor *ui;
-
     QWeakPointer<SamplingTask> _task;
+
+    SamplingTaskEditorWidgets * _myWidgets;
+    
 };
 
 #endif // SAMPLINGTASKEDITOR_H

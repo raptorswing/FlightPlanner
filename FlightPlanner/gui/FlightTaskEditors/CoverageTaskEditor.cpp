@@ -1,69 +1,39 @@
 #include "CoverageTaskEditor.h"
-#include "ui_CoverageTaskEditor.h"
 
 #include <QTimer>
 
 CoverageTaskEditor::CoverageTaskEditor(const QSharedPointer<CoverageTask> task, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::CoverageTaskEditor),
+    FlightTaskEditor(task, parent),
     _task(task)
 {
-    ui->setupUi(this);
+    _myWidgets = new CoverageTaskEditorWidgets(this);
+    this->addEditorWidget(_myWidgets);
 
-    if (_task.isNull())
-    {
-        QTimer::singleShot(1, this, SLOT(deleteLater()));
-        return;
-    }
-
-    connect(task.data(),
-            SIGNAL(destroyed()),
-            this,
-            SLOT(deleteLater()));
-
-    this->loadState();
+    this->setWindowTitle("Edit Coverage Task");
 }
 
 CoverageTaskEditor::~CoverageTaskEditor()
 {
-    delete ui;
 }
 
-//private slot
-void CoverageTaskEditor::loadState()
+//protected slot
+void CoverageTaskEditor::loadSub()
 {
     QSharedPointer<CoverageTask> task = _task.toStrongRef();
     if (task.isNull())
         return;
 
-    this->ui->granularitySpinbox->setValue(task->granularity());
-    this->ui->maxDistanceSpinbox->setValue(task->maxDistance());
-    this->ui->timingConstraintEditor->setTimingConstraints(task->timingConstraints());
-    this->ui->taskNameEditor->setName(task->taskName());
+    _myWidgets->setGranularity(task->granularity());
+    _myWidgets->setMaxDistance(task->maxDistance());
 }
 
-//private slot
-void CoverageTaskEditor::saveState()
+//protected slot
+void CoverageTaskEditor::saveSub()
 {
     QSharedPointer<CoverageTask> task = _task.toStrongRef();
     if (task.isNull())
         return;
 
-    task->setGranularity(this->ui->granularitySpinbox->value());
-    task->setMaxDistance(this->ui->maxDistanceSpinbox->value());
-    task->setTimingConstraints(this->ui->timingConstraintEditor->timingConstraints());
-    task->setTaskName(this->ui->taskNameEditor->name());
-}
-
-//private slot
-void CoverageTaskEditor::on_cancelButton_clicked()
-{
-    this->deleteLater();
-}
-
-//private slot
-void CoverageTaskEditor::on_okButton_clicked()
-{
-    this->saveState();
-    this->deleteLater();
+    task->setGranularity(_myWidgets->granularity());
+    task->setMaxDistance(_myWidgets->maxDistance());
 }

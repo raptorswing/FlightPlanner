@@ -14,10 +14,13 @@
    <string>Timing Constraints</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources.qrc">
+   <iconset resource="../../../resources.qrc">
     <normaloff>:/icons/16x16/gui/images/16x16/actions/run.png</normaloff>:/icons/16x16/gui/images/16x16/actions/run.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -43,8 +46,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>355</width>
-           <height>163</height>
+           <width>373</width>
+           <height>181</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -76,7 +79,7 @@
            <string>Add Disallowed Time</string>
           </property>
           <property name="icon">
-           <iconset resource="../../resources.qrc">
+           <iconset resource="../../../resources.qrc">
             <normaloff>:/icons/16x16/gui/images/16x16/actions/edit_add.png</normaloff>:/icons/16x16/gui/images/16x16/actions/edit_add.png</iconset>
           </property>
          </widget>
@@ -102,7 +105,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../resources.qrc"/>
+  <include location="../../../resources.qrc"/>
  </resources>
  <connections/>
 </ui>
