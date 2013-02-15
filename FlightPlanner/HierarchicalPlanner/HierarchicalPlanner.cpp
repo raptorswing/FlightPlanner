@@ -10,6 +10,7 @@
 
 #include <QMap>
 #include <cmath>
+#include <limits>
 
 const qreal TIMESLICE = 15.0; //seconds
 

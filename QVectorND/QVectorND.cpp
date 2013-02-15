@@ -226,7 +226,7 @@ qreal &QVectorND::operator [](int index)
     return _data[index];
 }
 
-const qreal QVectorND::operator [](int index) const
+qreal QVectorND::operator [](int index) const
 {
     if (index < 0 || index >= _dimensions)
         qCritical("Index out of bounds");

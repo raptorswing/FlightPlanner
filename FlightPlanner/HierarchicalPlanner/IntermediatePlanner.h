@@ -35,8 +35,8 @@ public:
 private:
     const UAVParameters& _uavParams;
     const Position& _startPos;
-    const Position& _endPos;
     const UAVOrientation& _startPose;
+    const Position& _endPos;
     const UAVOrientation& _endPose;
     const QList<QPolygonF>& _obstacles;
 };

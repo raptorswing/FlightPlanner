@@ -18,14 +18,14 @@ public:
      * @param distanceMetric the custom distance metric object you would like to use. If 0 euclidean
      * distance squared is used.
      */
-    QKDTree(uint dimension, bool allowDuplicates = false, QKDTreeDistanceMetric * distanceMetric = 0);
+    QKDTree(int dimension, bool allowDuplicates = false, QKDTreeDistanceMetric * distanceMetric = 0);
     ~QKDTree();
 
     /**
      * @brief dimension Returns the dimensionality of the positions stored by this tree.
      * @return
      */
-    uint dimension() const;
+    int dimension() const;
 
     /**
      * @brief size Returns the number of key/value pairs in the tree
@@ -64,7 +64,7 @@ public:
     void debugPrint();
 
 private:
-    uint _dimension;
+    int _dimension;
     qint64 _size;
 
     QKDTreeNode * _root;

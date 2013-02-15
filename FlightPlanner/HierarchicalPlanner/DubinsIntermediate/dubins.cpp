@@ -38,7 +38,9 @@ using namespace std;
 #define S_SEG (1)
 #define R_SEG (2)
 
+#ifndef INFINITY
 #define INFINITY std::numeric_limits<qreal>::infinity();
+#endif
 #ifndef M_PI
 #define M_PI 3.14159265
 #endif

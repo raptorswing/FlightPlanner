@@ -9,7 +9,7 @@
 const QString ERR_STRING_BAD_DIM = "Dimension of position does not match that of tree.";
 const QString ERR_STRING_BAD_OUTPTR = "You didn't provide a pointer for output.";
 
-QKDTree::QKDTree(uint dimension, bool allowDuplicates, QKDTreeDistanceMetric *distanceMetric) :
+QKDTree::QKDTree(int dimension, bool allowDuplicates, QKDTreeDistanceMetric *distanceMetric) :
     _dimension(dimension), _size(0), _root(0), _allowDuplicates(allowDuplicates)
 {
     //If they don't give us a distance metric, just use the default
@@ -41,7 +41,7 @@ QKDTree::~QKDTree()
     delete _distanceMetric;
 }
 
-uint QKDTree::dimension() const
+int QKDTree::dimension() const
 {
     return _dimension;
 }

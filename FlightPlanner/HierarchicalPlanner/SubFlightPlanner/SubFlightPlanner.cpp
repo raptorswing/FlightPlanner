@@ -3,6 +3,7 @@
 #include <QMap>
 #include <QMutableMapIterator>
 #include <QtDebug>
+#include <cmath>
 
 #include "SubFlightNode.h"
 #include "FlightTasks/FlightTask.h"

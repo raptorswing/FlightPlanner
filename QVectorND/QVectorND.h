@@ -49,7 +49,7 @@ public:
     bool operator!=(const QVectorND& other) const;
 
     qreal& operator[](int index);
-    const qreal operator[](int index) const;
+    qreal operator[](int index) const;
 
 private:
     int _dimensions;

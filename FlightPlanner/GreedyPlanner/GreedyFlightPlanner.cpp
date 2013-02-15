@@ -36,11 +36,7 @@ void GreedyFlightPlanner::doIteration()
         UAVOrientation lastOrientation;
         Position lastPos = _bestPathThisIteration.last();
         if (this->bestFlightSoFar().size() >= 2)
-        {
-            Position secondLast = this->bestFlightSoFar().at(this->bestFlightSoFar().size()-2);
-            QVector3D enu = Conversions::lla2enu(lastPos,secondLast);
             lastOrientation.setRadians(_lastOrientation);
-        }
         QSharedPointer<GreedyPlanningNode> iterTopNode(new GreedyPlanningNode(lastPos,
                                                                               lastOrientation,
                                                                               0,
