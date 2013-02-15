@@ -5,6 +5,7 @@
 #include <QPolygonF>
 #include <QSharedPointer>
 #include <QSet>
+#include <QString>
 
 #include "FlightTasks/FlightTask.h"
 
@@ -22,6 +23,8 @@ public:
     void removeTask(QSharedPointer<FlightTask> task);
     int numTasks() const;
 
+    const QString& areaName() const;
+
     
 signals:
     void flightTaskAreaChanged();
@@ -31,13 +34,17 @@ signals:
     void taskAdded(QSharedPointer<FlightTask> task);
     void taskAboutToRemove(int index);
     void taskRemoved(QSharedPointer<FlightTask> task);
+    void flightTaskAreaNameChanged();
     
 public slots:
     void setGeoPoly(const QPolygonF& nPoly);
+    void setAreaName(const QString& nName);
 
 private:
     QPolygonF _geoPoly;
     QList<QSharedPointer<FlightTask> > _tasks;
+
+    QString _areaName;
     
 };
 

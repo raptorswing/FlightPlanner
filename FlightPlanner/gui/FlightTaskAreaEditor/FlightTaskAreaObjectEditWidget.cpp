@@ -29,6 +29,11 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
             this,
             SLOT(persistentEditorHack()));
 
+    connect(flightTaskAreaObj->flightTaskArea().data(),
+            SIGNAL(flightTaskAreaNameChanged()),
+            this,
+            SLOT(handleNameChanged()));
+
     FlightTaskAreaListModel * model = new FlightTaskAreaListModel(flightTaskAreaObj->flightTaskArea(),
                                                                   this->ui->taskListView);
     this->ui->taskListView->setModel(model);
@@ -36,6 +41,8 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
                                                            this->ui->taskListView);
     this->ui->taskListView->setItemDelegate(delegate);
 
+    //Initialize things
+    this->handleNameChanged();
     this->persistentEditorHack();
 }
 
@@ -54,6 +61,19 @@ void FlightTaskAreaObjectEditWidget::persistentEditorHack()
         QModelIndex index = model->index(i, 0);
         this->ui->taskListView->openPersistentEditor(index);
     }
+}
+
+//private slot
+void FlightTaskAreaObjectEditWidget::handleNameChanged()
+{
+    if (_flightTaskAreaMapObj.isNull())
+        return;
+
+    QSharedPointer<FlightTaskArea> flightTaskArea = _flightTaskAreaMapObj->flightTaskArea().toStrongRef();
+    if (flightTaskArea.isNull())
+        return;
+
+    this->ui->areaNameEdit->setText(flightTaskArea->areaName());
 }
 
 
@@ -111,4 +131,17 @@ void FlightTaskAreaObjectEditWidget::on_addSamplingButton_clicked()
 
     QSharedPointer<SamplingTask> task(new SamplingTask(30.0));
     flightTaskArea->addTask(task);
+}
+
+//private slot
+void FlightTaskAreaObjectEditWidget::on_areaNameEdit_editingFinished()
+{
+    if (_flightTaskAreaMapObj.isNull())
+        return;
+
+    QSharedPointer<FlightTaskArea> flightTaskArea = _flightTaskAreaMapObj->flightTaskArea().toStrongRef();
+    if (flightTaskArea.isNull())
+        return;
+
+    flightTaskArea->setAreaName(this->ui->areaNameEdit->text());
 }

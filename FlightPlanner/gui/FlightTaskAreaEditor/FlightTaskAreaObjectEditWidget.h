@@ -22,6 +22,8 @@ public:
 private slots:
     void persistentEditorHack();
 
+    void handleNameChanged();
+
     void on_AddFlyThruButton_clicked();
 
     void on_addNoFlyButton_clicked();
@@ -29,6 +31,8 @@ private slots:
     void on_coverageButton_clicked();
 
     void on_addSamplingButton_clicked();
+
+    void on_areaNameEdit_editingFinished();
 
 private:
     Ui::FlightTaskAreaObjectEditWidget *ui;
