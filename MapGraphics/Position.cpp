@@ -3,6 +3,7 @@
 #include "guts/Conversions.h"
 
 #include <QtGlobal>
+#include <cmath>
 
 Position::Position()
 {
