@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DependencyConstraintEditor</class>
+ <widget class="QGroupBox" name="DependencyConstraintEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="title">
+   <string>Dependencies</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QListView" name="listView"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="addDependencyButton">
+       <property name="text">
+        <string>Add Dependency</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../resources.qrc">
+         <normaloff>:/icons/16x16/gui/images/16x16/actions/edit_add.png</normaloff>:/icons/16x16/gui/images/16x16/actions/edit_add.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

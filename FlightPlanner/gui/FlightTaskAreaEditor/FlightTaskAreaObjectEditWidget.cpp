@@ -8,10 +8,12 @@
 #include "FlightTasks/SamplingTask.h"
 #include "FlightTaskDelegate.h"
 
-FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTaskAreaMapObject> flightTaskAreaObj,
+FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QWeakPointer<PlanningProblem> problem,
+                                                               QPointer<FlightTaskAreaMapObject> flightTaskAreaObj,
                                                                QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FlightTaskAreaObjectEditWidget),
+    _problem(problem),
     _flightTaskAreaMapObj(flightTaskAreaObj)
 {
     ui->setupUi(this);
@@ -37,7 +39,8 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QPointer<FlightTa
     FlightTaskAreaListModel * model = new FlightTaskAreaListModel(flightTaskAreaObj->flightTaskArea(),
                                                                   this->ui->taskListView);
     this->ui->taskListView->setModel(model);
-    FlightTaskDelegate * delegate = new FlightTaskDelegate(flightTaskAreaObj->flightTaskArea(),
+    FlightTaskDelegate * delegate = new FlightTaskDelegate(_problem,
+                                                           flightTaskAreaObj->flightTaskArea(),
                                                            this->ui->taskListView);
     this->ui->taskListView->setItemDelegate(delegate);
 

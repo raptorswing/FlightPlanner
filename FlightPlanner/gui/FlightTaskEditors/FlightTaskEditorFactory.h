@@ -5,11 +5,13 @@
 #include <QSharedPointer>
 
 #include "FlightTasks/FlightTask.h"
+#include "PlanningProblem.h"
 
 class FlightTaskEditorFactory
 {
 public:
-    static QWidget * getEditor(const QSharedPointer<FlightTask>& task);
+    static QWidget * getEditor(const QSharedPointer<PlanningProblem> problem,
+                               const QSharedPointer<FlightTask>& task);
 
 private:
     FlightTaskEditorFactory();

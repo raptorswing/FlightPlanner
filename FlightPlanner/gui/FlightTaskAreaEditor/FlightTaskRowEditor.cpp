@@ -5,11 +5,13 @@
 
 #include <QtDebug>
 
-FlightTaskRowEditor::FlightTaskRowEditor(QWeakPointer<FlightTaskArea> area,
+FlightTaskRowEditor::FlightTaskRowEditor(QWeakPointer<PlanningProblem> problem,
+                                         QWeakPointer<FlightTaskArea> area,
                                          QWeakPointer<FlightTask> task,
                                          QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FlightTaskRowEditor),
+    _problem(problem),
     _area(area),
     _task(task)
 {
@@ -47,7 +49,11 @@ void FlightTaskRowEditor::on_editTaskButton_clicked()
     if (task.isNull())
         return;
 
-    QWidget * widget = FlightTaskEditorFactory::getEditor(task);
+    QSharedPointer<PlanningProblem> problem = _problem.toStrongRef();
+    if (problem.isNull())
+        return;
+
+    QWidget * widget = FlightTaskEditorFactory::getEditor(problem, task);
     widget->show();
 }
 

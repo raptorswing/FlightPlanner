@@ -109,7 +109,7 @@ void FlightTaskAreaMapObject::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
 //private slot
 void FlightTaskAreaMapObject::spawnConfigurationWidget()
 {
-    FlightTaskAreaObjectEditWidget * editor = new FlightTaskAreaObjectEditWidget(this);
+    FlightTaskAreaObjectEditWidget * editor = new FlightTaskAreaObjectEditWidget(_prob, this);
     editor->setAttribute(Qt::WA_DeleteOnClose);
     editor->show();
 }

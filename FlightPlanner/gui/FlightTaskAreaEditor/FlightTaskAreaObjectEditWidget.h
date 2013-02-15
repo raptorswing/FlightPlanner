@@ -3,8 +3,11 @@
 
 #include <QWidget>
 #include <QPointer>
+#include <QSharedPointer>
 
 #include "MapObjects/FlightTaskAreaMapObject.h"
+
+#include "PlanningProblem.h"
 
 namespace Ui {
 class FlightTaskAreaObjectEditWidget;
@@ -15,7 +18,8 @@ class FlightTaskAreaObjectEditWidget : public QWidget
     Q_OBJECT
     
 public:
-    explicit FlightTaskAreaObjectEditWidget(QPointer<FlightTaskAreaMapObject> taskAreaObj = 0,
+    explicit FlightTaskAreaObjectEditWidget(QWeakPointer<PlanningProblem> problem,
+                                            QPointer<FlightTaskAreaMapObject> taskAreaObj = 0,
                                             QWidget *parent = 0);
     ~FlightTaskAreaObjectEditWidget();
     
@@ -37,6 +41,7 @@ private slots:
 private:
     Ui::FlightTaskAreaObjectEditWidget *ui;
 
+    QWeakPointer<PlanningProblem> _problem;
     QPointer<FlightTaskAreaMapObject> _flightTaskAreaMapObj;
 };
 

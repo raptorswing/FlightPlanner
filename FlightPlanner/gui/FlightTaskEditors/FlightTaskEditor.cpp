@@ -5,10 +5,12 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-FlightTaskEditor::FlightTaskEditor(QSharedPointer<FlightTask> task, QWidget *parent) :
+FlightTaskEditor::FlightTaskEditor(QSharedPointer<PlanningProblem> problem,
+                                   QSharedPointer<FlightTask> task, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FlightTaskEditor),
-    _baseTask(task)
+    _baseTask(task),
+    _problem(problem)
 {
     ui->setupUi(this);
 
@@ -31,6 +33,9 @@ FlightTaskEditor::FlightTaskEditor(QSharedPointer<FlightTask> task, QWidget *par
 
     _timingConstraintsEditor = new TimingConstraintEditor(this);
     this->addEditorWidget(_timingConstraintsEditor);
+
+    _dependencyConstraintsEditor = new DependencyConstraintEditor(_problem, _baseTask, this);
+    this->addEditorWidget(_dependencyConstraintsEditor);
 }
 
 FlightTaskEditor::~FlightTaskEditor()

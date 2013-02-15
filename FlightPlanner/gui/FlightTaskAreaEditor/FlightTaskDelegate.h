@@ -4,12 +4,14 @@
 #include <QStyledItemDelegate>
 
 #include "FlightTaskArea.h"
+#include "PlanningProblem.h"
 
 class FlightTaskDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit FlightTaskDelegate(QWeakPointer<FlightTaskArea> area,
+    explicit FlightTaskDelegate(QWeakPointer<PlanningProblem> problem,
+                                QWeakPointer<FlightTaskArea> area,
                                 QObject *parent = 0);
 
     //virtual from QStyledItemDelegate
@@ -26,6 +28,7 @@ signals:
 public slots:
 
 private:
+    QWeakPointer<PlanningProblem> _problem;
     QWeakPointer<FlightTaskArea> _area;
     
 };

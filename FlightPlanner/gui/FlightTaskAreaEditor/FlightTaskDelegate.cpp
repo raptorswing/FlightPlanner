@@ -5,8 +5,10 @@
 
 #include "FlightTaskRowEditor.h"
 
-FlightTaskDelegate::FlightTaskDelegate(QWeakPointer<FlightTaskArea> area, QObject *parent) :
-    QStyledItemDelegate(parent), _area(area)
+FlightTaskDelegate::FlightTaskDelegate(QWeakPointer<PlanningProblem> problem,
+                                       QWeakPointer<FlightTaskArea> area,
+                                       QObject *parent) :
+    QStyledItemDelegate(parent), _problem(problem), _area(area)
 {
 }
 
@@ -51,5 +53,5 @@ QWidget *FlightTaskDelegate::createEditor(QWidget *parent,
     if (!area)
         return 0;
 
-    return new FlightTaskRowEditor(_area, area->tasks().at(index.row()), parent);
+    return new FlightTaskRowEditor(_problem, _area, area->tasks().at(index.row()), parent);
 }

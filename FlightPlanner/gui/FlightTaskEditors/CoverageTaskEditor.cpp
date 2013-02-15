@@ -2,8 +2,9 @@
 
 #include <QTimer>
 
-CoverageTaskEditor::CoverageTaskEditor(const QSharedPointer<CoverageTask> task, QWidget *parent) :
-    FlightTaskEditor(task, parent),
+CoverageTaskEditor::CoverageTaskEditor(QSharedPointer<PlanningProblem> problem,
+                                       QSharedPointer<CoverageTask> task, QWidget *parent) :
+    FlightTaskEditor(problem, task, parent),
     _task(task)
 {
     _myWidgets = new CoverageTaskEditorWidgets(this);

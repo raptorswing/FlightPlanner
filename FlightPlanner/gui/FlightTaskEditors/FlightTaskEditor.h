@@ -8,6 +8,9 @@
 
 #include "SubWidgets/TaskNameEditor.h"
 #include "SubWidgets/TimingConstraintEditor.h"
+#include "SubWidgets/DependencyConstraintEditor.h"
+
+#include "PlanningProblem.h"
 
 namespace Ui {
 class FlightTaskEditor;
@@ -18,7 +21,8 @@ class FlightTaskEditor : public QWidget
     Q_OBJECT
     
 public:
-    explicit FlightTaskEditor(QSharedPointer<FlightTask> task, QWidget *parent = 0);
+    explicit FlightTaskEditor(QSharedPointer<PlanningProblem> problem,
+                              QSharedPointer<FlightTask> task, QWidget *parent = 0);
     virtual ~FlightTaskEditor();
 
 protected:
@@ -48,6 +52,9 @@ private:
 
     TaskNameEditor * _taskNameEditor;
     TimingConstraintEditor * _timingConstraintsEditor;
+    DependencyConstraintEditor * _dependencyConstraintsEditor;
+
+    QWeakPointer<PlanningProblem> _problem;
 };
 
 #endif // FLIGHTTASKEDITOR_H

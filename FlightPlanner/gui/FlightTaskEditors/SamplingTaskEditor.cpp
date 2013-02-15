@@ -1,7 +1,7 @@
 #include "SamplingTaskEditor.h"
 
-SamplingTaskEditor::SamplingTaskEditor(const QSharedPointer<SamplingTask> task, QWidget *parent) :
-    FlightTaskEditor(task, parent),
+SamplingTaskEditor::SamplingTaskEditor(QSharedPointer<PlanningProblem> problem, QSharedPointer<SamplingTask> task, QWidget *parent) :
+    FlightTaskEditor(problem, task, parent),
     _task(task)
 {
     _myWidgets = new SamplingTaskEditorWidgets(this);

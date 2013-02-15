@@ -5,6 +5,7 @@
 
 #include "FlightTaskArea.h"
 #include "FlightTasks/FlightTask.h"
+#include "PlanningProblem.h"
 
 namespace Ui {
 class FlightTaskRowEditor;
@@ -15,7 +16,8 @@ class FlightTaskRowEditor : public QWidget
     Q_OBJECT
     
 public:
-    explicit FlightTaskRowEditor(QWeakPointer<FlightTaskArea> area,
+    explicit FlightTaskRowEditor(QWeakPointer<PlanningProblem> problem,
+                                 QWeakPointer<FlightTaskArea> area,
                                  QWeakPointer<FlightTask> task,
                                  QWidget *parent = 0);
     ~FlightTaskRowEditor();
@@ -28,6 +30,7 @@ private slots:
 private:
     Ui::FlightTaskRowEditor *ui;
 
+    QWeakPointer<PlanningProblem> _problem;
     QWeakPointer<FlightTaskArea> _area;
     QWeakPointer<FlightTask> _task;
 };

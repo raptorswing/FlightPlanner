@@ -3,7 +3,8 @@
 #include "CoverageTaskEditor.h"
 #include "SamplingTaskEditor.h"
 
-QWidget *FlightTaskEditorFactory::getEditor(const QSharedPointer<FlightTask> &task)
+QWidget *FlightTaskEditorFactory::getEditor(const QSharedPointer<PlanningProblem> problem,
+                                            const QSharedPointer<FlightTask> &task)
 {
     const QString type = task->taskType();
     QWidget * toRet = new QWidget();
@@ -11,12 +12,12 @@ QWidget *FlightTaskEditorFactory::getEditor(const QSharedPointer<FlightTask> &ta
     if (type == "Coverage")
     {
         QSharedPointer<CoverageTask> coverageTask = task.objectCast<CoverageTask>();
-        toRet = new CoverageTaskEditor(coverageTask);
+        toRet = new CoverageTaskEditor(problem, coverageTask);
     }
     else if (type == "Sampling")
     {
         QSharedPointer<SamplingTask> samplingTask = task.objectCast<SamplingTask>();
-        toRet = new SamplingTaskEditor(samplingTask);
+        toRet = new SamplingTaskEditor(problem, samplingTask);
     }
 
     toRet->setAttribute(Qt::WA_DeleteOnClose);

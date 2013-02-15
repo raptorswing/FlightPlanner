@@ -12,7 +12,8 @@ class SamplingTaskEditor : public FlightTaskEditor
 {
     Q_OBJECT
 public:
-    explicit SamplingTaskEditor(const QSharedPointer<SamplingTask> task, QWidget *parent = 0);
+    explicit SamplingTaskEditor(QSharedPointer<PlanningProblem> problem,
+                                QSharedPointer<SamplingTask> task, QWidget *parent = 0);
     
 signals:
     
