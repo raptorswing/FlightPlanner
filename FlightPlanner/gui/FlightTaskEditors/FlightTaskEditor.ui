@@ -30,7 +30,7 @@
      <item>
       <widget class="QPushButton" name="cancelButton">
        <property name="text">
-        <string>Cancel</string>
+        <string>&amp;Cancel</string>
        </property>
        <property name="icon">
         <iconset resource="../../resources.qrc">
@@ -41,7 +41,7 @@
      <item>
       <widget class="QPushButton" name="okButton">
        <property name="text">
-        <string>OK</string>
+        <string>&amp;OK</string>
        </property>
        <property name="icon">
         <iconset resource="../../resources.qrc">

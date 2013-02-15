@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Edit Tasks</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../resources.qrc">
+    <normaloff>:/icons/16x16/gui/images/16x16/actions/run.png</normaloff>:/icons/16x16/gui/images/16x16/actions/run.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QListView" name="taskListView">
@@ -68,6 +72,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
