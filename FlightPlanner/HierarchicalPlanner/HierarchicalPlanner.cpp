@@ -358,13 +358,10 @@ bool HierarchicalPlanner::_buildSchedule()
             bool timingViolation = false;
             foreach(const TimingConstraint& constraint, task->timingConstraints())
             {
-                if (startTime <= constraint.start() && endTime >= constraint.end())
+                if (startTime < constraint.start() || startTime > constraint.end())
                     timingViolation = true;
-                else if (startTime >= constraint.start() && startTime <= constraint.end())
+                else if (endTime < constraint.start() || endTime > constraint.end())
                     timingViolation = true;
-                else if (endTime >= constraint.start() && endTime <= constraint.end())
-                    timingViolation = true;
-
                 if (timingViolation)
                     break;
             }

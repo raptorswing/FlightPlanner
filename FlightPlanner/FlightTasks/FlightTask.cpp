@@ -8,6 +8,7 @@ const qreal SQRT2PI = sqrt(2.0*PI);
 FlightTask::FlightTask()
 {
     _taskName = "Untitled";
+    this->addTimingConstraint(TimingConstraint(0, 3600));
 }
 
 FlightTask::~FlightTask()

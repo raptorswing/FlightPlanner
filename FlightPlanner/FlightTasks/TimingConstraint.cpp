@@ -5,8 +5,8 @@ TimingConstraint::TimingConstraint()
 }
 
 
-TimingConstraint::TimingConstraint(int disallowedStartSeconds, int disallowedEndSeconds) :
-    _start(disallowedStartSeconds), _end(disallowedEndSeconds)
+TimingConstraint::TimingConstraint(int allowedStartSeconds, int allowedEndSeconds) :
+    _start(allowedStartSeconds), _end(allowedEndSeconds)
 {
 }
 

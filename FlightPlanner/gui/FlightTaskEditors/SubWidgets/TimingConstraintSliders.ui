@@ -30,14 +30,14 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Start Time:</string>
+          <string>Window Start:</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>End Time:</string>
+          <string>Window End:</string>
          </property>
         </widget>
        </item>
@@ -97,7 +97,7 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset resource="../../resources.qrc">
+        <iconset resource="../../../resources.qrc">
          <normaloff>:/icons/16x16/gui/images/16x16/actions/cancel.png</normaloff>:/icons/16x16/gui/images/16x16/actions/cancel.png</iconset>
        </property>
       </widget>
@@ -114,7 +114,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../resources.qrc"/>
+  <include location="../../../resources.qrc"/>
  </resources>
  <connections>
   <connection>

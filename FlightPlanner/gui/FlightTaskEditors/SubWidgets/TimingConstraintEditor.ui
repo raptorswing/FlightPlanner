@@ -24,7 +24,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Disallowed Times</string>
+      <string>Timing Constraints</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
@@ -76,7 +76,7 @@
         <item>
          <widget class="QPushButton" name="addTimingConstraintButton_2">
           <property name="text">
-           <string>Add Disallowed Time</string>
+           <string>Add Time Window</string>
           </property>
           <property name="icon">
            <iconset resource="../../../resources.qrc">

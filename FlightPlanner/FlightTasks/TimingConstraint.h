@@ -5,8 +5,8 @@ class TimingConstraint
 {
 public:
     TimingConstraint();
-    TimingConstraint(int disallowedStartSeconds,
-                     int disallowedEndSeconds);
+    TimingConstraint(int allowedStartSeconds,
+                     int allowedEndSeconds);
 
     int start() const;
     int end() const;
