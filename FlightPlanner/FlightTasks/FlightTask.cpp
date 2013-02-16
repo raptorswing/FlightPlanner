@@ -1,6 +1,7 @@
 #include "FlightTask.h"
 
 #include <cmath>
+#include <QMutableListIterator>
 
 const qreal PI = 3.1415926535897932384626433;
 const qreal SQRT2PI = sqrt(2.0*PI);
@@ -68,6 +69,52 @@ const QString &FlightTask::taskName() const
 void FlightTask::setTaskName(const QString &nName)
 {
     _taskName = nName;
+    this->flightTaskChanged();
+}
+
+const QList<QWeakPointer<FlightTask> > &FlightTask::dependencyConstraints() const
+{
+    return _dependencyConstraints;
+}
+
+void FlightTask::setDependencyConstraints(const QList<QWeakPointer<FlightTask> > &nConstraints)
+{
+    _dependencyConstraints = nConstraints;
+
+    foreach(const QWeakPointer<FlightTask>& task, _dependencyConstraints)
+    {
+        QSharedPointer<FlightTask> strong = task.toStrongRef();
+        if (strong.isNull())
+            continue;
+
+        //We want to know when our dependencies blow up
+        connect(strong.data(),
+                SIGNAL(destroyed()),
+                this,
+                SLOT(handleDependencyDeleted()));
+    }
+
+    this->flightTaskChanged();
+}
+
+//private slot
+void FlightTask::handleDependencyDeleted()
+{
+    /*
+     * Some sucka-punk dependency has gone and gotten themselves deleted.
+     * For good measure, loop through and remove all references to deleted dependencies.
+     * Yes, I am lazy.
+    */
+    QMutableListIterator<QWeakPointer<FlightTask> > iter(_dependencyConstraints);
+
+    while (iter.hasNext())
+    {
+        const QWeakPointer<FlightTask>& dependency = iter.next();
+        if (dependency.isNull())
+            iter.remove();
+    }
+
+    //Be sure to let everyone know that we've changed.
     this->flightTaskChanged();
 }
 

@@ -4,8 +4,11 @@
 #include <QGroupBox>
 #include <QSharedPointer>
 #include <QMenu>
+#include <QList>
+#include <QHash>
 
 #include "PlanningProblem.h"
+#include "DependencyRow.h"
 
 namespace Ui {
 class DependencyConstraintEditor;
@@ -20,9 +23,17 @@ public:
                                         QWeakPointer<FlightTask> task,
                                         QWidget *parent = 0);
     ~DependencyConstraintEditor();
+
+    QList<QWeakPointer<FlightTask> > dependencies() const;
+
+public slots:
+    void setDependencies(const QList<QWeakPointer<FlightTask> >& nDeps);
     
 private slots:
     void buildMenu();
+
+    void handleConstraintWantsToAdd();
+    void handleConstraintWantsToRemove(DependencyRow * row);
 
 private:
     Ui::DependencyConstraintEditor *ui;
@@ -31,6 +42,9 @@ private:
     QWeakPointer<FlightTask> _task;
 
     QMenu _menu;
+    QHash<QObject *, QWeakPointer<FlightTask> > _menuHelper;
+
+    QList<DependencyRow *> _rows;
 };
 
 #endif // DEPENDENCYCONSTRAINTEDITOR_H

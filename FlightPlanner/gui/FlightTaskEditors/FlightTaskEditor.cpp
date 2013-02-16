@@ -63,6 +63,7 @@ void FlightTaskEditor::load()
 
     _taskNameEditor->setName(strong->taskName());
     _timingConstraintsEditor->setTimingConstraints(strong->timingConstraints());
+    _dependencyConstraintsEditor->setDependencies(strong->dependencyConstraints());
     this->loadSub();
 }
 
@@ -75,6 +76,7 @@ void FlightTaskEditor::save()
 
     strong->setTaskName(_taskNameEditor->name());
     strong->setTimingConstraints(_timingConstraintsEditor->timingConstraints());
+    strong->setDependencyConstraints(_dependencyConstraintsEditor->dependencies());
 
     this->saveSub();
 }

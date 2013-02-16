@@ -6,6 +6,7 @@
 #include <QPolygonF>
 #include <QList>
 #include <QString>
+#include <QWeakPointer>
 
 #include "Position.h"
 #include "TimingConstraint.h"
@@ -40,6 +41,12 @@ public:
     const QString& taskName() const;
     void setTaskName(const QString& nName);
 
+    const QList<QWeakPointer<FlightTask> >& dependencyConstraints() const;
+    void setDependencyConstraints(const QList<QWeakPointer<FlightTask> >& nConstraints);
+
+private slots:
+    void handleDependencyDeleted();
+
 signals:
     void flightTaskChanged();
 
@@ -49,6 +56,7 @@ protected:
 private:
     QList<TimingConstraint> _timingConstraints;
     QString _taskName;
+    QList<QWeakPointer<FlightTask> > _dependencyConstraints;
 };
 
 #endif // FLIGHTTASK_H
