@@ -51,7 +51,10 @@ void FlightTaskAreaMapObject::paint(QPainter *painter, const QStyleOptionGraphic
         return;
 
     if (area->tasks().isEmpty())
+    {
+        this->setFillColor(QColor(150, 150, 150, 100));
         PolygonObject::paint(painter, option, widget);
+    }
     else
     {
         QString taskType = "";
