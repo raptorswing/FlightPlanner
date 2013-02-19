@@ -354,6 +354,25 @@ bool HierarchicalPlanner::_buildSchedule()
             endTime = startTime + newState[i] - state[i];
             const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
 
+            //Check dependency constraints
+            bool dependencyViolation = false;
+            foreach(const QWeakPointer<FlightTask> wConstraint, task->dependencyConstraints())
+            {
+                QSharedPointer<FlightTask> constraint = wConstraint.toStrongRef();
+                if (constraint.isNull())
+                    continue;
+                int index = _tasks.indexOf(constraint);
+                if (index == -1)
+                    continue;
+                if (state.val(index) < taskTimes.at(index))
+                {
+                    dependencyViolation = true;
+                    break;
+                }
+            }
+            if (dependencyViolation)
+                continue;
+
             //If the newstate violates timing constraints then we won't generate it
             bool timingViolation = false;
             foreach(const TimingConstraint& constraint, task->timingConstraints())
