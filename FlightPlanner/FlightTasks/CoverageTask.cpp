@@ -54,6 +54,12 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
         const qreal currentEnticement = FlightTask::normal(distance, 200.0, 10.0);
         if (currentEnticement > enticement)
             enticement = currentEnticement;
+
+        /*
+         *Comment out this break if you want to use the nearest enticement point rather than
+         *the one that is next in the list.
+        */
+        break;
     }
 
     return reward + enticement;
