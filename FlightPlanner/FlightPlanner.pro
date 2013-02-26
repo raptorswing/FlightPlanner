@@ -58,7 +58,8 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.cpp \
     gui/FlightTaskEditors/SamplingTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.cpp \
-    gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp
+    gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
+    gui/FlightTaskEditors/FlyThroughTaskEditor.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -108,7 +109,8 @@ HEADERS  += \
     gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.h \
     gui/FlightTaskEditors/SamplingTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.h \
-    gui/FlightTaskEditors/SubWidgets/DependencyRow.h
+    gui/FlightTaskEditors/SubWidgets/DependencyRow.h \
+    gui/FlightTaskEditors/FlyThroughTaskEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \

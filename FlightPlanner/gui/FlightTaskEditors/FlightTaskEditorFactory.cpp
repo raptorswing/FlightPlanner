@@ -2,6 +2,7 @@
 
 #include "CoverageTaskEditor.h"
 #include "SamplingTaskEditor.h"
+#include "FlyThroughTaskEditor.h"
 
 QWidget *FlightTaskEditorFactory::getEditor(const QSharedPointer<PlanningProblem> problem,
                                             const QSharedPointer<FlightTask> &task)
@@ -18,6 +19,11 @@ QWidget *FlightTaskEditorFactory::getEditor(const QSharedPointer<PlanningProblem
     {
         QSharedPointer<SamplingTask> samplingTask = task.objectCast<SamplingTask>();
         toRet = new SamplingTaskEditor(problem, samplingTask);
+    }
+    else if (type == "Fly Through")
+    {
+        QSharedPointer<FlyThroughTask> flyThrough = task.objectCast<FlyThroughTask>();
+        toRet = new FlyThroughTaskEditor(problem, flyThrough);
     }
 
     toRet->setAttribute(Qt::WA_DeleteOnClose);
