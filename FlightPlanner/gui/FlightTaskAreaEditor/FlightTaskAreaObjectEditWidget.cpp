@@ -137,7 +137,7 @@ void FlightTaskAreaObjectEditWidget::on_addSamplingButton_clicked()
 }
 
 //private slot
-void FlightTaskAreaObjectEditWidget::on_areaNameEdit_editingFinished()
+void FlightTaskAreaObjectEditWidget::on_areaNameEdit_textEdited(const QString &arg1)
 {
     if (_flightTaskAreaMapObj.isNull())
         return;
@@ -146,5 +146,5 @@ void FlightTaskAreaObjectEditWidget::on_areaNameEdit_editingFinished()
     if (flightTaskArea.isNull())
         return;
 
-    flightTaskArea->setAreaName(this->ui->areaNameEdit->text());
+    flightTaskArea->setAreaName(arg1);
 }

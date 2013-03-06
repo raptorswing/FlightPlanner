@@ -36,7 +36,7 @@ private slots:
 
     void on_addSamplingButton_clicked();
 
-    void on_areaNameEdit_editingFinished();
+    void on_areaNameEdit_textEdited(const QString &arg1);
 
 private:
     Ui::FlightTaskAreaObjectEditWidget *ui;
