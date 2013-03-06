@@ -19,7 +19,7 @@ qreal UAVOrientation::radians() const
 
 qreal UAVOrientation::degrees() const
 {
-    return _radians * (PI / 180.0);
+    return _radians * (180.0 / PI);
 }
 
 QDebug operator<<(QDebug dbg, const UAVOrientation& pos)
