@@ -15,8 +15,17 @@ public:
 
     virtual void setPos(const QPointF &);
 
+    const UAVOrientation& orientation() const;
+    void setOrientation(const UAVOrientation& orient);
+
+    //virtual from CircleObject
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 protected:
     virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     
 signals:
     
@@ -25,6 +34,10 @@ public slots:
 
 private:
     QWeakPointer<PlanningProblem> _prob;
+    UAVOrientation _orientation;
+
+    UAVOrientation _angleDragStartOrientation;
+    int _angleDragDist;
     
 };
 

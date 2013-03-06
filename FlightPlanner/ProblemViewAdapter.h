@@ -34,7 +34,7 @@ private:
     QSharedPointer<PlanningProblem> _model;
     MapGraphicsScene * _view;
 
-    QSharedPointer<CircleObject> _startPosObject;
+    QSharedPointer<StartPosMapObject> _startPosObject;
 
     QSet<QSharedPointer<FlightTaskAreaMapObject> > _areaObjects;
     

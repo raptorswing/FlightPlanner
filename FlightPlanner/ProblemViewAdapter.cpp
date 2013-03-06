@@ -60,7 +60,7 @@ void ProblemViewAdapter::handleStartingPositionChanged(const Position &pos)
 {
     if (_startPosObject.isNull())
     {
-        _startPosObject = QSharedPointer<CircleObject>(new StartPosMapObject(_model.toWeakRef()));
+        _startPosObject = QSharedPointer<StartPosMapObject>(new StartPosMapObject(_model.toWeakRef()));
         _view->addObject(_startPosObject.data());
         _startPosObject->setPos(pos.lonLat());
     }
@@ -69,7 +69,7 @@ void ProblemViewAdapter::handleStartingPositionChanged(const Position &pos)
 //private slot
 void ProblemViewAdapter::handleStartingOrientationChanged(const UAVOrientation &orientation)
 {
-    Q_UNUSED(orientation)
+    _startPosObject->setOrientation(orientation);
 }
 
 //private slot
