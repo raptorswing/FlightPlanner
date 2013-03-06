@@ -21,7 +21,7 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
     if (positions.isEmpty())
         return 0.0;
 
-    if (geoPoly != _lastGeoPoly)
+    if (geoPoly != _lastGeoPoly || _bins.isEmpty())
         _calculateBins(geoPoly);
 
     const qreal maxDistance = _maxDistance;
@@ -80,6 +80,9 @@ qreal CoverageTask::granularity() const
 void CoverageTask::setGranularity(qreal nGran)
 {
     _granularity = qBound<qreal>(1.0, nGran, 1000.0);
+
+    //Reset bins so that they are forced to recalculate next time
+    _bins.clear();
     this->flightTaskChanged();
 }
 
@@ -91,6 +94,9 @@ qreal CoverageTask::maxDistance() const
 void CoverageTask::setMaxDistance(qreal maxDist)
 {
     _maxDistance = qBound<qreal>(1.0, maxDist, 1000.0);
+
+    //Reset bins so that they are forced to recalculate next time
+    _bins.clear();
     this->flightTaskChanged();
 }
 
