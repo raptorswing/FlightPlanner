@@ -8,6 +8,24 @@ FlyThroughTask::FlyThroughTask()
 {
 }
 
+//for de-serializing
+FlyThroughTask::FlyThroughTask(QDataStream &stream) :
+    FlightTask(stream)
+{
+}
+
+//pure-virtual from Serializable
+QString FlyThroughTask::serializationKey() const
+{
+    return "FlyThroughTask";
+}
+
+//pure-virtual from Serializable
+void FlyThroughTask::serialize(QDataStream &stream) const
+{
+    FlightTask::serialize(stream);
+}
+
 QString FlyThroughTask::taskType() const
 {
     return "Fly Through";

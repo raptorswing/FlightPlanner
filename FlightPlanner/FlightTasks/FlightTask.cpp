@@ -16,6 +16,19 @@ FlightTask::~FlightTask()
 {
 }
 
+//for de-serializing
+FlightTask::FlightTask(QDataStream &stream)
+{
+    stream >> _taskName;
+    stream >> _timingConstraints;
+}
+
+void FlightTask::serialize(QDataStream &stream) const
+{
+    stream << _taskName;
+    stream << _timingConstraints;
+}
+
 //virtual
 bool FlightTask::shortnessRewardApplies() const
 {

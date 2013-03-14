@@ -10,12 +10,22 @@
 #include "FlightTaskArea.h"
 #include "Fitness.h"
 #include "UAVParameters.h"
+#include "Serializable.h"
 
-class PlanningProblem : public QObject
+class PlanningProblem : public QObject, public Serializable
 {
     Q_OBJECT
 public:
     PlanningProblem();
+
+    //for de-serializing
+    PlanningProblem(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual QString serializationKey() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
 
     bool startingOrientationDefined() const;
     const UAVOrientation& startingOrientation() const;

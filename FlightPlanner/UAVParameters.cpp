@@ -42,3 +42,28 @@ qreal UAVParameters::maxTurnAngle() const
 {
     return _waypointInterval / _minTurningRadius;
 }
+
+//non-member
+QDataStream& operator<<(QDataStream& stream, const UAVParameters& params)
+{
+    stream << params.airspeed();
+    stream << params.minTurningRadius();
+    stream << params.waypointInterval();
+
+    return stream;
+}
+
+//non-member
+QDataStream& operator>>(QDataStream& stream, UAVParameters& params)
+{
+    qreal airspeed, minTurningRadius, waypointInterval;
+
+    stream >> airspeed;
+    stream >> minTurningRadius;
+    stream >> waypointInterval;
+
+    UAVParameters a(airspeed, minTurningRadius, waypointInterval);
+    params = a;
+
+    return stream;
+}

@@ -33,8 +33,10 @@ void ProblemViewAdapter::setModel(QSharedPointer<PlanningProblem> model)
 
     _model = model;
 
-    //For convenience
-    PlanningProblem * conv = _model.data();
+    if (_model.isNull())
+        return;
+
+    PlanningProblem * conv = _model.data(); //For convenience
     connect(conv,
             SIGNAL(startingPositionChanged(Position)),
             this,
@@ -53,6 +55,12 @@ void ProblemViewAdapter::setModel(QSharedPointer<PlanningProblem> model)
             SIGNAL(flightTaskAreaRemoved(QSharedPointer<FlightTaskArea>)),
             this,
             SLOT(handleFlightTaskAreaRemoved(QSharedPointer<FlightTaskArea>)));
+
+    //Fire some fake events to force generation of the map graphics objects
+    this->handleStartingPositionChanged(_model->startingPosition());
+    this->handleStartingOrientationChanged(_model->startingOrientation());
+    foreach(const QSharedPointer<FlightTaskArea>& area, _model->areas())
+        this->handleFlightTaskAreaAdded(area);
 }
 
 //private slot

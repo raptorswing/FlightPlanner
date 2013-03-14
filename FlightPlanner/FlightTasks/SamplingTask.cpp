@@ -4,6 +4,26 @@ SamplingTask::SamplingTask(const qreal timeRequired) : _timeRequired(timeRequire
 {
 }
 
+//for de-serializing
+SamplingTask::SamplingTask(QDataStream &stream) :
+    FlightTask(stream)
+{
+    stream >> _timeRequired;
+}
+
+//pure-virtual from Serializable
+QString SamplingTask::serializationKey() const
+{
+    return "SamplingTask";
+}
+
+//pure-virtual from Serializable
+void SamplingTask::serialize(QDataStream &stream) const
+{
+    FlightTask::serialize(stream);
+    stream << _timeRequired;
+}
+
 //virtual from FlightTask
 bool SamplingTask::shortnessRewardApplies() const
 {

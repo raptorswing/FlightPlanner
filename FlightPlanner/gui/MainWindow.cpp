@@ -37,13 +37,53 @@ MainWindow::~MainWindow()
 //private slot
 void MainWindow::on_actionOpen_triggered()
 {
+    const QString filePath = QFileDialog::getOpenFileName(this,
+                                                          "Select file to load");
+    if (filePath.isEmpty())
+        return;
 
+    QFile fp(filePath);
+    if (!fp.exists())
+        return;
+    else if (!fp.open(QFile::ReadOnly))
+    {
+        QMessageBox::warning(this, "Error", "Failed to open file for reading");
+        return;
+    }
+
+    QDataStream stream(&fp);
+    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem(stream));
+    _planner->setProblem(_problem);
+    _viewAdapter->setModel(_problem);
+
+    connect(_problem.data(),
+            SIGNAL(planningProblemChanged()),
+            _planner,
+            SLOT(resetPlanning()));
 }
 
 //private slot
 void MainWindow::on_actionSave_Planning_Problem_triggered()
 {
+    if (_problem.isNull())
+        return;
 
+    const QString filePath = QFileDialog::getSaveFileName(this,
+                                                          "Select save file");
+    if (filePath.isEmpty())
+        return;
+
+    QFile fp(filePath);
+    if (!fp.open(QFile::WriteOnly))
+    {
+        QMessageBox::warning(this,
+                             "Error",
+                             "Failed to open save file for writing.");
+        return;
+    }
+
+    QDataStream stream(&fp);
+    _problem->serialize(stream);
 }
 
 //private slot

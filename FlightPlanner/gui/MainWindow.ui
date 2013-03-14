@@ -87,9 +87,6 @@
    <addaction name="menuPlanning_Options"/>
   </widget>
   <action name="actionSave_Planning_Problem">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</iconset>
@@ -141,9 +138,6 @@
    </property>
   </action>
   <action name="actionOpen">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</iconset>

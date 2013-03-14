@@ -12,6 +12,24 @@ UAVOrientation::UAVOrientation(qreal radians)
     this->setRadians(radians);
 }
 
+//For de-serializing
+UAVOrientation::UAVOrientation(QDataStream &stream)
+{
+    stream >> _radians;
+}
+
+//pure-virtual from Serializable
+QString UAVOrientation::serializationKey() const
+{
+    return "UAVOrientation";
+}
+
+//pure-virtual from Serializable
+void UAVOrientation::serialize(QDataStream &stream) const
+{
+    stream << _radians;
+}
+
 qreal UAVOrientation::radians() const
 {
     return _radians;

@@ -40,3 +40,22 @@ bool TimingConstraint::operator !=(const TimingConstraint &other) const
 {
     return !(other == *this);
 }
+
+//non-member
+QDataStream& operator<<(QDataStream& stream, const TimingConstraint& a)
+{
+    stream << a.start();
+    stream << a.end();
+    return stream;
+}
+
+//non-member
+QDataStream& operator>>(QDataStream& stream, TimingConstraint& a)
+{
+    int start, end;
+    stream >> start;
+    stream >> end;
+
+    a = TimingConstraint(start, end);
+    return stream;
+}

@@ -11,13 +11,20 @@
 #include "Position.h"
 #include "TimingConstraint.h"
 #include "UAVParameters.h"
+#include "Serializable.h"
 
-class FlightTask : public QObject
+class FlightTask : public QObject, public Serializable
 {
     Q_OBJECT
 public:
     FlightTask();
     virtual ~FlightTask();
+
+    //for de-serializing
+    FlightTask(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
 
     virtual bool shortnessRewardApplies() const;
 

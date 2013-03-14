@@ -9,6 +9,15 @@ class SamplingTask : public FlightTask
 public:
     explicit SamplingTask(const qreal timeRequired);
 
+    //for de-serializing
+    SamplingTask(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual QString serializationKey() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
+
     virtual bool shortnessRewardApplies() const;
 
     virtual QString taskType() const;

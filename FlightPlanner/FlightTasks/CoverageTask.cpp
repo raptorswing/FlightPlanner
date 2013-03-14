@@ -9,6 +9,28 @@ CoverageTask::CoverageTask(qreal coverageGranularity, qreal maxSatisfyingDistanc
 {
 }
 
+//for de-serializing
+CoverageTask::CoverageTask(QDataStream &stream) :
+    FlightTask(stream)
+{
+    stream >> _granularity;
+    stream >> _maxDistance;
+}
+
+//pure-virtual from Serializable
+QString CoverageTask::serializationKey() const
+{
+    return "CoverageTask";
+}
+
+//pure-virtual from Serializable
+void CoverageTask::serialize(QDataStream &stream) const
+{
+    FlightTask::serialize(stream);
+    stream << _granularity;
+    stream << _maxDistance;
+}
+
 QString CoverageTask::taskType() const
 {
     return "Coverage";

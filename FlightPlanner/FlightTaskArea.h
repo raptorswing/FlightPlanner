@@ -8,13 +8,23 @@
 #include <QString>
 
 #include "FlightTasks/FlightTask.h"
+#include "Serializable.h"
 
-class FlightTaskArea : public QObject
+class FlightTaskArea : public QObject, public Serializable
 {
     Q_OBJECT
 public:
     FlightTaskArea();
     explicit FlightTaskArea(const QPolygonF& geoPoly);
+
+    //for de-serializing
+    FlightTaskArea(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual QString serializationKey() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
 
     const QPolygonF& geoPoly() const;
 

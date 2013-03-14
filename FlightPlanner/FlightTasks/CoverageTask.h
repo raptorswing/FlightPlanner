@@ -13,6 +13,15 @@ class CoverageTask : public FlightTask
 public:
     CoverageTask(qreal coverageGranularity = 100.0, qreal maxSatisfyingDistance = 50.0);
 
+    //for de-serializing
+    CoverageTask(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual QString serializationKey() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
+
     virtual QString taskType() const;
 
     virtual qreal calculateFlightPerformance(const QList<Position>& positions,

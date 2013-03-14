@@ -4,11 +4,22 @@
 #include <QtGlobal>
 #include <QtDebug>
 
+#include "Serializable.h"
+
 class UAVOrientation
 {
 public:
     UAVOrientation();
     UAVOrientation(qreal radians);
+
+    //for de-serializing
+    UAVOrientation(QDataStream& stream);
+
+    //pure-virtual from Serializable
+    virtual QString serializationKey() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
 
     qreal radians() const;
     qreal degrees() const;

@@ -4,6 +4,24 @@ NoFlyFlightTask::NoFlyFlightTask()
 {
 }
 
+//for de-serializing
+NoFlyFlightTask::NoFlyFlightTask(QDataStream &stream) :
+    FlightTask(stream)
+{
+}
+
+//pure-virtual from Serializable
+QString NoFlyFlightTask::serializationKey() const
+{
+    return "NoFlyFlightTask";
+}
+
+//pure-virtual from Serializable
+void NoFlyFlightTask::serialize(QDataStream &stream) const
+{
+    FlightTask::serialize(stream);
+}
+
 //virtual from FlightTask
 bool NoFlyFlightTask::shortnessRewardApplies() const
 {

@@ -7,6 +7,56 @@ PlanningProblem::PlanningProblem() :
 {
 }
 
+//for de-serializing
+PlanningProblem::PlanningProblem(QDataStream &stream)
+{
+    stream >> _startingOrientationDefined;
+    if (_startingOrientationDefined)
+        _startingOrientation = UAVOrientation(stream);
+
+    stream >> _startingPositionDefined;
+    if (_startingPositionDefined)
+        stream >> _startingPosition;
+
+    int numAreas;
+    stream >> numAreas;
+
+    for (int i = 0; i < numAreas; i++)
+    {
+        QSharedPointer<FlightTaskArea> area(new FlightTaskArea(stream));
+        _areas.insert(area);
+    }
+
+    stream >> _uavParameters;
+}
+
+//pure-virtual from Serializable
+QString PlanningProblem::serializationKey() const
+{
+    return "PlanningProblem";
+}
+
+//pure-virtual from Serializable
+void PlanningProblem::serialize(QDataStream &stream) const
+{
+    stream << _startingOrientationDefined;
+    if (_startingOrientationDefined)
+        _startingOrientation.serialize(stream);
+
+    stream << _startingPositionDefined;
+    /* Position is from MapGraphics and doesn't inherit Serializable.
+     Luckily, it has the normal streaming operators we can use
+    */
+    if (_startingPositionDefined)
+        stream << _startingPosition;
+
+    stream << this->areas().size();
+    foreach(const QSharedPointer<FlightTaskArea>& area, this->areas())
+        area->serialize(stream);
+
+    stream << _uavParameters;
+}
+
 bool PlanningProblem::startingOrientationDefined() const
 {
     return _startingOrientationDefined;

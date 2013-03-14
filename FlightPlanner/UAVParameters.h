@@ -2,6 +2,7 @@
 #define UAVPARAMETERS_H
 
 #include <QtGlobal>
+#include <QDataStream>
 
 class UAVParameters
 {
@@ -28,5 +29,8 @@ private:
     qreal _minTurningRadius;
     qreal _waypointInterval;
 };
+
+QDataStream& operator<<(QDataStream& stream, const UAVParameters& params);
+QDataStream& operator>>(QDataStream& stream, UAVParameters& params);
 
 #endif // UAVPARAMETERS_H

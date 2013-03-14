@@ -1,6 +1,8 @@
 #ifndef TIMINGCONSTRAINT_H
 #define TIMINGCONSTRAINT_H
 
+#include <QDataStream>
+
 class TimingConstraint
 {
 public:
@@ -21,5 +23,8 @@ private:
     int _start;
     int _end;
 };
+
+QDataStream& operator<<(QDataStream& stream, const TimingConstraint& a);
+QDataStream& operator>>(QDataStream& stream, TimingConstraint& a);
 
 #endif // TIMINGCONSTRAINT_H

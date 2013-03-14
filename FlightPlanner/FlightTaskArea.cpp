@@ -2,6 +2,11 @@
 
 #include <QtDebug>
 
+#include "FlightTasks/CoverageTask.h"
+#include "FlightTasks/FlyThroughTask.h"
+#include "FlightTasks/NoFlyFlightTask.h"
+#include "FlightTasks/SamplingTask.h"
+
 FlightTaskArea::FlightTaskArea()
 {
     this->setAreaName("Untitled");
@@ -10,6 +15,57 @@ FlightTaskArea::FlightTaskArea()
 FlightTaskArea::FlightTaskArea(const QPolygonF &geoPoly) :
     _geoPoly(geoPoly)
 {
+}
+
+//for de-serializing
+FlightTaskArea::FlightTaskArea(QDataStream &stream)
+{
+    stream >> _geoPoly;
+    stream >> _areaName;
+
+    int numTasks;
+    stream >> numTasks;
+    for (int i = 0; i < numTasks; i++)
+    {
+        QString sKey;
+        stream >> sKey;
+
+        QSharedPointer<FlightTask> task;
+        if (sKey == "CoverageTask")
+            task = QSharedPointer<FlightTask>(new CoverageTask(stream));
+        else if (sKey == "FlyThroughTask")
+            task = QSharedPointer<FlightTask>(new FlyThroughTask(stream));
+        else if (sKey == "SamplingTask")
+            task = QSharedPointer<SamplingTask>(new SamplingTask(stream));
+        else if (sKey == "NoFlyFlightTask")
+            task = QSharedPointer<NoFlyFlightTask>(new NoFlyFlightTask(stream));
+        else
+        {
+            qWarning() << "Unknown task" << sKey << " can't deserialize";
+            continue;
+        }
+        _tasks.append(task);
+    }
+}
+
+//pure-virtual from Serializable
+QString FlightTaskArea::serializationKey() const
+{
+    return "FlightTaskArea";
+}
+
+//pure-virtual from Serializable
+void FlightTaskArea::serialize(QDataStream &stream) const
+{
+    stream << _geoPoly;
+    stream << _areaName;
+
+    stream << this->tasks().size();
+    foreach(const QSharedPointer<FlightTask>& task, this->tasks())
+    {
+        stream << task->serializationKey();
+        task->serialize(stream);
+    }
 }
 
 const QPolygonF &FlightTaskArea::geoPoly() const
