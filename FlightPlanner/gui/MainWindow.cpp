@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDateTime>
 
 #include "MapGraphicsView.h"
 #include "MapGraphicsScene.h"
@@ -27,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initPlanningProblem();
     this->initPaletteConnections();
     this->initPlanningControlConnections();
+
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
 MainWindow::~MainWindow()

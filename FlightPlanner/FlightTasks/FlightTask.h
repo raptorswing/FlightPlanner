@@ -50,6 +50,12 @@ public:
 
     const QList<QWeakPointer<FlightTask> >& dependencyConstraints() const;
     void setDependencyConstraints(const QList<QWeakPointer<FlightTask> >& nConstraints);
+    void addDependencyContraint(const QSharedPointer<FlightTask>& other);
+
+    quint64 uuid() const;
+    void resolveDependencies();
+
+    static QHash<quint64, QWeakPointer<FlightTask> > _uuidToWeakTask;
 
 private slots:
     void handleDependencyDeleted();
@@ -64,6 +70,9 @@ private:
     QList<TimingConstraint> _timingConstraints;
     QString _taskName;
     QList<QWeakPointer<FlightTask> > _dependencyConstraints;
+    quint64 _uuid;
+
+    QSet<quint64> _unresolvedDependencies;
 };
 
 #endif // FLIGHTTASK_H

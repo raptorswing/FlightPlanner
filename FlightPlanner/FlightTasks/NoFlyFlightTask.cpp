@@ -11,7 +11,7 @@ NoFlyFlightTask::NoFlyFlightTask(QDataStream &stream) :
 }
 
 //pure-virtual from Serializable
-QString NoFlyFlightTask::serializationKey() const
+QString NoFlyFlightTask::serializationType() const
 {
     return "NoFlyFlightTask";
 }

@@ -1,15 +1,27 @@
 #include "FlightTask.h"
 
 #include <cmath>
+#include <QtDebug>
 #include <QMutableListIterator>
+#include <QMutableSetIterator>
 
 const qreal PI = 3.1415926535897932384626433;
 const qreal SQRT2PI = sqrt(2.0*PI);
+
+//static public
+QHash<quint64, QWeakPointer<FlightTask> > FlightTask::_uuidToWeakTask = QHash<quint64, QWeakPointer<FlightTask> >();
 
 FlightTask::FlightTask()
 {
     _taskName = "Untitled";
     this->addTimingConstraint(TimingConstraint(0, 3600));
+
+    const quint32 r1 = qrand();
+    const quint32 r2 = qrand();
+    quint64 uuid = r1;
+    uuid = uuid << 32;
+    uuid = uuid | r2;
+    _uuid = uuid;
 }
 
 FlightTask::~FlightTask()
@@ -21,12 +33,38 @@ FlightTask::FlightTask(QDataStream &stream)
 {
     stream >> _taskName;
     stream >> _timingConstraints;
+
+    int numDependencies;
+    stream >> numDependencies;
+    for (int i = 0; i < numDependencies; i++)
+    {
+        quint64 depUUID;
+        stream >> depUUID;
+        _unresolvedDependencies.insert(depUUID);
+    }
+
+    stream >> _uuid;
 }
 
 void FlightTask::serialize(QDataStream &stream) const
 {
     stream << _taskName;
     stream << _timingConstraints;
+
+    stream << this->dependencyConstraints().size();
+    foreach(const QWeakPointer<FlightTask>& wTask, this->dependencyConstraints())
+    {
+        QSharedPointer<FlightTask> strong = wTask.toStrongRef();
+        if (strong.isNull())
+        {
+            qWarning() << "Failed to serialize flight task dependency uuid. (Strong pointer is null)";
+            stream << (quint64)0;
+            continue;
+        }
+        stream << strong->uuid();
+    }
+
+    stream << _uuid;
 }
 
 //virtual
@@ -97,17 +135,44 @@ void FlightTask::setDependencyConstraints(const QList<QWeakPointer<FlightTask> >
     foreach(const QWeakPointer<FlightTask>& task, _dependencyConstraints)
     {
         QSharedPointer<FlightTask> strong = task.toStrongRef();
-        if (strong.isNull())
-            continue;
-
-        //We want to know when our dependencies blow up
-        connect(strong.data(),
-                SIGNAL(destroyed()),
-                this,
-                SLOT(handleDependencyDeleted()));
+        this->addDependencyContraint(strong);
     }
 
     this->flightTaskChanged();
+}
+
+void FlightTask::addDependencyContraint(const QSharedPointer<FlightTask> &other)
+{
+    if (other.isNull())
+        return;
+
+    connect(other.data(),
+            SIGNAL(destroyed()),
+            this,
+            SLOT(handleDependencyDeleted()));
+    _dependencyConstraints.append(other);
+}
+
+quint64 FlightTask::uuid() const
+{
+    return _uuid;
+}
+
+void FlightTask::resolveDependencies()
+{
+    QMutableSetIterator<quint64> iter(_unresolvedDependencies);
+
+    while (iter.hasNext())
+    {
+        quint64 depUUID = iter.next();
+        if (FlightTask::_uuidToWeakTask.contains(depUUID))
+        {
+            this->addDependencyContraint(FlightTask::_uuidToWeakTask.value(depUUID));
+            iter.remove();
+        }
+        else
+            qWarning() << "Unresolved task dependency" << depUUID;
+    }
 }
 
 //private slot

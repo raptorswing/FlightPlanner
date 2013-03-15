@@ -18,7 +18,7 @@ CoverageTask::CoverageTask(QDataStream &stream) :
 }
 
 //pure-virtual from Serializable
-QString CoverageTask::serializationKey() const
+QString CoverageTask::serializationType() const
 {
     return "CoverageTask";
 }

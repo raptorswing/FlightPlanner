@@ -10,7 +10,7 @@ public:
     Serializable();
     virtual ~Serializable();
 
-    virtual QString serializationKey() const=0;
+    virtual QString serializationType() const=0;
     virtual void serialize(QDataStream& stream) const=0;
 };
 

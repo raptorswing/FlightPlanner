@@ -12,7 +12,7 @@ SamplingTask::SamplingTask(QDataStream &stream) :
 }
 
 //pure-virtual from Serializable
-QString SamplingTask::serializationKey() const
+QString SamplingTask::serializationType() const
 {
     return "SamplingTask";
 }

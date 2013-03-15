@@ -5,7 +5,7 @@
 #include "FlightTasks/CoverageTask.h"
 #include "FlightTasks/FlyThroughTask.h"
 #include "FlightTasks/NoFlyFlightTask.h"
-#include "FlightTasks/SamplingTask.h"
+#include "FlightTasks/SamplingTask.h"\
 
 FlightTaskArea::FlightTaskArea()
 {
@@ -44,12 +44,13 @@ FlightTaskArea::FlightTaskArea(QDataStream &stream)
             qWarning() << "Unknown task" << sKey << " can't deserialize";
             continue;
         }
+        FlightTask::_uuidToWeakTask.insert(task->uuid(), task.toWeakRef()); //For inter-task dependencies
         _tasks.append(task);
     }
 }
 
 //pure-virtual from Serializable
-QString FlightTaskArea::serializationKey() const
+QString FlightTaskArea::serializationType() const
 {
     return "FlightTaskArea";
 }
@@ -63,7 +64,7 @@ void FlightTaskArea::serialize(QDataStream &stream) const
     stream << this->tasks().size();
     foreach(const QSharedPointer<FlightTask>& task, this->tasks())
     {
-        stream << task->serializationKey();
+        stream << task->serializationType();
         task->serialize(stream);
     }
 }

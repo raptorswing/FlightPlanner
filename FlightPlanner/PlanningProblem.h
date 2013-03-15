@@ -22,7 +22,7 @@ public:
     PlanningProblem(QDataStream& stream);
 
     //pure-virtual from Serializable
-    virtual QString serializationKey() const;
+    virtual QString serializationType() const;
 
     //pure-virtual from Serializable
     virtual void serialize(QDataStream& stream) const;

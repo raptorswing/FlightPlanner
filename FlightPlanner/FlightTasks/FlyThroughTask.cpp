@@ -15,7 +15,7 @@ FlyThroughTask::FlyThroughTask(QDataStream &stream) :
 }
 
 //pure-virtual from Serializable
-QString FlyThroughTask::serializationKey() const
+QString FlyThroughTask::serializationType() const
 {
     return "FlyThroughTask";
 }

@@ -27,11 +27,19 @@ PlanningProblem::PlanningProblem(QDataStream &stream)
         _areas.insert(area);
     }
 
+    //Resolve dependencies between flight tasks. This requires a "second pass" here.
+    foreach(const QSharedPointer<FlightTaskArea>& area, _areas)
+    {
+        foreach(const QSharedPointer<FlightTask>& task, area->tasks())
+            task->resolveDependencies();
+    }
+    FlightTask::_uuidToWeakTask.clear();
+
     stream >> _uavParameters;
 }
 
 //pure-virtual from Serializable
-QString PlanningProblem::serializationKey() const
+QString PlanningProblem::serializationType() const
 {
     return "PlanningProblem";
 }
