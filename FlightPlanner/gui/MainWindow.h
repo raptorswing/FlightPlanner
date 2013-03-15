@@ -36,6 +36,7 @@ private slots:
     void on_actionExit_triggered();
     void on_actionUAV_Parameters_triggered();
     void on_actionSensor_Parameters_triggered();
+    void on_actionImport_Solution_triggered();
 
     //Palette Widget actions
     void handleAddStartPointRequested();

@@ -15,6 +15,7 @@
 #include "UAVParametersWidget.h"
 
 #include "Exporters/GPXExporter.h"
+#include "Importers/GPXImporter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -194,6 +195,30 @@ void MainWindow::on_actionUAV_Parameters_triggered()
             configWidget,
             SLOT(deleteLater()));
     configWidget->show();
+}
+
+//private slot
+void MainWindow::on_actionImport_Solution_triggered()
+{
+    const QString fileToLoad = QFileDialog::getOpenFileName(this,
+                                                            "Select import file",
+                                                            QString(),
+                                                            "GPX (*.gpx);;");
+    if (fileToLoad.isEmpty())
+        return;
+
+    QScopedPointer<GPXImporter> importer(new GPXImporter(fileToLoad));
+    if (!importer->doImport())
+    {
+        QMessageBox::warning(this,
+                             "Error",
+                             "Import failed. Please check that your file is formatted correctly.");
+        return;
+    }
+
+    const QList<Position>& results = importer->results();
+    _planner->setBestFlightSoFar(results);
+    this->updateDisplayedFlight();
 }
 
 //private slot

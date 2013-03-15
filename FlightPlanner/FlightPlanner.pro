@@ -60,7 +60,9 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
     gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
-    Serializable.cpp
+    Serializable.cpp \
+    Importers/Importer.cpp \
+    Importers/GPXImporter.cpp
 
 HEADERS  += \
     FlightTasks/FlightTask.h \
@@ -112,7 +114,9 @@ HEADERS  += \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.h \
     gui/FlightTaskEditors/FlyThroughTaskEditor.h \
-    Serializable.h
+    Serializable.h \
+    Importers/Importer.h \
+    Importers/GPXImporter.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \

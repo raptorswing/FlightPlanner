@@ -29,6 +29,7 @@ public:
     Fitness bestFitnessSoFar() const;
 
     const QList<Position>& bestFlightSoFar() const;
+    void setBestFlightSoFar(const QList<Position>& nFlight);
 
     quint32 iterations() const;
     
@@ -47,7 +48,6 @@ protected:
     virtual void doReset()=0;
 
     void setBestFitnessSoFar(const Fitness& nBest);
-    void setBestFlightSoFar(const QList<Position>& nFlight);
 
 private:
     QSharedPointer<PlanningProblem> _prob;

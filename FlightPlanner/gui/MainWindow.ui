@@ -61,9 +61,9 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave_Planning_Problem"/>
-    <addaction name="actionSave_As"/>
     <addaction name="actionClose"/>
     <addaction name="separator"/>
+    <addaction name="actionImport_Solution"/>
     <addaction name="actionExport_Solution"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -92,7 +92,7 @@
      <normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</normaloff>:/icons/16x16/gui/images/16x16/devices/3floppy_unmount.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save</string>
+    <string>&amp;Save Problem</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -143,7 +143,7 @@
      <normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Open</string>
+    <string>&amp;Open Problem</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -179,7 +179,7 @@
      <normaloff>:/icons/16x16/gui/images/16x16/actions/filenew.png</normaloff>:/icons/16x16/gui/images/16x16/actions/filenew.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;New Problem</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -194,7 +194,7 @@
      <normaloff>:/icons/16x16/gui/images/16x16/actions/fileclose.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileclose.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Close</string>
+    <string>&amp;Close problem</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
@@ -228,6 +228,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionImport_Solution">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</normaloff>:/icons/16x16/gui/images/16x16/actions/fileopen.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Import Solution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+I</string>
    </property>
   </action>
  </widget>

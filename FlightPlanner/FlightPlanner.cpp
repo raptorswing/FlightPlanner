@@ -38,6 +38,11 @@ const QList<Position> &FlightPlanner::bestFlightSoFar() const
     return _bestFlightSoFar;
 }
 
+void FlightPlanner::setBestFlightSoFar(const QList<Position> &nFlight)
+{
+    _bestFlightSoFar = nFlight;
+}
+
 quint32 FlightPlanner::iterations() const
 {
     return _iterations;
@@ -91,12 +96,6 @@ void FlightPlanner::resetPlanning()
 void FlightPlanner::setBestFitnessSoFar(const Fitness &nBest)
 {
     _bestFitnessSoFar = nBest;
-}
-
-//protected
-void FlightPlanner::setBestFlightSoFar(const QList<Position> &nFlight)
-{
-    _bestFlightSoFar = nFlight;
 }
 
 //private slot
