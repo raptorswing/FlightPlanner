@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        WaypointPlannerMainWindow.cpp
+        WaypointPlannerMainWindow.cpp \
+    WaypointMapView.cpp
 
-HEADERS  += WaypointPlannerMainWindow.h
+HEADERS  += WaypointPlannerMainWindow.h \
+    WaypointMapView.h
 
 FORMS    += WaypointPlannerMainWindow.ui
 
