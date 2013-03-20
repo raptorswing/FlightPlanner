@@ -1,6 +1,7 @@
 #include "WaysetManager.h"
 
 #include <QtDebug>
+#include <QTimer>
 
 WaysetManager::WaysetManager(MapGraphicsScene *scene, QObject *parent) :
     QObject(parent), _scene(scene)
@@ -48,6 +49,45 @@ void WaysetManager::enableMouseInteraction(bool enable)
         current->setFlag(MapGraphicsObject::ObjectIsMovable, enable);
         current = current->next();
     }
+}
+
+//public slot
+void WaysetManager::fixKinematics()
+{
+    if (_first.isNull())
+        return;
+
+    int numErrors = _first->autoFixKinematicsIteration();
+
+    if (numErrors > 0)
+        QTimer::singleShot(1, this, SLOT(fixKinematics()));
+}
+
+//public slot
+void WaysetManager::fixDistances()
+{
+    if (_first.isNull())
+        return;
+
+    int numErrors = _first->autoFixDistancesIteration();
+
+    if (numErrors > 0)
+        QTimer::singleShot(1, this, SLOT(fixDistances()));
+}
+
+//public slot
+void WaysetManager::fixAll(bool repeatable)
+{
+    if (_first.isNull())
+        return;
+
+    int numKinematics = _first->autoFixKinematicsIteration();
+    int numDistance = _first->autoFixDistancesIteration();
+
+    if (numKinematics > 0 || numDistance > 0)
+        QTimer::singleShot(1, this, SLOT(fixAll()));
+    else if (repeatable)
+        this->fixAll(false);
 }
 
 //private slot

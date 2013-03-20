@@ -92,6 +92,25 @@ void WaypointPlannerMainWindow::on_actionCreate_Mode_triggered()
     this->setMouseMode(CreateMode);
 }
 
+//private slot
+void WaypointPlannerMainWindow::on_actionAuto_Fix_Angles_triggered()
+{
+    _waysetManager->fixKinematics();
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionAuto_Fix_Distances_triggered()
+{
+    _waysetManager->fixDistances();
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionAuto_Fix_triggered()
+{
+    _waysetManager->fixAll();
+}
+
+
 //private
 void WaypointPlannerMainWindow::restoreGeometry()
 {

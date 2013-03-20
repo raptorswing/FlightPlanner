@@ -23,6 +23,9 @@ signals:
 public slots:
     void appendWaypoint(Position pos);
     void enableMouseInteraction(bool enable=true);
+    void fixKinematics();
+    void fixDistances();
+    void fixAll(bool repeatable = true);
 
 private slots:
     void setNewFirst(Waypoint * wpt);

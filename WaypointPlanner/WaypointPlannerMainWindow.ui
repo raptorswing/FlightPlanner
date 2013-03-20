@@ -59,6 +59,10 @@
    </attribute>
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionCreate_Mode"/>
+   <addaction name="separator"/>
+   <addaction name="actionAuto_Fix_Angles"/>
+   <addaction name="actionAuto_Fix_Distances"/>
+   <addaction name="actionAuto_Fix"/>
   </widget>
   <action name="actionExit">
    <property name="icon">
@@ -89,6 +93,21 @@
    </property>
    <property name="text">
     <string>Create Mode</string>
+   </property>
+  </action>
+  <action name="actionAuto_Fix_Angles">
+   <property name="text">
+    <string>Auto-Fix Angles</string>
+   </property>
+  </action>
+  <action name="actionAuto_Fix_Distances">
+   <property name="text">
+    <string>Auto-Fix Distances</string>
+   </property>
+  </action>
+  <action name="actionAuto_Fix">
+   <property name="text">
+    <string>Auto-Fix</string>
    </property>
   </action>
  </widget>

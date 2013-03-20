@@ -1,10 +1,12 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
-#include "CircleObject.h"
-#include "LineObject.h"
+#include <QPointer>
 
-class Waypoint : public CircleObject
+#include "LineObject.h"
+#include "MapGraphicsObject.h"
+
+class Waypoint : public MapGraphicsObject
 {
     Q_OBJECT
 public:
@@ -15,8 +17,17 @@ public:
     Waypoint * prev() const;
     Waypoint * next() const;
 
+    int autoFixKinematicsIteration();
+    int autoFixDistancesIteration();
+
     //virtual from MapGraphicsObject
     virtual void setPos(const QPointF&);
+
+    //pure-virtual from MapGraphicsObject
+    QRectF boundingRect() const;
+
+    //pure-virtual from MapGraphicsObject
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     
 signals:
     void newWaypointGenerated(Waypoint * newOne);
@@ -29,6 +40,8 @@ public slots:
     void append(Waypoint * newWpt);
     void insertNewAfter();
     void insertNewBefore();
+    void deleteAllFollowing();
+    void deleteAllPrevious();
 
 protected:
     //virtual from MapGraphicsObject
@@ -38,8 +51,14 @@ private slots:
     void updateLine();
 
 private:
-    Waypoint * _prev;
-    Waypoint * _next;
+    static qreal angleBetween(const QPointF& src, const QPointF& dst);
+    static qreal angleAbsVal(qreal angleA, qreal angleB);
+    static qreal normalizeAngle(qreal angle);
+    static QPointF perturbPosition(const QPointF& pos);
+
+    qreal _displaySize;
+    QPointer<Waypoint> _prev;
+    QPointer<Waypoint> _next;
 
     LineObject *_lineObj;
     
