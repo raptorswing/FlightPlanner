@@ -356,6 +356,10 @@ void Waypoint::deleteAllPrevious()
 //virtual from MapGraphicsObject
 void Waypoint::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
+    //Quick hack to check for mouse interactivity mode (or lack of it)
+    if (!this->flags().testFlag(MapGraphicsObject::ObjectIsSelectable))
+        return;
+
     event->accept();
 
     const bool hasNext = (this->next() != 0);
