@@ -36,8 +36,6 @@ private slots:
     void on_actionExit_triggered();
     void on_actionSelect_Mode_triggered();
     void on_actionCreate_Mode_triggered();
-    void on_actionAuto_Fix_Angles_triggered();
-    void on_actionAuto_Fix_Distances_triggered();
     void on_actionAuto_Fix_triggered();
 
 private:

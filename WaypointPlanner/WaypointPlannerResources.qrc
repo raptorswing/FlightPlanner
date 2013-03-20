@@ -23,6 +23,8 @@
         <file>images/16x16/devices/3floppy_unmount.png</file>
         <file>images/16x16/filesystems/folder_documents.png</file>
         <file>images/32x32/apps/spire.png</file>
-        <file>images/32x32/rect2987.png</file>
+        <file>images/createWaypointCursor.png</file>
+        <file>images/editWaypointCursor.png</file>
+        <file>images/fixIcon.png</file>
     </qresource>
 </RCC>

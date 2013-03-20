@@ -16,7 +16,8 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::WaypointPlannerMainWindow)
 {
-    ui->setupUi(this);
+    this->ui->setupUi(this);
+    this->ui->menuView->addAction(this->ui->toolBar->toggleViewAction());
     this->restoreGeometry();
 
     this->initMap();
@@ -90,18 +91,6 @@ void WaypointPlannerMainWindow::on_actionSelect_Mode_triggered()
 void WaypointPlannerMainWindow::on_actionCreate_Mode_triggered()
 {
     this->setMouseMode(CreateMode);
-}
-
-//private slot
-void WaypointPlannerMainWindow::on_actionAuto_Fix_Angles_triggered()
-{
-    _waysetManager->fixKinematics();
-}
-
-//private slot
-void WaypointPlannerMainWindow::on_actionAuto_Fix_Distances_triggered()
-{
-    _waysetManager->fixDistances();
 }
 
 //private slot

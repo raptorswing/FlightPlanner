@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>405</width>
     <height>300</height>
    </rect>
   </property>
@@ -17,13 +17,16 @@
    <iconset resource="WaypointPlannerResources.qrc">
     <normaloff>:/images/images/32x32/apps/spire.png</normaloff>:/images/images/32x32/apps/spire.png</iconset>
   </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonTextBesideIcon</enum>
+  </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>405</width>
      <height>21</height>
     </rect>
    </property>
@@ -33,17 +36,29 @@
     </property>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Waypoint Tools</string>
    </property>
    <property name="movable">
     <bool>false</bool>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftToolBarArea</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -60,8 +75,6 @@
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionCreate_Mode"/>
    <addaction name="separator"/>
-   <addaction name="actionAuto_Fix_Angles"/>
-   <addaction name="actionAuto_Fix_Distances"/>
    <addaction name="actionAuto_Fix"/>
   </widget>
   <action name="actionExit">
@@ -83,29 +96,31 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/editWaypointCursor.png</normaloff>:/images/images/editWaypointCursor.png</iconset>
+   </property>
    <property name="text">
-    <string>Edit Mode</string>
+    <string>Edit Waypoints</string>
    </property>
   </action>
   <action name="actionCreate_Mode">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="text">
-    <string>Create Mode</string>
+   <property name="icon">
+    <iconset resource="WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/createWaypointCursor.png</normaloff>:/images/images/createWaypointCursor.png</iconset>
    </property>
-  </action>
-  <action name="actionAuto_Fix_Angles">
    <property name="text">
-    <string>Auto-Fix Angles</string>
-   </property>
-  </action>
-  <action name="actionAuto_Fix_Distances">
-   <property name="text">
-    <string>Auto-Fix Distances</string>
+    <string>Create Waypoints</string>
    </property>
   </action>
   <action name="actionAuto_Fix">
+   <property name="icon">
+    <iconset resource="WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/fixIcon.png</normaloff>:/images/images/fixIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Auto-Fix</string>
    </property>
