@@ -15,7 +15,7 @@ public:
     Waypoint * prev() const;
     Waypoint * next() const;
 
-    //virtual from CircleObject
+    //virtual from MapGraphicsObject
     virtual void setPos(const QPointF&);
     
 signals:
