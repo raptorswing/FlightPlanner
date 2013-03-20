@@ -26,5 +26,6 @@
         <file>images/createWaypointCursor.png</file>
         <file>images/editWaypointCursor.png</file>
         <file>images/fixIcon.png</file>
+        <file>images/coverageHelperIcon.png</file>
     </qresource>
 </RCC>

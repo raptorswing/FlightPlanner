@@ -75,6 +75,8 @@
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionCreate_Mode"/>
    <addaction name="separator"/>
+   <addaction name="actionCoverage_Helper"/>
+   <addaction name="separator"/>
    <addaction name="actionAuto_Fix"/>
   </widget>
   <action name="actionExit">
@@ -123,6 +125,15 @@
    </property>
    <property name="text">
     <string>Auto-Fix</string>
+   </property>
+  </action>
+  <action name="actionCoverage_Helper">
+   <property name="icon">
+    <iconset resource="WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/coverageHelperIcon.png</normaloff>:/images/images/coverageHelperIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Coverage Helper</string>
    </property>
   </action>
  </widget>
