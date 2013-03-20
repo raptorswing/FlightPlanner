@@ -12,6 +12,9 @@ WaypointMapView::WaypointMapView(MapGraphicsScene *scene, QWidget *parent) :
 //virtual from MapGraphicsView
 void WaypointMapView::handleChildMousePress(QMouseEvent *event)
 {
+    if (event->button() != Qt::LeftButton)
+        return;
+
     /*
      *Not accepted since we can't tell whether this will be a click or a drag until
      *we see the release event. Drags need to be handled by parent to support slippymap.

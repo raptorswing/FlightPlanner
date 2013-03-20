@@ -14,10 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         WaypointPlannerMainWindow.cpp \
-    WaypointMapView.cpp
+    WaypointMapView.cpp \
+    Waypoint.cpp \
+    WaysetManager.cpp
 
 HEADERS  += WaypointPlannerMainWindow.h \
-    WaypointMapView.h
+    WaypointMapView.h \
+    Waypoint.h \
+    WaysetManager.h
 
 FORMS    += WaypointPlannerMainWindow.ui
 
@@ -37,3 +41,6 @@ else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
 
 INCLUDEPATH += $$PWD/../GPX
 DEPENDPATH += $$PWD/../GPX
+
+RESOURCES += \
+    WaypointPlannerResources.qrc

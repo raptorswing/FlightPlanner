@@ -14,8 +14,8 @@
    <string>Waypoint Flight Planner</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../FlightPlanner/resources.qrc">
-    <normaloff>:/icons/32x32/gui/images/32x32/apps/spire.png</normaloff>:/icons/32x32/gui/images/32x32/apps/spire.png</iconset>
+   <iconset resource="WaypointPlannerResources.qrc">
+    <normaloff>:/images/images/32x32/apps/spire.png</normaloff>:/images/images/32x32/apps/spire.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
@@ -62,8 +62,8 @@
   </widget>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../FlightPlanner/resources.qrc">
-     <normaloff>:/icons/16x16/gui/images/16x16/actions/exit.png</normaloff>:/icons/16x16/gui/images/16x16/actions/exit.png</iconset>
+    <iconset resource="WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/16x16/actions/exit.png</normaloff>:/images/images/16x16/actions/exit.png</iconset>
    </property>
    <property name="text">
     <string>E&amp;xit</string>
@@ -80,7 +80,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Select Mode</string>
+    <string>Edit Mode</string>
    </property>
   </action>
   <action name="actionCreate_Mode">
@@ -94,7 +94,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../FlightPlanner/resources.qrc"/>
+  <include location="WaypointPlannerResources.qrc"/>
  </resources>
  <connections/>
 </ui>

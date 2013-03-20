@@ -2,9 +2,12 @@
 #define WAYPOINTPLANNERMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPointer>
 
 #include "WaypointMapView.h"
 #include "MapGraphicsScene.h"
+#include "Waypoint.h"
+#include "WaysetManager.h"
 
 namespace Ui {
 class WaypointPlannerMainWindow;
@@ -44,6 +47,7 @@ private:
     MapGraphicsScene * _scene;
 
     MouseMode _mouseMode;
+    WaysetManager * _waysetManager;
 };
 
 #endif // WAYPOINTPLANNERMAINWINDOW_H

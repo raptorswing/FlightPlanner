@@ -21,8 +21,6 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 
     this->initMap();
 
-    this->setMouseMode(CreateMode);
-
     //A hack to make initial map centering work right.
     QTimer::singleShot(1, this, SLOT(doInitialMapCentering()));
 }
@@ -56,14 +54,7 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
     this->ui->actionSelect_Mode->setChecked(select);
     this->ui->actionCreate_Mode->setChecked(create);
 
-    if (select)
-    {
-        //TODO - Enable selection in all waypoint objects
-    }
-    else if (create)
-    {
-        //TODO - Disable selection in all waypoint objects
-    }
+    _waysetManager->enableMouseInteraction(mode == SelectMode);
 }
 
 //private slot
@@ -80,9 +71,7 @@ void WaypointPlannerMainWindow::handleMapClick(QPoint pos)
         return;
 
     const QPointF scenePos = _view->mapToScene(pos);
-    CircleObject * obj = new CircleObject(20, true, Qt::green);
-    obj->setPos(scenePos);
-    _scene->addObject(obj);
+    _waysetManager->appendWaypoint(Position(scenePos));
 }
 
 //private slot
@@ -153,7 +142,7 @@ void WaypointPlannerMainWindow::initMap()
     _scene = new MapGraphicsScene(this);
     _view = new WaypointMapView(_scene, this);
 
-    QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::MapQuestAerialTiles));
+    QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::MapQuestOSMTiles));
     _view->setTileSource(tileSource);
 
     connect(_view,
@@ -162,4 +151,8 @@ void WaypointPlannerMainWindow::initMap()
             SLOT(handleMapClick(QPoint)));
 
     this->setCentralWidget(_view);
+
+    _waysetManager = new WaysetManager(_scene, this);
+
+    this->setMouseMode(CreateMode);
 }
