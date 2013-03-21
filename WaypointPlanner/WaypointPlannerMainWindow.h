@@ -20,7 +20,8 @@ public:
     enum MouseMode
     {
         SelectMode,
-        CreateMode
+        CreateMode,
+        CoverageHelperMode
     };
 
 public:
@@ -37,6 +38,7 @@ private slots:
     void on_actionSelect_Mode_triggered();
     void on_actionCreate_Mode_triggered();
     void on_actionAuto_Fix_triggered();
+    void on_actionCoverage_Helper_triggered();
 
 private:
     void restoreGeometry();

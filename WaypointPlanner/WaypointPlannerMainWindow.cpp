@@ -37,24 +37,28 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
 {
     _mouseMode = mode;
 
-    bool select, create;
+    bool select = false, create = false, coverage = false;
 
     switch(_mouseMode)
     {
     case SelectMode:
         select = true;
-        create = false;
         break;
 
     case CreateMode:
-        select = false;
         create = true;
+        break;
+
+    case CoverageHelperMode:
+        coverage = true;
         break;
     }
 
     this->ui->actionSelect_Mode->setChecked(select);
     this->ui->actionCreate_Mode->setChecked(create);
+    this->ui->actionCoverage_Helper->setChecked(coverage);
 
+    //Waypoints can only be interacted with in Select/Edit mode
     _waysetManager->enableMouseInteraction(mode == SelectMode);
 }
 
@@ -99,6 +103,11 @@ void WaypointPlannerMainWindow::on_actionAuto_Fix_triggered()
     _waysetManager->fixAll();
 }
 
+//private slot
+void WaypointPlannerMainWindow::on_actionCoverage_Helper_triggered()
+{
+    this->setMouseMode(CoverageHelperMode);
+}
 
 //private
 void WaypointPlannerMainWindow::restoreGeometry()
