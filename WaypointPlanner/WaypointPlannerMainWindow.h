@@ -8,6 +8,7 @@
 #include "MapGraphicsScene.h"
 #include "Waypoint.h"
 #include "WaysetManager.h"
+#include "PolygonObject.h"
 
 namespace Ui {
 class WaypointPlannerMainWindow;
@@ -51,6 +52,8 @@ private:
 
     MouseMode _mouseMode;
     WaysetManager * _waysetManager;
+
+    QPointer<PolygonObject> _coveragePolygon;
 };
 
 #endif // WAYPOINTPLANNERMAINWINDOW_H

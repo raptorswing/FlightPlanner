@@ -2,7 +2,6 @@
 #include "ui_WaypointPlannerMainWindow.h"
 
 #include "tileSources/OSMTileSource.h"
-#include "CircleObject.h"
 
 #include <QSettings>
 #include <QDesktopWidget>
@@ -50,6 +49,8 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
         break;
 
     case CoverageHelperMode:
+        if (!_coveragePolygon.isNull())
+            _coveragePolygon->deleteLater();
         coverage = true;
         break;
     }
@@ -72,11 +73,25 @@ void WaypointPlannerMainWindow::doInitialMapCentering()
 //private slot
 void WaypointPlannerMainWindow::handleMapClick(QPoint pos)
 {
-    if (_mouseMode != CreateMode)
-        return;
-
     const QPointF scenePos = _view->mapToScene(pos);
-    _waysetManager->appendWaypoint(Position(scenePos));
+    if (_mouseMode == CreateMode)
+        _waysetManager->appendWaypoint(Position(scenePos));
+    else if (_mouseMode == CoverageHelperMode)
+    {
+        if (_coveragePolygon.isNull())
+        {
+            QPolygonF poly;
+            poly << scenePos;
+            _coveragePolygon = new PolygonObject(poly);
+            _scene->addObject(_coveragePolygon);
+        }
+        else
+        {
+            QPolygonF poly = _coveragePolygon->geoPoly();
+            poly << scenePos;
+            _coveragePolygon->setGeoPoly(poly);
+        }
+    }
 }
 
 //private slot
