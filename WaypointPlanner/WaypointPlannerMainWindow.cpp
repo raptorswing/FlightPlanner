@@ -126,7 +126,7 @@ void WaypointPlannerMainWindow::restoreGeometry()
 
     bool ok;
     const int wStateInt = settings.value(SETTINGS_WINDOWSTATE).toInt(&ok);
-    const Qt::WindowStates wState = wStateInt;
+    const Qt::WindowStates wState(wStateInt);
     if (ok)
         this->setWindowState(wState);
 }
