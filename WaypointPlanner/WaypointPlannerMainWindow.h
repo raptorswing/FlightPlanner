@@ -3,12 +3,15 @@
 
 #include <QMainWindow>
 #include <QPointer>
+#include <QSharedPointer>
 
 #include "WaypointMapView.h"
 #include "MapGraphicsScene.h"
 #include "Waypoint.h"
 #include "WaysetManager.h"
 #include "PolygonObject.h"
+
+#include "PlanningProblem.h"
 
 namespace Ui {
 class WaypointPlannerMainWindow;
@@ -29,8 +32,12 @@ public:
     explicit WaypointPlannerMainWindow(QWidget *parent = 0);
     ~WaypointPlannerMainWindow();
 
+signals:
+    void planningProblemChanged(const QSharedPointer<PlanningProblem>& problem);
+
 public slots:
     void setMouseMode(MouseMode mode);
+    void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
     
 private slots:
     void doInitialMapCentering();
@@ -44,6 +51,7 @@ private slots:
 private:
     void restoreGeometry();
     void storeGeometry();
+    void initProblem();
     void initMap();
     Ui::WaypointPlannerMainWindow *ui;
 
@@ -51,6 +59,7 @@ private:
     MapGraphicsScene * _scene;
 
     MouseMode _mouseMode;
+    QSharedPointer<PlanningProblem> _problem;
     WaysetManager * _waysetManager;
 
     QPointer<PolygonObject> _coveragePolygon;

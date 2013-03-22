@@ -14,9 +14,11 @@ class WaysetManager : public QObject
     Q_OBJECT
 public:
     explicit WaysetManager(MapGraphicsScene * scene,
+                           QSharedPointer<PlanningProblem> problem,
                            QObject *parent = 0);
 
     QList<Position> currentWayset() const;
+    void setWayset(const QList<Position>& wayset);
     
 signals:
     
@@ -33,6 +35,7 @@ private slots:
 
 private:
     MapGraphicsScene * _scene;
+    QWeakPointer<PlanningProblem> _problem;
 
     QPointer<Waypoint> _first;
     bool _mouseInteraction;

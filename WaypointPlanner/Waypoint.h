@@ -2,15 +2,19 @@
 #define WAYPOINT_H
 
 #include <QPointer>
+#include <QWeakPointer>
 
 #include "DubinsLineObject.h"
 #include "MapGraphicsObject.h"
+
+#include "PlanningProblem.h"
 
 class Waypoint : public MapGraphicsObject
 {
     Q_OBJECT
 public:
-    Waypoint(Waypoint * prev = 0,
+    Waypoint(const QWeakPointer<PlanningProblem>& problem,
+             Waypoint * prev = 0,
              Waypoint * next = 0);
     ~Waypoint();
 
@@ -59,6 +63,8 @@ private:
     qreal _displaySize;
     QPointer<Waypoint> _prev;
     QPointer<Waypoint> _next;
+
+    QWeakPointer<PlanningProblem> _problem;
 
     DubinsLineObject *_lineObj;
     

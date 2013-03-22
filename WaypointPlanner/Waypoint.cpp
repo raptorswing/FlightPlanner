@@ -9,11 +9,11 @@
 #include "Dubins.h"
 
 const qreal PI = 3.14159265359;
-const qreal KINEMATIC_LIMIT = PI / 4.0;
-const qreal KINEMATIC_LIMIT_TURN_RADIUS = 35.0;
 
-Waypoint::Waypoint(Waypoint *prev, Waypoint *next) :
-    MapGraphicsObject(true), _displaySize(15.0), _lineObj(0)
+Waypoint::Waypoint(const QWeakPointer<PlanningProblem> &problem,
+                   Waypoint *prev,
+                   Waypoint *next) :
+    MapGraphicsObject(true), _displaySize(15.0), _problem(problem), _lineObj(0)
 {
     this->setPrev(prev);
     this->setNext(next);
@@ -49,6 +49,11 @@ int Waypoint::autoFixKinematicsIteration()
 {
     int violations = 0;
 
+    if (_problem.isNull())
+        return 0;
+    QSharedPointer<PlanningProblem> problem = _problem.toStrongRef();
+    const qreal maxTurnAngle = problem->uavParameters().maxTurnAngle();
+
     if (!_prev.isNull() && !_next.isNull())
     {
         const qreal angleBefore = Waypoint::angleBetween(this->prev()->pos(),
@@ -56,7 +61,7 @@ int Waypoint::autoFixKinematicsIteration()
         const qreal angleAfter = Waypoint::angleBetween(this->pos(),
                                                         this->next()->pos());
 
-        const qreal error = Waypoint::angleAbsVal(angleBefore, angleAfter) - KINEMATIC_LIMIT;
+        const qreal error = Waypoint::angleAbsVal(angleBefore, angleAfter) - maxTurnAngle;
         if (error > 0.0)
         {
             //Perturb positions
@@ -74,7 +79,7 @@ int Waypoint::autoFixKinematicsIteration()
                                                                  newPos);
                 const qreal angleAfter = Waypoint::angleBetween(newPos,
                                                                 newNextPos);
-                currentError = Waypoint::angleAbsVal(angleBefore, angleAfter) - KINEMATIC_LIMIT;
+                currentError = Waypoint::angleAbsVal(angleBefore, angleAfter) - maxTurnAngle;
             }
 
             this->prev()->setPos(newPrevPos);
@@ -96,7 +101,7 @@ int Waypoint::autoFixKinematicsIteration()
                                                          this->pos());
         const qreal angleAfter = Waypoint::angleBetween(this->pos(),
                                                         this->next()->pos());
-        const qreal error = Waypoint::angleAbsVal(angleBefore, angleAfter) - KINEMATIC_LIMIT;
+        const qreal error = Waypoint::angleAbsVal(angleBefore, angleAfter) - maxTurnAngle;
         if (error > 0.0)
             violations++;
     }
@@ -182,18 +187,7 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
 
-    //Set color based on kinematics!
-    QColor fillColor = Qt::yellow;
-//    if (!_next.isNull() && !_prev.isNull())
-//    {
-//        const qreal angleBefore = Waypoint::angleBetween(this->prev()->pos(),
-//                                                         this->pos());
-//        const qreal angleAfter = Waypoint::angleBetween(this->pos(),
-//                                                        this->next()->pos());
-//        if (Waypoint::angleAbsVal(angleBefore, angleAfter) > KINEMATIC_LIMIT)
-//            fillColor = Qt::red;
-//    }
-
+    const QColor fillColor = QColor(255,0,0,50);
     QPolygonF triangle;
     triangle << QPointF(-0.5 * _displaySize, -0.5 * _displaySize);
     triangle << QPointF(0.5 * _displaySize, -0.5 * _displaySize);
@@ -298,7 +292,7 @@ void Waypoint::insertNewAfter()
 
     const QPointF avg = (this->pos() + this->next()->pos()) / 2.0;
 
-    Waypoint * wpt = new Waypoint();
+    Waypoint * wpt = new Waypoint(_problem);
     wpt->setPos(avg);
 
     //Announce the new waypoint before setting links
@@ -321,7 +315,7 @@ void Waypoint::insertNewBefore()
 
     const QPointF avg = (this->pos() + this->prev()->pos()) / 2.0;
 
-    Waypoint * wpt = new Waypoint();
+    Waypoint * wpt = new Waypoint(_problem);
     wpt->setPos(avg);
 
     //Announce the new waypoint before setting links
@@ -387,6 +381,11 @@ void Waypoint::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 //private slot
 void Waypoint::updateLine()
 {
+    if (_problem.isNull())
+        return;
+    QSharedPointer<PlanningProblem> problem = _problem.toStrongRef();
+    const qreal minTurnRadius = problem->uavParameters().minTurningRadius();
+
     if (this->next() == 0 && _lineObj != 0)
     {
         _lineObj->deleteLater();
@@ -406,7 +405,7 @@ void Waypoint::updateLine()
         if (this->next()->next() != 0)
             endAngle = Waypoint::angleBetween(this->next()->pos(),this->next()->next()->pos()) + PI / 2.0;
 
-        Dubins dubins(startPos, startAngle, endPos, endAngle, KINEMATIC_LIMIT_TURN_RADIUS);
+        Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius);
 
         if (_lineObj == 0)
         {

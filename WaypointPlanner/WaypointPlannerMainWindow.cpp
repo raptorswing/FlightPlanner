@@ -19,6 +19,7 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     this->ui->menuView->addAction(this->ui->toolBar->toggleViewAction());
     this->restoreGeometry();
 
+    this->initProblem();
     this->initMap();
 
     //A hack to make initial map centering work right.
@@ -61,6 +62,13 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
 
     //Waypoints can only be interacted with in Select/Edit mode
     _waysetManager->enableMouseInteraction(mode == SelectMode);
+}
+
+//public slot
+void WaypointPlannerMainWindow::setPlanningProblem(const QSharedPointer<PlanningProblem> &problem)
+{
+    _problem = problem;
+    this->planningProblemChanged(problem);
 }
 
 //private slot
@@ -169,6 +177,12 @@ void WaypointPlannerMainWindow::storeGeometry()
 }
 
 //private
+void WaypointPlannerMainWindow::initProblem()
+{
+    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
+}
+
+//private
 void WaypointPlannerMainWindow::initMap()
 {
     _scene = new MapGraphicsScene(this);
@@ -184,7 +198,7 @@ void WaypointPlannerMainWindow::initMap()
 
     this->setCentralWidget(_view);
 
-    _waysetManager = new WaysetManager(_scene, this);
+    _waysetManager = new WaysetManager(_scene, _problem, this);
 
     this->setMouseMode(CreateMode);
 }

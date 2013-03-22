@@ -3,8 +3,10 @@
 #include <QtDebug>
 #include <QTimer>
 
-WaysetManager::WaysetManager(MapGraphicsScene *scene, QObject *parent) :
-    QObject(parent), _scene(scene)
+WaysetManager::WaysetManager(MapGraphicsScene *scene,
+                             QSharedPointer<PlanningProblem> problem,
+                             QObject *parent) :
+    QObject(parent), _scene(scene), _problem(problem)
 {
 }
 
@@ -22,10 +24,24 @@ QList<Position> WaysetManager::currentWayset() const
     return toRet;
 }
 
+void WaysetManager::setWayset(const QList<Position> &wayset)
+{
+    if (!_first.isNull())
+    {
+        _first->deleteLater();
+        _first = 0;
+    }
+
+    foreach(const Position& pos, wayset)
+    {
+        this->appendWaypoint(pos);
+    }
+}
+
 //public slot
 void WaysetManager::appendWaypoint(Position pos)
 {
-    Waypoint * wpt = new Waypoint();
+    Waypoint * wpt = new Waypoint(_problem);
     wpt->setPos(pos.lonLat());
     _scene->addObject(wpt);
 
