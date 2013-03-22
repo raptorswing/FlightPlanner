@@ -51,7 +51,6 @@ SOURCES += main.cpp\
     Exporters/GPXExporter.cpp \
     FlightTasks/SamplingTask.cpp \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.cpp \
-    HierarchicalPlanner/DubinsIntermediate/dubins.cpp \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.cpp \
     gui/FlightTaskEditors/FlightTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.cpp \
@@ -105,7 +104,6 @@ HEADERS  += \
     Exporters/GPXExporter.h \
     FlightTasks/SamplingTask.h \
     HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h \
-    HierarchicalPlanner/DubinsIntermediate/dubins.h \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.h \
     gui/FlightTaskEditors/FlightTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.h \
@@ -169,3 +167,11 @@ else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
 
 INCLUDEPATH += $$PWD/../GPX
 DEPENDPATH += $$PWD/../GPX
+
+#Linkage for Dubins library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Dubins/release/ -lDubins
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Dubins/debug/ -lDubins
+else:unix: LIBS += -L$$OUT_PWD/../Dubins/ -lDubins
+
+INCLUDEPATH += $$PWD/../Dubins
+DEPENDPATH += $$PWD/../Dubins

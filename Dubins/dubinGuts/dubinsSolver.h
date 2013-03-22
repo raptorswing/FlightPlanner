@@ -17,8 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#ifndef DUBINS_H
-#define DUBINS_H
+#ifndef DUBINSGUTS_H
+#define DUBINSGUTS_H
 
 #include <QtGlobal>
 
@@ -32,13 +32,14 @@
 extern "C" {
 #endif
 
-typedef struct 
+class DubinsPath
 {
+public:
     qreal qi[3];       // the initial configuration
     qreal param[3];    // the lengths of the three segments
     qreal rho;         // model forward velocity / model angular velocity
     int type;           // encoded representation of the segment types
-} DubinsPath;
+};
 
 /**
  * Callback function for path sampling
@@ -121,6 +122,6 @@ void dubins_RLR( qreal alpha, qreal beta, qreal d, qreal* outputs );
 } // extern "C"
 #endif
 
-#endif // DUBINS_H
+#endif // DUBINSGUTS_H
 
 

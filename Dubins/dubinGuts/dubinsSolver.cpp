@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "dubins.h"
+#include "dubinGuts/dubinsSolver.h"
 #include <cmath>
 #include <cassert>
 #include <limits>
