@@ -14,16 +14,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     WaypointMapView.cpp \
-    Waypoint.cpp \
-    WaysetManager.cpp \
-    DubinsLineObject.cpp \
     gui/MainWindow.cpp
 
 HEADERS  += \
     WaypointMapView.h \
-    Waypoint.h \
-    WaysetManager.h \
-    DubinsLineObject.h \
     gui/MainWindow.h
 
 FORMS    += \

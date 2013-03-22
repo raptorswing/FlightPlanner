@@ -278,6 +278,8 @@ void MainWindow::initPlanningProblem()
     _viewAdapter = new ProblemViewAdapter(_problem,
                                           _scene,
                                           this);
+
+    _waysetManager = new WaysetManager(_scene, _problem, this);
 }
 
 //private
@@ -327,17 +329,5 @@ void MainWindow::initPlanningControlConnections()
 
 void MainWindow::updateDisplayedFlight()
 {
-    foreach(MapGraphicsObject * obj, _displayedPathObjects)
-        obj->deleteLater();
-    _displayedPathObjects.clear();
-
-    const QList<Position>& path = _planner->bestFlightSoFar();
-    foreach(const Position& pos, path)
-    {
-        CircleObject * obj = new CircleObject(5.0, true, QColor(255,255,0));
-        obj->setPos(pos.lonLat());
-        obj->setZValue(100.0);
-        _scene->addObject(obj);
-        _displayedPathObjects.append(obj);
-    }
+    _waysetManager->setWayset(_planner->bestFlightSoFar());
 }

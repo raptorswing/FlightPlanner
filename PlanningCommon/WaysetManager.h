@@ -7,9 +7,11 @@
 
 #include "Position.h"
 #include "MapGraphicsScene.h"
-#include "Waypoint.h"
+#include "MapObjects/Waypoint.h"
 
-class WaysetManager : public QObject
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT WaysetManager : public QObject
 {
     Q_OBJECT
 public:

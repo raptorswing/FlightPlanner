@@ -11,6 +11,8 @@
 #include "FlightPlanner.h"
 #include "ProblemViewAdapter.h"
 
+#include "WaysetManager.h" //From PlanningCommon
+
 namespace Ui {
 class MainWindow;
 }
@@ -67,7 +69,7 @@ private:
     FlightPlanner * _planner;
     ProblemViewAdapter * _viewAdapter;
 
-    QList<MapGraphicsObject *> _displayedPathObjects;
+    WaysetManager * _waysetManager;
 };
 
 #endif // MAINWINDOW_H

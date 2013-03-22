@@ -7,7 +7,6 @@
 
 #include "WaypointMapView.h"
 #include "MapGraphicsScene.h"
-#include "Waypoint.h"
 #include "WaysetManager.h"
 #include "PolygonObject.h"
 

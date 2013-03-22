@@ -40,7 +40,10 @@ SOURCES += \
     Exporters/Exporter.cpp \
     Importers/importer.cpp \
     Importers/GPXImporter.cpp \
-    gui/CommonFileHandling.cpp
+    gui/CommonFileHandling.cpp \
+    MapObjects/Waypoint.cpp \
+    MapObjects/DubinsLineObject.cpp \
+    WaysetManager.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -72,7 +75,10 @@ HEADERS +=\
     Exporters/Exporter.h \
     Importers/Importer.h \
     Importers/GPXImporter.h \
-    gui/CommonFileHandling.h
+    gui/CommonFileHandling.h \
+    MapObjects/Waypoint.h \
+    MapObjects/DubinsLineObject.h \
+    WaysetManager.h
 
 unix:!symbian {
     maemo5 {

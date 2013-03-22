@@ -7,7 +7,9 @@
 
 #include <QPointer>
 
-class DubinsLineObject : public LineObject
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT DubinsLineObject : public LineObject
 {
     Q_OBJECT
 public:

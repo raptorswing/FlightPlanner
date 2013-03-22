@@ -6,10 +6,11 @@
 
 #include "DubinsLineObject.h"
 #include "MapGraphicsObject.h"
-
 #include "PlanningProblem.h"
 
-class Waypoint : public MapGraphicsObject
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT Waypoint : public MapGraphicsObject
 {
     Q_OBJECT
 public:
