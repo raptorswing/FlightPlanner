@@ -202,7 +202,7 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
     else
     {
-        const qreal angle = Waypoint::angleBetween(this->pos(), this->next()->pos());
+        const qreal angle = Waypoint::angleBetween(this->pos(), this->next()->pos()) - PI / 2.0;
         painter->save();
         painter->rotate(angle * 180.0 / PI);
         painter->drawPolygon(triangle, Qt::OddEvenFill);
@@ -398,12 +398,12 @@ void Waypoint::updateLine()
         const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
 
         const QPointF startPos(0,0);
-        const qreal startAngle = Waypoint::angleBetween(this->pos(), this->next()->pos()) + PI / 2.0;
+        const qreal startAngle = Waypoint::angleBetween(this->pos(), this->next()->pos());
         const QPointF endPos((this->next()->pos().x() - this->pos().x()) / lonPerMeter,
                              (this->next()->pos().y() - this->pos().y()) / latPerMeter);
         qreal endAngle = startAngle;
         if (this->next()->next() != 0)
-            endAngle = Waypoint::angleBetween(this->next()->pos(),this->next()->next()->pos()) + PI / 2.0;
+            endAngle = Waypoint::angleBetween(this->next()->pos(),this->next()->next()->pos());
 
         Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius);
 
@@ -437,7 +437,7 @@ qreal Waypoint::angleBetween(const QPointF &src, const QPointF &dst)
     const QPointF diffDeg = dst - src;
     const QPointF diffMeters(diffDeg.x() / lonPerMeter,
                              diffDeg.y() / latPerMeter);
-    const qreal angle = atan2(diffMeters.y(), diffMeters.x()) - PI / 2.0;
+    const qreal angle = atan2(diffMeters.y(), diffMeters.x());
     return angle;
 }
 
