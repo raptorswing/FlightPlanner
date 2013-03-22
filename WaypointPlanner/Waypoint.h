@@ -3,7 +3,7 @@
 
 #include <QPointer>
 
-#include "LineObject.h"
+#include "DubinsLineObject.h"
 #include "MapGraphicsObject.h"
 
 class Waypoint : public MapGraphicsObject
@@ -60,7 +60,7 @@ private:
     QPointer<Waypoint> _prev;
     QPointer<Waypoint> _next;
 
-    LineObject *_lineObj;
+    DubinsLineObject *_lineObj;
     
 };
 

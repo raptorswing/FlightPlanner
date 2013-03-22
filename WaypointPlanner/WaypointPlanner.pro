@@ -16,14 +16,19 @@ SOURCES += main.cpp\
         WaypointPlannerMainWindow.cpp \
     WaypointMapView.cpp \
     Waypoint.cpp \
-    WaysetManager.cpp
+    WaysetManager.cpp \
+    DubinsLineObject.cpp
 
 HEADERS  += WaypointPlannerMainWindow.h \
     WaypointMapView.h \
     Waypoint.h \
-    WaysetManager.h
+    WaysetManager.h \
+    DubinsLineObject.h
 
 FORMS    += WaypointPlannerMainWindow.ui
+
+RESOURCES += \
+    WaypointPlannerResources.qrc
 
 
 #Linkage for MapGraphics
@@ -42,5 +47,10 @@ else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
 INCLUDEPATH += $$PWD/../GPX
 DEPENDPATH += $$PWD/../GPX
 
-RESOURCES += \
-    WaypointPlannerResources.qrc
+#Linkage for Dubins
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Dubins/release/ -lDubins
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Dubins/debug/ -lDubins
+else:unix: LIBS += -L$$OUT_PWD/../Dubins/ -lDubins
+
+INCLUDEPATH += $$PWD/../Dubins
+DEPENDPATH += $$PWD/../Dubins

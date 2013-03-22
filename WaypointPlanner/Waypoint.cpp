@@ -6,12 +6,14 @@
 
 #include "guts/Conversions.h"
 
-const qreal PI = 3.14159265359;
+#include "Dubins.h"
 
+const qreal PI = 3.14159265359;
 const qreal KINEMATIC_LIMIT = PI / 4.0;
+const qreal KINEMATIC_LIMIT_TURN_RADIUS = 35.0;
 
 Waypoint::Waypoint(Waypoint *prev, Waypoint *next) :
-    MapGraphicsObject(true), _displaySize(12.0), _lineObj(0)
+    MapGraphicsObject(true), _displaySize(15.0), _lineObj(0)
 {
     this->setPrev(prev);
     this->setNext(next);
@@ -157,6 +159,9 @@ void Waypoint::setPos(const QPointF & pos)
 {
     MapGraphicsObject::setPos(pos);
     this->updateLine();
+
+    if (this->prev() != 0 && this->prev()->prev() != 0)
+        this->prev()->prev()->updateLine();
 }
 
 //pure-virtual from MapGraphicsObject
@@ -179,15 +184,15 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     //Set color based on kinematics!
     QColor fillColor = Qt::yellow;
-    if (!_next.isNull() && !_prev.isNull())
-    {
-        const qreal angleBefore = Waypoint::angleBetween(this->prev()->pos(),
-                                                         this->pos());
-        const qreal angleAfter = Waypoint::angleBetween(this->pos(),
-                                                        this->next()->pos());
-        if (Waypoint::angleAbsVal(angleBefore, angleAfter) > KINEMATIC_LIMIT)
-            fillColor = Qt::red;
-    }
+//    if (!_next.isNull() && !_prev.isNull())
+//    {
+//        const qreal angleBefore = Waypoint::angleBetween(this->prev()->pos(),
+//                                                         this->pos());
+//        const qreal angleAfter = Waypoint::angleBetween(this->pos(),
+//                                                        this->next()->pos());
+//        if (Waypoint::angleAbsVal(angleBefore, angleAfter) > KINEMATIC_LIMIT)
+//            fillColor = Qt::red;
+//    }
 
     QPolygonF triangle;
     triangle << QPointF(-0.5 * _displaySize, -0.5 * _displaySize);
@@ -262,6 +267,9 @@ void Waypoint::setNext(Waypoint *nNext)
                 this,
                 SLOT(updateLine()));
     }
+
+    if (!_prev.isNull())
+        _prev->updateLine();
 }
 
 //public slot
@@ -386,17 +394,29 @@ void Waypoint::updateLine()
     }
     else if (this->next() != 0)
     {
+        const qreal avgLat = (this->pos().y() + this->next()->pos().y()) / 2.0;
+        const qreal lonPerMeter = Conversions::degreesLonPerMeter(avgLat);
+        const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
+
+        const QPointF startPos(0,0);
+        const qreal startAngle = Waypoint::angleBetween(this->pos(), this->next()->pos()) + PI / 2.0;
+        const QPointF endPos((this->next()->pos().x() - this->pos().x()) / lonPerMeter,
+                             (this->next()->pos().y() - this->pos().y()) / latPerMeter);
+        qreal endAngle = startAngle;
+        if (this->next()->next() != 0)
+            endAngle = Waypoint::angleBetween(this->next()->pos(),this->next()->next()->pos()) + PI / 2.0;
+
+        Dubins dubins(startPos, startAngle, endPos, endAngle, KINEMATIC_LIMIT_TURN_RADIUS);
+
         if (_lineObj == 0)
         {
-            _lineObj = new LineObject(this->pos(),
-                                      this->next()->pos());
+            _lineObj = new DubinsLineObject(Position(this->pos()), dubins, 0);
 
             this->newObjectGenerated(_lineObj);
         }
         else
         {
-            _lineObj->setEndPoints(this->pos(),
-                                   this->next()->pos());
+            _lineObj->setDubins(Position(this->pos()), dubins, 0);
         }
     }
 

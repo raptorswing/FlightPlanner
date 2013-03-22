@@ -10,5 +10,6 @@ FlightPlanner.depends += Dubins
 
 WaypointPlanner.depends += MapGraphics
 WaypointPlanner.depends += GPX
+WaypointPlanner.depends += Dubins
 
 QKDTree.depends += QVectorND
