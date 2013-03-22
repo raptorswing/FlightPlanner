@@ -43,7 +43,8 @@ SOURCES += \
     gui/CommonFileHandling.cpp \
     MapObjects/Waypoint.cpp \
     MapObjects/DubinsLineObject.cpp \
-    WaysetDisplayManager.cpp
+    WaysetDisplayManager.cpp \
+    Wayset.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -78,7 +79,8 @@ HEADERS +=\
     gui/CommonFileHandling.h \
     MapObjects/Waypoint.h \
     MapObjects/DubinsLineObject.h \
-    WaysetDisplayManager.h
+    WaysetDisplayManager.h \
+    Wayset.h
 
 unix:!symbian {
     maemo5 {
