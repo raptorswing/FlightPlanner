@@ -10,7 +10,7 @@ WaysetManager::WaysetManager(MapGraphicsScene *scene,
 {
 }
 
-QList<Position> WaysetManager::currentWayset() const
+QList<Position> WaysetManager::wayset() const
 {
     QList<Position> toRet;
 

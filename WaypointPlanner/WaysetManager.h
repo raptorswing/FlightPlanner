@@ -17,7 +17,7 @@ public:
                            QSharedPointer<PlanningProblem> problem,
                            QObject *parent = 0);
 
-    QList<Position> currentWayset() const;
+    QList<Position> wayset() const;
     void setWayset(const QList<Position>& wayset);
     
 signals:
