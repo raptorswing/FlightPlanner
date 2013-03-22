@@ -35,7 +35,11 @@ SOURCES += \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp
+    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp \
+    Exporters/GPXExporter.cpp \
+    Exporters/Exporter.cpp \
+    Importers/importer.cpp \
+    Importers/GPXImporter.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -62,7 +66,11 @@ HEADERS +=\
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h
+    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h \
+    Exporters/GPXExporter.h \
+    Exporters/Exporter.h \
+    Importers/Importer.h \
+    Importers/GPXImporter.h
 
 unix:!symbian {
     maemo5 {
@@ -104,3 +112,11 @@ else:unix: LIBS += -L$$OUT_PWD/../MapGraphics/ -lMapGraphics
 
 INCLUDEPATH += $$PWD/../MapGraphics
 DEPENDPATH += $$PWD/../MapGraphics
+
+#Linkage for GPX
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../GPX/release/ -lGPX
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../GPX/debug/ -lGPX
+else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
+
+INCLUDEPATH += $$PWD/../GPX
+DEPENDPATH += $$PWD/../GPX

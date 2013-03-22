@@ -4,7 +4,9 @@
 #include <QList>
 #include "Position.h"
 
-class Exporter
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT Exporter
 {
 public:
     Exporter(const QList<Position>& solution);

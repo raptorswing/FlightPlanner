@@ -3,7 +3,9 @@
 
 #include "Exporter.h"
 
-class GPXExporter : public Exporter
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT GPXExporter : public Exporter
 {
 public:
     GPXExporter(const QList<Position>& solution);

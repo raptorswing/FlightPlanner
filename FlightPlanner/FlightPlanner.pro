@@ -26,8 +26,6 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.cpp \
     gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
     gui/FlightTaskEditors/CoverageTaskEditor.cpp \
-    Exporters/Exporter.cpp \
-    Exporters/GPXExporter.cpp \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.cpp \
     gui/FlightTaskEditors/FlightTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.cpp \
@@ -35,9 +33,7 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SamplingTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
-    gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
-    Importers/Importer.cpp \
-    Importers/GPXImporter.cpp
+    gui/FlightTaskEditors/FlyThroughTaskEditor.cpp
 
 HEADERS  += \
     gui/MainWindow.h \
@@ -55,8 +51,6 @@ HEADERS  += \
     gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.h \
     gui/FlightTaskEditors/FlightTaskEditorFactory.h \
     gui/FlightTaskEditors/CoverageTaskEditor.h \
-    Exporters/Exporter.h \
-    Exporters/GPXExporter.h \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.h \
     gui/FlightTaskEditors/FlightTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.h \
@@ -64,9 +58,7 @@ HEADERS  += \
     gui/FlightTaskEditors/SamplingTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.h \
-    gui/FlightTaskEditors/FlyThroughTaskEditor.h \
-    Importers/Importer.h \
-    Importers/GPXImporter.h
+    gui/FlightTaskEditors/FlyThroughTaskEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \

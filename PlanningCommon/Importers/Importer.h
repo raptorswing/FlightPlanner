@@ -4,7 +4,9 @@
 #include <QList>
 #include "Position.h"
 
-class Importer
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT Importer
 {
 public:
     Importer();

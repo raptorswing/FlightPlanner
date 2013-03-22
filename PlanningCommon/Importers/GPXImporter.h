@@ -3,7 +3,9 @@
 
 #include "Importer.h"
 
-class GPXImporter : public Importer
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT GPXImporter : public Importer
 {
 public:
     GPXImporter(const QString& filename);
