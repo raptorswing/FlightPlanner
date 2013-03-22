@@ -7,7 +7,7 @@
 
 #include "WaypointMapView.h"
 #include "MapGraphicsScene.h"
-#include "WaysetManager.h"
+#include "WaysetDisplayManager.h"
 #include "PolygonObject.h"
 
 #include "PlanningProblem.h"
@@ -61,7 +61,7 @@ private:
 
     MouseMode _mouseMode;
     QSharedPointer<PlanningProblem> _problem;
-    WaysetManager * _waysetManager;
+    WaysetDisplayManager * _waysetManager;
 
     QPointer<PolygonObject> _coveragePolygon;
 };

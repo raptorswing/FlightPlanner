@@ -1,16 +1,16 @@
-#include "WaysetManager.h"
+#include "WaysetDisplayManager.h"
 
 #include <QtDebug>
 #include <QTimer>
 
-WaysetManager::WaysetManager(MapGraphicsScene *scene,
-                             QSharedPointer<PlanningProblem> problem,
-                             QObject *parent) :
+WaysetDisplayManager::WaysetDisplayManager(MapGraphicsScene *scene,
+                                           QSharedPointer<PlanningProblem> problem,
+                                           QObject *parent) :
     QObject(parent), _scene(scene), _problem(problem)
 {
 }
 
-QList<Position> WaysetManager::wayset() const
+QList<Position> WaysetDisplayManager::wayset() const
 {
     QList<Position> toRet;
 
@@ -24,7 +24,7 @@ QList<Position> WaysetManager::wayset() const
     return toRet;
 }
 
-void WaysetManager::setWayset(const QList<Position> &wayset)
+void WaysetDisplayManager::setWayset(const QList<Position> &wayset)
 {
     if (!_first.isNull())
     {
@@ -39,7 +39,7 @@ void WaysetManager::setWayset(const QList<Position> &wayset)
 }
 
 //public slot
-void WaysetManager::appendWaypoint(Position pos)
+void WaysetDisplayManager::appendWaypoint(Position pos)
 {
     Waypoint * wpt = new Waypoint(_problem);
     wpt->setPos(pos.lonLat());
@@ -54,7 +54,7 @@ void WaysetManager::appendWaypoint(Position pos)
 }
 
 //public slot
-void WaysetManager::enableMouseInteraction(bool enable)
+void WaysetDisplayManager::enableMouseInteraction(bool enable)
 {
     QPointer<Waypoint> current = _first;
     _mouseInteraction = enable;
@@ -68,7 +68,7 @@ void WaysetManager::enableMouseInteraction(bool enable)
 }
 
 //public slot
-void WaysetManager::fixKinematics()
+void WaysetDisplayManager::fixKinematics()
 {
     if (_first.isNull())
         return;
@@ -80,7 +80,7 @@ void WaysetManager::fixKinematics()
 }
 
 //public slot
-void WaysetManager::fixDistances()
+void WaysetDisplayManager::fixDistances()
 {
     if (_first.isNull())
         return;
@@ -92,7 +92,7 @@ void WaysetManager::fixDistances()
 }
 
 //public slot
-void WaysetManager::fixAll(bool repeatable)
+void WaysetDisplayManager::fixAll(bool repeatable)
 {
     if (_first.isNull())
         return;
@@ -107,7 +107,7 @@ void WaysetManager::fixAll(bool repeatable)
 }
 
 //private slot
-void WaysetManager::setNewFirst(Waypoint *wpt)
+void WaysetDisplayManager::setNewFirst(Waypoint *wpt)
 {
     _first = wpt;
     if (_first.isNull())
@@ -120,7 +120,7 @@ void WaysetManager::setNewFirst(Waypoint *wpt)
 }
 
 //private slot
-void WaysetManager::handleNewWaypoint(Waypoint *wpt)
+void WaysetDisplayManager::handleNewWaypoint(Waypoint *wpt)
 {
     if (!wpt)
         return;

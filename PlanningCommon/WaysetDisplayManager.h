@@ -1,5 +1,5 @@
-#ifndef WAYSETMANAGER_H
-#define WAYSETMANAGER_H
+#ifndef WAYSETDISPLAYMANAGER_H
+#define WAYSETDISPLAYMANAGER_H
 
 #include <QObject>
 #include <QList>
@@ -11,13 +11,13 @@
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT WaysetManager : public QObject
+class PLANNINGCOMMONSHARED_EXPORT WaysetDisplayManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit WaysetManager(MapGraphicsScene * scene,
-                           QSharedPointer<PlanningProblem> problem,
-                           QObject *parent = 0);
+    explicit WaysetDisplayManager(MapGraphicsScene * scene,
+                                  QSharedPointer<PlanningProblem> problem,
+                                  QObject *parent = 0);
 
     QList<Position> wayset() const;
     void setWayset(const QList<Position>& wayset);
@@ -44,4 +44,4 @@ private:
     
 };
 
-#endif // WAYSETMANAGER_H
+#endif // WAYSETDISPLAYMANAGER_H

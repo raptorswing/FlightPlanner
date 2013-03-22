@@ -279,7 +279,7 @@ void MainWindow::initPlanningProblem()
                                           _scene,
                                           this);
 
-    _waysetManager = new WaysetManager(_scene, _problem, this);
+    _waysetManager = new WaysetDisplayManager(_scene, _problem, this);
 }
 
 //private

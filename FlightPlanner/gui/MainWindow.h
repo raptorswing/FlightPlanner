@@ -11,7 +11,7 @@
 #include "FlightPlanner.h"
 #include "ProblemViewAdapter.h"
 
-#include "WaysetManager.h" //From PlanningCommon
+#include "WaysetDisplayManager.h" //From PlanningCommon
 
 namespace Ui {
 class MainWindow;
@@ -69,7 +69,7 @@ private:
     FlightPlanner * _planner;
     ProblemViewAdapter * _viewAdapter;
 
-    WaysetManager * _waysetManager;
+    WaysetDisplayManager * _waysetManager;
 };
 
 #endif // MAINWINDOW_H

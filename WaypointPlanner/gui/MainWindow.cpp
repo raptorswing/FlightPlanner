@@ -220,7 +220,7 @@ void WaypointPlannerMainWindow::initMap()
 
     this->setCentralWidget(_view);
 
-    _waysetManager = new WaysetManager(_scene, _problem, this);
+    _waysetManager = new WaysetDisplayManager(_scene, _problem, this);
 
     this->setMouseMode(CreateMode);
 }
