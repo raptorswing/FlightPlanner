@@ -12,7 +12,9 @@
 #include "UAVParameters.h"
 #include "Serializable.h"
 
-class PlanningProblem : public QObject, public Serializable
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT PlanningProblem : public QObject, public Serializable
 {
     Q_OBJECT
 public:

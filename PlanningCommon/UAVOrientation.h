@@ -6,7 +6,9 @@
 
 #include "Serializable.h"
 
-class UAVOrientation
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT UAVOrientation
 {
 public:
     UAVOrientation();

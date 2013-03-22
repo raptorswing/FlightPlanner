@@ -3,7 +3,9 @@
 
 #include <QDataStream>
 
-class TimingConstraint
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT TimingConstraint
 {
 public:
     TimingConstraint();

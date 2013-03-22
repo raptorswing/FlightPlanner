@@ -3,7 +3,9 @@
 
 #include <QtGlobal>
 
-class Fitness
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT Fitness
 {
 public:
     Fitness();

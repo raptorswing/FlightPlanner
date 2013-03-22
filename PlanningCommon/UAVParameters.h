@@ -4,7 +4,9 @@
 #include <QtGlobal>
 #include <QDataStream>
 
-class UAVParameters
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT UAVParameters
 {
 public:
     UAVParameters(qreal airspeed = 14.0, qreal minTurningRadius = 38.0, qreal waypointInterval = 30.0);

@@ -3,7 +3,9 @@
 
 #include "FlightTask.h"
 
-class NoFlyFlightTask : public FlightTask
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT NoFlyFlightTask : public FlightTask
 {
     Q_OBJECT
 public:

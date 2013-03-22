@@ -9,7 +9,9 @@
 #include "PlanningProblem.h"
 #include "Position.h"
 
-class HierarchicalPlanner : public FlightPlanner
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT HierarchicalPlanner : public FlightPlanner
 {
     Q_OBJECT
 public:

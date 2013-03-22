@@ -7,7 +7,9 @@
 
 #include "FlightTask.h"
 
-class CoverageTask : public FlightTask
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT CoverageTask : public FlightTask
 {
     Q_OBJECT
 public:

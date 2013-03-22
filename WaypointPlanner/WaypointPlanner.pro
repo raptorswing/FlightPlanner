@@ -54,3 +54,11 @@ else:unix: LIBS += -L$$OUT_PWD/../Dubins/ -lDubins
 
 INCLUDEPATH += $$PWD/../Dubins
 DEPENDPATH += $$PWD/../Dubins
+
+#Linkage for PlanningCommon
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../PlanningCommon/release/ -lPlanningCommon
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../PlanningCommon/debug/ -lPlanningCommon
+else:unix: LIBS += -L$$OUT_PWD/../PlanningCommon/ -lPlanningCommon
+
+INCLUDEPATH += $$PWD/../PlanningCommon
+DEPENDPATH += $$PWD/../PlanningCommon

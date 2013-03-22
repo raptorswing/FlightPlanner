@@ -13,7 +13,9 @@
 #include "UAVParameters.h"
 #include "Serializable.h"
 
-class FlightTask : public QObject, public Serializable
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT FlightTask : public QObject, public Serializable
 {
     Q_OBJECT
 public:

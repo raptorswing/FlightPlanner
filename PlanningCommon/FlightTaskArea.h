@@ -10,7 +10,9 @@
 #include "FlightTasks/FlightTask.h"
 #include "Serializable.h"
 
-class FlightTaskArea : public QObject, public Serializable
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT FlightTaskArea : public QObject, public Serializable
 {
     Q_OBJECT
 public:

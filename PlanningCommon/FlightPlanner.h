@@ -7,8 +7,9 @@
 
 #include "PlanningProblem.h"
 #include "Fitness.h"
+#include "PlanningCommon_global.h"
 
-class FlightPlanner : public QObject
+class PLANNINGCOMMONSHARED_EXPORT FlightPlanner : public QObject
 {
     Q_OBJECT
 public:
