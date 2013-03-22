@@ -62,3 +62,11 @@ else:unix: LIBS += -L$$OUT_PWD/../PlanningCommon/ -lPlanningCommon
 
 INCLUDEPATH += $$PWD/../PlanningCommon
 DEPENDPATH += $$PWD/../PlanningCommon
+
+#Linkage for QVectorND
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QVectorND/release/ -lQVectorND
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QVectorND/debug/ -lQVectorND
+else:unix: LIBS += -L$$OUT_PWD/../QVectorND/ -lQVectorND
+
+INCLUDEPATH += $$PWD/../QVectorND
+DEPENDPATH += $$PWD/../QVectorND
