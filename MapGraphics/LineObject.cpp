@@ -44,7 +44,6 @@ void LineObject::paint(QPainter *painter,
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     const qreal avgLat = (_a.latitude() + _b.latitude()) / 2.0;
