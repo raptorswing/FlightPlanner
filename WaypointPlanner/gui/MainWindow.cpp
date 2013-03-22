@@ -1,5 +1,5 @@
-#include "WaypointPlannerMainWindow.h"
-#include "ui_WaypointPlannerMainWindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include "tileSources/OSMTileSource.h"
 
@@ -13,7 +13,7 @@ const QString SETTINGS_WINDOWSTATE = "lastWindowState";
 
 WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::WaypointPlannerMainWindow)
+    ui(new Ui::MainWindow)
 {
     this->ui->setupUi(this);
     this->ui->menuView->addAction(this->ui->toolBar->toggleViewAction());

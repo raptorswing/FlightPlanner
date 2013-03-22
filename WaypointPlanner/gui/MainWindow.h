@@ -14,7 +14,7 @@
 #include "PlanningProblem.h"
 
 namespace Ui {
-class WaypointPlannerMainWindow;
+class MainWindow;
 }
 
 class WaypointPlannerMainWindow : public QMainWindow
@@ -53,7 +53,7 @@ private:
     void storeGeometry();
     void initProblem();
     void initMap();
-    Ui::WaypointPlannerMainWindow *ui;
+    Ui::MainWindow *ui;
 
     WaypointMapView * _view;
     MapGraphicsScene * _scene;

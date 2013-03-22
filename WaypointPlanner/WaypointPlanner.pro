@@ -13,19 +13,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        WaypointPlannerMainWindow.cpp \
     WaypointMapView.cpp \
     Waypoint.cpp \
     WaysetManager.cpp \
-    DubinsLineObject.cpp
+    DubinsLineObject.cpp \
+    gui/MainWindow.cpp
 
-HEADERS  += WaypointPlannerMainWindow.h \
+HEADERS  += \
     WaypointMapView.h \
     Waypoint.h \
     WaysetManager.h \
-    DubinsLineObject.h
+    DubinsLineObject.h \
+    gui/MainWindow.h
 
-FORMS    += WaypointPlannerMainWindow.ui
+FORMS    += \
+    gui/MainWindow.ui
 
 RESOURCES += \
     WaypointPlannerResources.qrc

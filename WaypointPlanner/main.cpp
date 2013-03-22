@@ -1,4 +1,4 @@
-#include "WaypointPlannerMainWindow.h"
+#include "gui/MainWindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

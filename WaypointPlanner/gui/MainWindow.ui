@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WaypointPlannerMainWindow</class>
- <widget class="QMainWindow" name="WaypointPlannerMainWindow">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
    <string>Waypoint Flight Planner</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="WaypointPlannerResources.qrc">
+   <iconset resource="../WaypointPlannerResources.qrc">
     <normaloff>:/images/images/32x32/apps/spire.png</normaloff>:/images/images/32x32/apps/spire.png</iconset>
   </property>
   <property name="toolButtonStyle">
@@ -81,7 +81,7 @@
   </widget>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="WaypointPlannerResources.qrc">
+    <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/16x16/actions/exit.png</normaloff>:/images/images/16x16/actions/exit.png</iconset>
    </property>
    <property name="text">
@@ -99,7 +99,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="WaypointPlannerResources.qrc">
+    <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/editWaypointCursor.png</normaloff>:/images/images/editWaypointCursor.png</iconset>
    </property>
    <property name="text">
@@ -111,7 +111,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="WaypointPlannerResources.qrc">
+    <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/createWaypointCursor.png</normaloff>:/images/images/createWaypointCursor.png</iconset>
    </property>
    <property name="text">
@@ -120,7 +120,7 @@
   </action>
   <action name="actionAuto_Fix">
    <property name="icon">
-    <iconset resource="WaypointPlannerResources.qrc">
+    <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/fixIcon.png</normaloff>:/images/images/fixIcon.png</iconset>
    </property>
    <property name="text">
@@ -132,7 +132,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="WaypointPlannerResources.qrc">
+    <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/coverageHelperIcon.png</normaloff>:/images/images/coverageHelperIcon.png</iconset>
    </property>
    <property name="text">
@@ -142,7 +142,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="WaypointPlannerResources.qrc"/>
+  <include location="../WaypointPlannerResources.qrc"/>
  </resources>
  <connections/>
 </ui>
