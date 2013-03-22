@@ -47,6 +47,8 @@ private slots:
     void on_actionCreate_Mode_triggered();
     void on_actionAuto_Fix_triggered();
     void on_actionCoverage_Helper_triggered();
+    void on_actionImport_Solution_triggered();
+    void on_actionExport_Solution_triggered();
 
 private:
     void restoreGeometry();

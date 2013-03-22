@@ -34,6 +34,10 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="separator"/>
+    <addaction name="actionImport_Solution"/>
+    <addaction name="actionExport_Solution"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -137,6 +141,30 @@
    </property>
    <property name="text">
     <string>Coverage Helper</string>
+   </property>
+  </action>
+  <action name="actionImport_Solution">
+   <property name="icon">
+    <iconset resource="../WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/16x16/actions/fileopen.png</normaloff>:/images/images/16x16/actions/fileopen.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Import Solution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+I</string>
+   </property>
+  </action>
+  <action name="actionExport_Solution">
+   <property name="icon">
+    <iconset resource="../WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/16x16/actions/fileexport.png</normaloff>:/images/images/16x16/actions/fileexport.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Export Solution</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+E</string>
    </property>
   </action>
  </widget>

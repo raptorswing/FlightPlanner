@@ -7,6 +7,10 @@
 #include <QDesktopWidget>
 #include <QtDebug>
 #include <QTimer>
+#include <QFileDialog>
+
+
+#include "gui/CommonFileHandling.h"
 
 const QString SETTINGS_GEOMETRY = "lastGeometry";
 const QString SETTINGS_WINDOWSTATE = "lastWindowState";
@@ -130,6 +134,24 @@ void WaypointPlannerMainWindow::on_actionAuto_Fix_triggered()
 void WaypointPlannerMainWindow::on_actionCoverage_Helper_triggered()
 {
     this->setMouseMode(CoverageHelperMode);
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionImport_Solution_triggered()
+{
+    bool ok;
+    QList<Position> wayset = CommonFileHandling::doImport(ok, QString(), this);
+
+    if (!ok)
+        return;
+    _waysetManager->setWayset(wayset);
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
+{
+    QList<Position> toExport = _waysetManager->wayset();
+    CommonFileHandling::doExport(toExport, QString(), this);
 }
 
 //private

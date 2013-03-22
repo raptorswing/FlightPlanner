@@ -39,7 +39,8 @@ SOURCES += \
     Exporters/GPXExporter.cpp \
     Exporters/Exporter.cpp \
     Importers/importer.cpp \
-    Importers/GPXImporter.cpp
+    Importers/GPXImporter.cpp \
+    gui/CommonFileHandling.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -70,7 +71,8 @@ HEADERS +=\
     Exporters/GPXExporter.h \
     Exporters/Exporter.h \
     Importers/Importer.h \
-    Importers/GPXImporter.h
+    Importers/GPXImporter.h \
+    gui/CommonFileHandling.h
 
 unix:!symbian {
     maemo5 {
