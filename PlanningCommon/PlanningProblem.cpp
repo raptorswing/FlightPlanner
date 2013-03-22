@@ -176,5 +176,6 @@ void PlanningProblem::setUAVParameters(const UAVParameters &nParams)
 {
     _uavParameters = nParams;
 
+    this->uavParametersChanged(nParams);
     this->planningProblemChanged();
 }

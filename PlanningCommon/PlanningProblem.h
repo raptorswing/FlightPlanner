@@ -57,6 +57,8 @@ signals:
 
     void flighTaskAreaAdded(const QSharedPointer<FlightTaskArea>& area);
     void flightTaskAreaRemoved(const QSharedPointer<FlightTaskArea>& area);
+
+    void uavParametersChanged(const UAVParameters& params);
     
 public slots:
 
