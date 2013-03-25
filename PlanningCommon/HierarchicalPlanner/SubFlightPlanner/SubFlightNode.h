@@ -2,9 +2,8 @@
 #define SUBFLIGHTNODE_H
 
 #include <QSharedPointer>
-#include <QList>
 
-#include "Position.h"
+#include "Wayset.h"
 #include "UAVOrientation.h"
 #include "guts/Conversions.h"
 
@@ -22,7 +21,7 @@ public:
     QSharedPointer<SubFlightNode> parent() const;
     void setParent(const QSharedPointer<SubFlightNode>& parent);
 
-    const QList<Position>& path() const;
+    const Wayset& path() const;
 
     const QVector3D& xyz();
 
@@ -31,7 +30,7 @@ private:
     UAVOrientation _orientation;
     QSharedPointer<SubFlightNode> _parent;
 
-    QList<Position> _path;
+    Wayset _path;
 
     QVector3D _xyz;
 };

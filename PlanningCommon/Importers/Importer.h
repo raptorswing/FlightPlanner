@@ -1,8 +1,7 @@
 #ifndef IMPORTER_H
 #define IMPORTER_H
 
-#include <QList>
-#include "Position.h"
+#include "Wayset.h"
 
 #include "PlanningCommon_global.h"
 
@@ -14,13 +13,13 @@ public:
 
     virtual bool doImport()=0;
 
-    const QList<Position>& results() const;
+    const Wayset& results() const;
 
 protected:
-    void setResults(const QList<Position>& results);
+    void setResults(const Wayset& results);
 
 private:
-    QList<Position> _results;
+    Wayset _results;
 };
 
 #endif // IMPORTER_H

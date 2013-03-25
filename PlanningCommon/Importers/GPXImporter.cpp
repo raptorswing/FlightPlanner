@@ -20,7 +20,7 @@ bool GPXImporter::doImport()
         return false;
     }
 
-    QList<Position> toResult;
+    Wayset toResult;
     foreach(const GPXPoint& p, gpx.points())
         toResult.append(Position(p.longitude, p.latitude, p.height));
     qDebug() << "Imported" << toResult.size() << "gpx points.";

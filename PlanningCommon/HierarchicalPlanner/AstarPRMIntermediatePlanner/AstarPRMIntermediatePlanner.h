@@ -15,12 +15,12 @@ public:
                                 const QList<QPolygonF>& obstacles);
 
     virtual bool plan();
-    virtual QList<Position> results() const;
+    virtual Wayset results() const;
 
 private:
-    void _toRealPath(const QList<Position> &metaPlan);
+    void _toRealPath(const Wayset &metaPlan);
 
-    QList<Position> _results;
+    Wayset _results;
 
 };
 

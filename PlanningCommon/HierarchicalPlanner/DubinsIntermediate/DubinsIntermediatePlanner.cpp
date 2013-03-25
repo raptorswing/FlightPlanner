@@ -56,7 +56,7 @@ bool DubinsIntermediatePlanner::plan()
 }
 
 //virtual from IntermediatePlanner
-QList<Position> DubinsIntermediatePlanner::results() const
+Wayset DubinsIntermediatePlanner::results() const
 {
     return _results;
 }

@@ -124,7 +124,7 @@ void MainWindow::on_actionClose_triggered()
 //private slot
 void MainWindow::on_actionExport_Solution_triggered()
 {
-    const QList<Position>& solution = _planner->bestFlightSoFar();
+    const Wayset& solution = _planner->bestFlightSoFar();
     CommonFileHandling::doExport(solution, QString(), this);
 }
 
@@ -162,7 +162,7 @@ void MainWindow::on_actionUAV_Parameters_triggered()
 void MainWindow::on_actionImport_Solution_triggered()
 {
     bool ok;
-    QList<Position> results = CommonFileHandling::doImport(ok, QString(), this);
+    Wayset results = CommonFileHandling::doImport(ok, QString(), this);
 
     if (!ok)
         return;
@@ -280,6 +280,7 @@ void MainWindow::initPlanningProblem()
                                           this);
 
     _waysetManager = new WaysetDisplayManager(_scene, _problem, this);
+    _waysetManager->enableMouseInteraction(true);
 }
 
 //private
@@ -329,5 +330,6 @@ void MainWindow::initPlanningControlConnections()
 
 void MainWindow::updateDisplayedFlight()
 {
+    _waysetManager->setPlanningProblem(_problem);
     _waysetManager->setWayset(_planner->bestFlightSoFar());
 }

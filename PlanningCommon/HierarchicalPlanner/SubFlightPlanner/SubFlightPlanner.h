@@ -20,7 +20,7 @@ public:
                      const UAVOrientation& startPose);
 
     void plan();
-    const QList<Position> &results() const;
+    const Wayset &results() const;
 
 private:
     void _greedyPlan();
@@ -30,7 +30,7 @@ private:
     const Position& _startPos;
     const UAVOrientation& _startPose;
 
-    QList<Position> _results;
+    Wayset _results;
 };
 
 #endif // SUBFLIGHTPLANNER_H

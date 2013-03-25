@@ -4,6 +4,7 @@
 #include "Position.h"
 #include "UAVOrientation.h"
 #include "UAVParameters.h"
+#include "Wayset.h"
 
 #include <QList>
 #include <QPolygonF>
@@ -20,7 +21,7 @@ public:
     virtual ~IntermediatePlanner();
 
     virtual bool plan()=0;
-    virtual QList<Position> results() const=0;
+    virtual Wayset results() const=0;
 
     const UAVParameters& uavParams() const;
 

@@ -8,7 +8,7 @@
 class PLANNINGCOMMONSHARED_EXPORT GPXExporter : public Exporter
 {
 public:
-    GPXExporter(const QList<Position>& solution);
+    GPXExporter(const Wayset& solution);
 
     virtual bool doExport(QByteArray * output);
 };

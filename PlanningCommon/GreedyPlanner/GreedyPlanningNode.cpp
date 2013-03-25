@@ -141,7 +141,7 @@ void GreedyPlanningNode::setParent(const QSharedPointer<GreedyPlanningNode> &nPa
     _parent = nParent;
 }
 
-const QList<Position> &GreedyPlanningNode::flightPath()
+const Wayset &GreedyPlanningNode::flightPath()
 {
     if (_flightPath.isEmpty())
     {
@@ -152,7 +152,7 @@ const QList<Position> &GreedyPlanningNode::flightPath()
     return _flightPath;
 }
 
-void GreedyPlanningNode::setFlighPath(const QList<Position> &flightPath)
+void GreedyPlanningNode::setFlighPath(const Wayset &flightPath)
 {
     _flightPath = flightPath;
 }

@@ -16,9 +16,23 @@ public:
 
     const Position& at(int i) const;
 
+    Position& first();
+    const Position& first() const;
+
+    Position& last();
+    const Position& last() const;
+
     int count() const;
+    int size() const;
+    bool isEmpty() const;
+
     qreal lengthMeters(const UAVParameters& uavParams) const;
     qreal timeToFly(const UAVParameters& uavParams) const;
+
+    void clear();
+    void append(const Position& pos);
+    void append(const Wayset& wayset);
+    void prepend(const Position& pos);
 
     const QList<Position>& waypoints() const;
 

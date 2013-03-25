@@ -142,7 +142,7 @@ void PlanningProblem::removeTaskArea(QSharedPointer<FlightTaskArea> area)
     this->planningProblemChanged();
 }
 
-Fitness PlanningProblem::calculateFlightPerformance(const QList<Position> &positions) const
+Fitness PlanningProblem::calculateFlightPerformance(const Wayset &positions) const
 {
     qreal taskScore = 0.0;
     qreal efficiencyScore = 0.0;

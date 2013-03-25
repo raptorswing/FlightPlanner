@@ -30,18 +30,18 @@ private:
     void _buildSubFlights();
     bool _buildSchedule();
 
-    bool _interpolatePath(const QList<Position>& path,
+    bool _interpolatePath(const Wayset& path,
                               const UAVOrientation& startingOrientation,
                               qreal time,
                               Position * outPosition,
                               UAVOrientation * outOrientation) const;
 
-    QList<Position> _generateTransitionFlight(const Position& startPos,
+    Wayset _generateTransitionFlight(const Position& startPos,
                                               const UAVOrientation& startPose,
                                               const Position& endPos,
                                               const UAVOrientation& endPose);
 
-    QList<Position> _getPathPortion(const QList<Position>& path,
+    Wayset _getPathPortion(const Wayset& path,
                                     qreal portionStartTime,
                                     qreal portionEndTime) const;
 
@@ -49,8 +49,8 @@ private:
     QHash<QSharedPointer<FlightTask>, QSharedPointer<FlightTaskArea> > _tasks2areas;
     QHash<QSharedPointer<FlightTaskArea>, Position> _areaStartPositions;
     QHash<QSharedPointer<FlightTaskArea>, UAVOrientation> _areaStartOrientations;
-    QHash<QSharedPointer<FlightTask>, QList<Position> > _taskSubFlights;
-    QHash<QSharedPointer<FlightTaskArea>, QList<Position> > _startTransitionSubFlights;
+    QHash<QSharedPointer<FlightTask>, Wayset > _taskSubFlights;
+    QHash<QSharedPointer<FlightTaskArea>, Wayset > _startTransitionSubFlights;
     QList<QPolygonF> _obstacles;
     
 };

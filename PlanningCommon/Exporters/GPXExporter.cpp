@@ -2,7 +2,7 @@
 
 #include "GPX.h"
 
-GPXExporter::GPXExporter(const QList<Position>& solution) : Exporter(solution)
+GPXExporter::GPXExporter(const Wayset& solution) : Exporter(solution)
 {
 }
 
@@ -10,7 +10,7 @@ bool GPXExporter::doExport(QByteArray *output)
 {
     GPX gpx;
 
-    foreach(const Position& pos, this->solution())
+    foreach(const Position& pos, this->solution().waypoints())
     {
         GPXPoint point;
         point.longitude = pos.longitude();

@@ -8,13 +8,13 @@ Importer::~Importer()
 {
 }
 
-const QList<Position> &Importer::results() const
+const Wayset &Importer::results() const
 {
     return _results;
 }
 
 //protected
-void Importer::setResults(const QList<Position> &results)
+void Importer::setResults(const Wayset &results)
 {
     _results = results;
 }

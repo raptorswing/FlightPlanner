@@ -27,7 +27,7 @@ public:
     virtual QString taskType() const;
 
     //pure-virtual from FlightTask
-    virtual qreal calculateFlightPerformance(const QList<Position>& positions,
+    virtual qreal calculateFlightPerformance(const Wayset& positions,
                                              const QPolygonF& geoPoly,
                                              const UAVParameters& uavParams);
 };

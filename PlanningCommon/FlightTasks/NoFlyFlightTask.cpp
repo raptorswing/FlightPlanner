@@ -35,13 +35,13 @@ QString NoFlyFlightTask::taskType() const
 }
 
 //pure-virtual from FlightTask
-qreal NoFlyFlightTask::calculateFlightPerformance(const QList<Position> &positions,
+qreal NoFlyFlightTask::calculateFlightPerformance(const Wayset &positions,
                                                   const QPolygonF &geoPoly,
                                                   const UAVParameters &)
 {
     qreal fitness = this->maxTaskPerformance();
 
-    foreach(const Position& pos, positions)
+    foreach(const Position& pos, positions.waypoints())
     {
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {

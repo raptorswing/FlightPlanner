@@ -29,7 +29,7 @@ void SubFlightPlanner::plan()
     _greedyPlan();
 }
 
-const QList<Position>& SubFlightPlanner::results() const
+const Wayset& SubFlightPlanner::results() const
 {
     return _results;
 }

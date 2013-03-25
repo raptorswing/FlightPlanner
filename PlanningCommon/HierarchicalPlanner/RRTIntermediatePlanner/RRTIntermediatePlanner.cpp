@@ -116,7 +116,7 @@ bool RRTIntermediatePlanner::plan()
     return true;
 }
 
-QList<Position> RRTIntermediatePlanner::results() const
+Wayset RRTIntermediatePlanner::results() const
 {
     return _results;
 }

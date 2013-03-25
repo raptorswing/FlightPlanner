@@ -7,6 +7,7 @@
 
 #include "Position.h"
 #include "UAVOrientation.h"
+#include "Wayset.h"
 
 class GreedyPlanningNode
 {
@@ -30,8 +31,8 @@ public:
     const QSharedPointer<GreedyPlanningNode>& parent() const;
     void setParent(const QSharedPointer<GreedyPlanningNode>& nParent);
 
-    const QList<Position>& flightPath();
-    void setFlighPath(const QList<Position>& flightPath);
+    const Wayset& flightPath();
+    void setFlighPath(const Wayset& flightPath);
 private:
     Position _pos;
     UAVOrientation _orientation;
@@ -41,7 +42,7 @@ private:
     QSharedPointer<GreedyPlanningNode> _parent;
     bool _visited;
 
-    QList<Position> _flightPath;
+    Wayset _flightPath;
 };
 
 #endif // GREEDYPLANNINGNODE_H

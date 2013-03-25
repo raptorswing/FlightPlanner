@@ -10,9 +10,9 @@ WaysetDisplayManager::WaysetDisplayManager(MapGraphicsScene *scene,
 {
 }
 
-QList<Position> WaysetDisplayManager::wayset() const
+Wayset WaysetDisplayManager::wayset() const
 {
-    QList<Position> toRet;
+    Wayset toRet;
 
     QPointer<Waypoint> current = _first;
     while (!current.isNull())
@@ -24,18 +24,31 @@ QList<Position> WaysetDisplayManager::wayset() const
     return toRet;
 }
 
-void WaysetDisplayManager::setWayset(const QList<Position> &wayset)
+void WaysetDisplayManager::setWayset(const Wayset &wayset)
 {
     if (!_first.isNull())
     {
-        _first->deleteLater();
-        _first = 0;
+        disconnect(_first.data(),
+                   SIGNAL(aboutToDelete(Waypoint*)),
+                   this,
+                   SLOT(setNewFirst(Waypoint*)));
     }
 
-    foreach(const Position& pos, wayset)
+    QPointer<Waypoint> current = _first;
+    while (!current.isNull())
     {
-        this->appendWaypoint(pos);
+        current->deleteLater();
+        current = current->next();
     }
+    _first = 0;
+
+    foreach(const Position& pos, wayset.waypoints())
+        this->appendWaypoint(pos);
+}
+
+void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProblem> &problem)
+{
+    _problem = problem.toWeakRef();
 }
 
 //public slot

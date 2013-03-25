@@ -196,7 +196,7 @@ void HierarchicalPlanner::_buildStartTransitions()
         const Position& taskStartPos = _areaStartPositions.value(area);
         const UAVOrientation& taskStartPose = _areaStartOrientations.value(area);
 
-        QList<Position> subFlight = _generateTransitionFlight(globalStartPos,
+        Wayset subFlight = _generateTransitionFlight(globalStartPos,
                                                               globalStartPose,
                                                               taskStartPos,
                                                               taskStartPose);
@@ -232,10 +232,10 @@ bool HierarchicalPlanner::_buildSchedule()
     QList<qreal> taskTimes;
     foreach(const QSharedPointer<FlightTask>& task, _tasks)
     {
-        const QList<Position>& subFlight = _taskSubFlights.value(task);
+        const Wayset& subFlight = _taskSubFlights.value(task);
 
         //Time required is estimated to be the length of the path in meters divided by airspeed
-        qreal timeRequired = subFlight.length() * params.waypointInterval() / params.airspeed();
+        const qreal timeRequired = subFlight.timeToFly(params);
         taskTimes.append(timeRequired);
     }
 
@@ -252,7 +252,7 @@ bool HierarchicalPlanner::_buildSchedule()
     QHash<QVectorND, int> lastTasks;
 
     //This hash stores node:(transition flight to reach node) relationships
-    QHash<QVectorND, QList<Position> > transitionFlights;
+    QHash<QVectorND, Wayset > transitionFlights;
 
     QHash<QVectorND, qreal> actualCosts;
 
@@ -306,7 +306,7 @@ bool HierarchicalPlanner::_buildSchedule()
             qreal startTime;
             qreal endTime;
 
-            QList<Position> transitionFlight;
+            Wayset transitionFlight;
 
             /*
              * The heuristic is the amount of time to fly all remaining tasks assuming no-cost
@@ -349,7 +349,7 @@ bool HierarchicalPlanner::_buildSchedule()
             }
 
             //The time (if any) needed to fly the transition flight to this task
-            const qreal transitionTime = transitionFlight.length() * params.waypointInterval() / params.airspeed();
+            const qreal transitionTime = transitionFlight.timeToFly(params);
             startTime = actualCosts.value(state) + transitionTime;
             endTime = startTime + newState[i] - state[i];
             const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
@@ -409,7 +409,7 @@ bool HierarchicalPlanner::_buildSchedule()
     QVectorND prevInterval = schedule[0];
     schedule.removeFirst();
 
-    QList<Position> path;
+    Wayset path;
     foreach(const QVectorND& interval, schedule)
     {
         const int taskIndex = lastTasks.value(interval);
@@ -423,7 +423,7 @@ bool HierarchicalPlanner::_buildSchedule()
             path.append(transitionFlights.value(interval));
 
         //Add the portion of the sub-flight that we care about
-        const QList<Position>& subFlight = _taskSubFlights.value(task);
+        const Wayset& subFlight = _taskSubFlights.value(task);
         const qreal startTime = prevInterval.val(taskIndex);
         const qreal endTime = interval.val(taskIndex);
         path.append(_getPathPortion(subFlight, startTime, endTime));
@@ -437,7 +437,7 @@ bool HierarchicalPlanner::_buildSchedule()
 }
 
 //private
-bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
+bool HierarchicalPlanner::_interpolatePath(const Wayset &path,
                                            const UAVOrientation &startingOrientation,
                                            qreal goalTime,
                                            Position *outPosition,
@@ -460,7 +460,7 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
     }
     else if (path.size() == 1)
     {
-        *outPosition = path[0];
+        *outPosition = path.at(0);
         *outOrientation = startingOrientation;
         return true;
     }
@@ -474,8 +474,8 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
 
     for (int i = 1; i < path.size(); i++)
     {
-        const Position& pos = path[i];
-        const Position& lastPos = path[i-1];
+        const Position& pos = path.at(i);
+        const Position& lastPos = path.at(i-1);
         //const qreal distance = (Conversions::lla2xyz(pos) - Conversions::lla2xyz(lastPos)).length();
         const qreal intervalDistance = params.waypointInterval();
         distanceSoFar += intervalDistance;
@@ -510,7 +510,7 @@ bool HierarchicalPlanner::_interpolatePath(const QList<Position> &path,
 }
 
 //private
-QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
+Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
                                                                const UAVOrientation &startPose,
                                                                const Position &endPos,
                                                                const UAVOrientation &endPose)
@@ -527,26 +527,27 @@ QList<Position> HierarchicalPlanner::_generateTransitionFlight(const Position &s
                                                                              endPos, endPose,
                                                                              _obstacles);
     intermed->plan();
-    QList<Position> toRet = intermed->results();
+    Wayset toRet = intermed->results();
     delete intermed;
 
     return toRet;
 }
 
 //private
-QList<Position> HierarchicalPlanner::_getPathPortion(const QList<Position> &path,
+Wayset HierarchicalPlanner::_getPathPortion(const Wayset &path,
                                                      qreal portionStartTime,
                                                      qreal portionEndTime) const
 {
-    QList<Position> toRet;
+    Wayset toRet;
 
     const UAVParameters& params = this->problem()->uavParameters();
     const int startingIndex = portionStartTime * params.airspeed() / params.waypointInterval();
-    const int endingIndex = portionEndTime * params.airspeed() / params.waypointInterval();
+    const int endingIndex = qMin<int>(portionEndTime * params.airspeed() / params.waypointInterval(),
+                                      path.size() - 1);
     //const int count = endingIndex - startingIndex;
 
     for (int i = startingIndex; i < endingIndex; i++)
-        toRet.append(path[i]);
+        toRet.append(path.at(i));
 
 
     return toRet;

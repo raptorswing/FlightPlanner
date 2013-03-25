@@ -35,7 +35,7 @@ void SubFlightNode::setParent(const QSharedPointer<SubFlightNode> &parent)
     _path.append(this->position());
 }
 
-const QList<Position> &SubFlightNode::path() const
+const Wayset &SubFlightNode::path() const
 {
     return _path;
 }

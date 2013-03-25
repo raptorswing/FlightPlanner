@@ -12,6 +12,7 @@
 #include "TimingConstraint.h"
 #include "UAVParameters.h"
 #include "Serializable.h"
+#include "Wayset.h"
 
 #include "PlanningCommon_global.h"
 
@@ -32,7 +33,7 @@ public:
 
     virtual QString taskType() const=0;
 
-    virtual qreal calculateFlightPerformance(const QList<Position>& positions,
+    virtual qreal calculateFlightPerformance(const Wayset& positions,
                                              const QPolygonF& geoPoly,
                                              const UAVParameters& uavParams)=0;
 

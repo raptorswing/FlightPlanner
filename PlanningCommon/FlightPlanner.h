@@ -29,8 +29,8 @@ public:
 
     Fitness bestFitnessSoFar() const;
 
-    const QList<Position>& bestFlightSoFar() const;
-    void setBestFlightSoFar(const QList<Position>& nFlight);
+    const Wayset& bestFlightSoFar() const;
+    void setBestFlightSoFar(const Wayset& nFlight);
 
     quint32 iterations() const;
     
@@ -57,7 +57,7 @@ private:
     quint32 _iterations;
 
     Fitness _bestFitnessSoFar;
-    QList<Position> _bestFlightSoFar;
+    Wayset _bestFlightSoFar;
 
 private slots:
     //The timer calls this one, which will call the polymorphic instance

@@ -19,8 +19,10 @@ public:
                                   QSharedPointer<PlanningProblem> problem,
                                   QObject *parent = 0);
 
-    QList<Position> wayset() const;
-    void setWayset(const QList<Position>& wayset);
+    Wayset wayset() const;
+    void setWayset(const Wayset& wayset);
+
+    void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
     
 signals:
     

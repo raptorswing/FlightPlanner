@@ -1,23 +1,22 @@
 #ifndef EXPORTER_H
 #define EXPORTER_H
 
-#include <QList>
-#include "Position.h"
+#include "Wayset.h"
 
 #include "PlanningCommon_global.h"
 
 class PLANNINGCOMMONSHARED_EXPORT Exporter
 {
 public:
-    Exporter(const QList<Position>& solution);
+    Exporter(const Wayset& solution);
     virtual ~Exporter();
 
-    const QList<Position>& solution() const;
+    const Wayset& solution() const;
 
     virtual bool doExport(QByteArray * output)=0;
 
 private:
-    QList<Position> _solution;
+    Wayset _solution;
 };
 
 #endif // EXPORTER_H

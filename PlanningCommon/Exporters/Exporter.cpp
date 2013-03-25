@@ -1,6 +1,6 @@
 #include "Exporter.h"
 
-Exporter::Exporter(const QList<Position> &solution) : _solution(solution)
+Exporter::Exporter(const Wayset &solution) : _solution(solution)
 {
 }
 
@@ -8,7 +8,7 @@ Exporter::~Exporter()
 {
 }
 
-const QList<Position> &Exporter::solution() const
+const Wayset &Exporter::solution() const
 {
     return _solution;
 }

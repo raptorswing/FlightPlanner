@@ -15,12 +15,47 @@ Wayset::Wayset(const QList<Position> &waypoints) :
 
 const Position &Wayset::at(int i) const
 {
+    if (i < 0 || i >= this->size())
+    {
+        qWarning() << "Index" << i << "out of bounds!";
+        return Position();
+    }
     return _waypoints.at(i);
+}
+
+Position &Wayset::first()
+{
+    return _waypoints.first();
+}
+
+const Position &Wayset::first() const
+{
+    return _waypoints.last();
+}
+
+Position &Wayset::last()
+{
+    return _waypoints.last();
+}
+
+const Position &Wayset::last() const
+{
+    return _waypoints.last();
 }
 
 int Wayset::count() const
 {
     return _waypoints.size();
+}
+
+int Wayset::size() const
+{
+    return _waypoints.size();
+}
+
+bool Wayset::isEmpty() const
+{
+    return _waypoints.isEmpty();
 }
 
 qreal Wayset::lengthMeters(const UAVParameters &uavParams) const
@@ -57,6 +92,26 @@ qreal Wayset::timeToFly(const UAVParameters &uavParams) const
     const qreal meters = this->lengthMeters(uavParams);
     const qreal ttf = meters / uavParams.airspeed();
     return ttf;
+}
+
+void Wayset::clear()
+{
+    _waypoints.clear();
+}
+
+void Wayset::append(const Position &pos)
+{
+    _waypoints.append(pos);
+}
+
+void Wayset::append(const Wayset &wayset)
+{
+    _waypoints.append(wayset.waypoints());
+}
+
+void Wayset::prepend(const Position &pos)
+{
+    _waypoints.prepend(pos);
 }
 
 const QList<Position> &Wayset::waypoints() const

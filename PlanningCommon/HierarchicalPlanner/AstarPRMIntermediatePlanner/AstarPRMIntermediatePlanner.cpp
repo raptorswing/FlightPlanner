@@ -47,7 +47,7 @@ bool AstarPRMIntermediatePlanner::plan()
         //When we get close enough trace back
         if (current.flatDistanceEstimate(this->endPos()) < GRANULARITY)
         {
-            QList<Position> metaPlan;
+            Wayset metaPlan;
             metaPlan.append(this->endPos());
 
             //Trace back
@@ -105,13 +105,13 @@ bool AstarPRMIntermediatePlanner::plan()
     return false;
 }
 
-QList<Position> AstarPRMIntermediatePlanner::results() const
+Wayset AstarPRMIntermediatePlanner::results() const
 {
     return _results;
 }
 
 //private
-void AstarPRMIntermediatePlanner::_toRealPath(const QList<Position>& metaPlan)
+void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
 {
     QList<UAVOrientation> orientations;
     orientations.append(this->startPose());

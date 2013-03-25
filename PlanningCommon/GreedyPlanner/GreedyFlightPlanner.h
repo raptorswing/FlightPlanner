@@ -36,7 +36,7 @@ private:
     qreal _lastOrientation;
 
     Fitness _bestFitnessThisIteration;
-    QList<Position> _bestPathThisIteration;
+    Wayset _bestPathThisIteration;
 };
 
 #endif // GREEDYFLIGHTPLANNER_H

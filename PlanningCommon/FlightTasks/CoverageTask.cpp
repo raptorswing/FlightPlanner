@@ -36,7 +36,7 @@ QString CoverageTask::taskType() const
     return "Coverage";
 }
 
-qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
+qreal CoverageTask::calculateFlightPerformance(const Wayset &positions,
                                                const QPolygonF &geoPoly,
                                                const UAVParameters &)
 {
@@ -50,7 +50,7 @@ qreal CoverageTask::calculateFlightPerformance(const QList<Position> &positions,
 
     QSet<int> satisfiedBins;
 
-    foreach(const Position& pos, positions)
+    foreach(const Position& pos, positions.waypoints())
     {
         const QVector3D xyz = Conversions::lla2xyz(pos);
         for (int i = 0; i < _bins.size(); i++)

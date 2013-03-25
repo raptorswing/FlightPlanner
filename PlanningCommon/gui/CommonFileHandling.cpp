@@ -8,7 +8,7 @@
 #include <QMessageBox>
 
 //static
-bool CommonFileHandling::doExport(const QList<Position> &toExport,
+bool CommonFileHandling::doExport(const Wayset &toExport,
                                   QString destFile,
                                   QWidget * parent)
 {
@@ -45,12 +45,12 @@ bool CommonFileHandling::doExport(const QList<Position> &toExport,
 }
 
 //static
-QList<Position> CommonFileHandling::doImport(bool &ok,
+Wayset CommonFileHandling::doImport(bool &ok,
                                              QString destFile,
                                              QWidget *parent)
 {
     ok = true; //by default
-    QList<Position> toRet;
+    Wayset toRet;
 
     if (destFile.isEmpty())
     {

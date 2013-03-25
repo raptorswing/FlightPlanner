@@ -39,7 +39,7 @@ bool PhonyIntermediatePlanner::plan()
     return true;
 }
 
-QList<Position> PhonyIntermediatePlanner::results() const
+Wayset PhonyIntermediatePlanner::results() const
 {
     return _results;
 }

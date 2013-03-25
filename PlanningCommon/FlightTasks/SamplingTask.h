@@ -2,6 +2,7 @@
 #define SAMPLINGTASK_H
 
 #include "FlightTask.h"
+#include "Wayset.h"
 
 #include "PlanningCommon_global.h"
 
@@ -24,7 +25,7 @@ public:
 
     virtual QString taskType() const;
 
-    virtual qreal calculateFlightPerformance(const QList<Position>& positions,
+    virtual qreal calculateFlightPerformance(const Wayset& positions,
                                              const QPolygonF& geoPoly,
                                              const UAVParameters& uavParams);
 

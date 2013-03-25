@@ -14,10 +14,10 @@ public:
                               const QList<QPolygonF>& obstacles);
 
     virtual bool plan();
-    virtual QList<Position> results() const;
+    virtual Wayset results() const;
 
 private:
-    QList<Position> _results;
+    Wayset _results;
 };
 
 #endif // DUBINSINTERMEDIATEPLANNER_H

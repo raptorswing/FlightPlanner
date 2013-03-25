@@ -37,13 +37,13 @@ QString SamplingTask::taskType() const
 }
 
 //virtual from FlightTask
-qreal SamplingTask::calculateFlightPerformance(const QList<Position> &positions,
+qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
                                                const QPolygonF &geoPoly,
                                                const UAVParameters &uavParams)
 {
     qreal toRet = 0.0;
 
-    foreach(const Position& pos, positions)
+    foreach(const Position& pos, positions.waypoints())
     {
         if (!geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
             continue;

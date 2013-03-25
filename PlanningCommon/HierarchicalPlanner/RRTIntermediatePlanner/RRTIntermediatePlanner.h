@@ -16,7 +16,7 @@ public:
                            const QList<QPolygonF>& obstacles);
 
     virtual bool plan();
-    virtual QList<Position> results() const;
+    virtual Wayset results() const;
 
 private:
     static QVectorND _toVec(const Position& pos, const UAVOrientation& pose);
@@ -25,7 +25,7 @@ private:
 
     bool _collidesWithObstacle(const Position& pos) const;
 
-    QList<Position> _results;
+    Wayset _results;
 };
 
 #endif // RRTINTERMEDIATEPLANNER_H

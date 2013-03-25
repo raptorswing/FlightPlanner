@@ -53,7 +53,7 @@ void GreedyFlightPlanner::doIteration()
         QSharedPointer<GreedyPlanningNode> top = _frontier.dequeue();
 
         //Check out the performance of the top's flight
-        const QList<Position>& flightPath = top->flightPath();
+        const Wayset& flightPath = top->flightPath();
 
         Fitness score = this->problem()->calculateFlightPerformance(flightPath);
 

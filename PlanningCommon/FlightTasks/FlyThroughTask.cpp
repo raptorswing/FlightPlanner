@@ -31,12 +31,12 @@ QString FlyThroughTask::taskType() const
     return "Fly Through";
 }
 
-qreal FlyThroughTask::calculateFlightPerformance(const QList<Position> &positions,
+qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
                                                  const QPolygonF &geoPoly,
                                                  const UAVParameters &)
 {
     //First, see if one of the points is within the polygon
-    foreach(const Position& pos, positions)
+    foreach(const Position& pos, positions.waypoints())
     {
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
             return this->maxTaskPerformance();

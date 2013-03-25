@@ -11,10 +11,10 @@
 class PLANNINGCOMMONSHARED_EXPORT CommonFileHandling
 {
 public:
-    static bool doExport(const QList<Position>& toExport,
+    static bool doExport(const Wayset& toExport,
                          QString destFile = QString(),
                          QWidget * parent = 0);
-    static QList<Position> doImport(bool &ok,
+    static Wayset doImport(bool &ok,
                                              QString destFile = QString(),
                                              QWidget * parent = 0);
 };

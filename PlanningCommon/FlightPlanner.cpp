@@ -33,12 +33,12 @@ Fitness FlightPlanner::bestFitnessSoFar() const
     return _bestFitnessSoFar;
 }
 
-const QList<Position> &FlightPlanner::bestFlightSoFar() const
+const Wayset &FlightPlanner::bestFlightSoFar() const
 {
     return _bestFlightSoFar;
 }
 
-void FlightPlanner::setBestFlightSoFar(const QList<Position> &nFlight)
+void FlightPlanner::setBestFlightSoFar(const Wayset &nFlight)
 {
     _bestFlightSoFar = nFlight;
 }

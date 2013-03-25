@@ -41,7 +41,7 @@ public:
     void addTaskArea(const QPointF& centerPos);
     void removeTaskArea(QSharedPointer<FlightTaskArea> area);
 
-    Fitness calculateFlightPerformance(const QList<Position>& positions) const;
+    Fitness calculateFlightPerformance(const Wayset& positions) const;
 
     const QSet<QSharedPointer<FlightTaskArea> >& areas() const;
 

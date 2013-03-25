@@ -140,7 +140,7 @@ void WaypointPlannerMainWindow::on_actionCoverage_Helper_triggered()
 void WaypointPlannerMainWindow::on_actionImport_Solution_triggered()
 {
     bool ok;
-    QList<Position> wayset = CommonFileHandling::doImport(ok, QString(), this);
+    Wayset wayset = CommonFileHandling::doImport(ok, QString(), this);
 
     if (!ok)
         return;
@@ -150,7 +150,7 @@ void WaypointPlannerMainWindow::on_actionImport_Solution_triggered()
 //private slot
 void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
 {
-    QList<Position> toExport = _waysetManager->wayset();
+    Wayset toExport = _waysetManager->wayset();
     CommonFileHandling::doExport(toExport, QString(), this);
 }
 
