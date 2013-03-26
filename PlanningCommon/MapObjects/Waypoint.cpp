@@ -215,7 +215,7 @@ UAVOrientation Waypoint::angle() const
     if (_next.isNull() && _prev.isNull())
         toRet = 0.0;
     else if (_next.isNull())
-        toRet = _prev->angle().radians();
+        toRet = Waypoint::angleBetween(this->prev()->pos(), this->pos());
     else if (_prev.isNull())
         toRet = Waypoint::angleBetween(this->pos(), this->next()->pos());
     else
