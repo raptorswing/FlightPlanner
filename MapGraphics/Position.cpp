@@ -108,6 +108,15 @@ QVector2D Position::flatOffsetMeters(const Position &dest) const
     return QVector2D(lonDiffMeters, latDiffMeters);
 }
 
+Position Position::flatOffsetToPosition(const QPointF& offset) const
+{
+    const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->latitude());
+    const qreal latPerMeter = Conversions::degreesLatPerMeter(this->latitude());
+
+    return Position(this->longitude() + offset.x() * lonPerMeter,
+                    this->latitude() + offset.y() * latPerMeter);
+}
+
 qreal Position::flatManhattanEstimate(const Position &other) const
 {
     const QVector2D offsetMeters = this->flatOffsetMeters(other);
