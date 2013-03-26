@@ -9,7 +9,7 @@
 class PLANNINGCOMMONSHARED_EXPORT UAVParameters
 {
 public:
-    UAVParameters(qreal airspeed = 14.0, qreal minTurningRadius = 38.0, qreal waypointInterval = 30.0);
+    UAVParameters(qreal airspeed = 13.0, qreal minTurningRadius = 30.0, qreal waypointInterval = 30.0);
 
     qreal airspeed() const;
     qreal minTurningRadius() const;
