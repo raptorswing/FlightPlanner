@@ -74,21 +74,62 @@ void SubFlightPlanner::_greedyPlan()
         const qreal latPerMeter = Conversions::degreesLatPerMeter(node->position().latitude());
 
         //Build successors to the current node. Add them to frontier.
-        const int branches = 4;
-        for (int i = -branches; i <= branches; i++)
+        //        const int branches = 4;
+        //        for (int i = -branches; i <= branches; i++)
+        //        {
+        //            qreal successorRadians = node->orientation().radians() + _uavParams.maxTurnAngle() * ((qreal)i / (qreal) branches);
+        //            QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
+        //            successorVec.normalize();
+        //            successorVec *= _uavParams.waypointInterval();
+        //            Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
+        //                                  node->position().latitude() + latPerMeter * successorVec.y());
+
+        //            UAVOrientation successorPose(successorRadians);
+        //            QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));
+
+        //            const qreal successorScore = _task->calculateFlightPerformance(successor->path(), _area->geoPoly(), _uavParams);
+        //            frontier.insert(successorScore, successor);
+        //        }
+        for (qreal i = 1.2; i <= 6.0 * 1.5; i += 1.5)
         {
-            qreal successorRadians = node->orientation().radians() + _uavParams.maxTurnAngle() * ((qreal)i / (qreal) branches);
-            QVector3D successorVec(cos(successorRadians), sin(successorRadians), 0);
-            successorVec.normalize();
-            successorVec *= _uavParams.waypointInterval();
-            Position successorPos(node->position().longitude() + lonPerMeter * successorVec.x(),
-                                  node->position().latitude() + latPerMeter * successorVec.y());
+            const qreal radius = _uavParams.minTurningRadius() * i;
+            const qreal arc = _uavParams.waypointInterval() / radius;
+            const qreal leftCircleAngle = node->orientation().radians() + PI / 2.0;
+            const QVector2D leftCenterPos(radius * cos(leftCircleAngle),
+                                          radius * sin(leftCircleAngle));
+            const qreal newAngle = leftCircleAngle - PI + arc;
+            const QVector2D pos(leftCenterPos.x() + radius * cos(newAngle),
+                                leftCenterPos.y() + radius * sin(newAngle));
+            const qreal forwardAngle = newAngle + PI / 2.0;
 
-            UAVOrientation successorPose(successorRadians);
-            QSharedPointer<SubFlightNode> successor(new SubFlightNode(successorPos, successorPose, node));
+            const Position posLatLon(node->position().longitude() + pos.x() * lonPerMeter,
+                                     node->position().latitude() + pos.y() * latPerMeter);
+            QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
+                                                              UAVOrientation(forwardAngle),
+                                                              node));
+            const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);
+            frontier.insert(sScore, s);
+        }
 
-            const qreal successorScore = _task->calculateFlightPerformance(successor->path(), _area->geoPoly(), _uavParams);
-            frontier.insert(successorScore, successor);
+        for (qreal i = 1.2; i <= 6.0 * 1.5; i += 1.5)
+        {
+            const qreal radius = _uavParams.minTurningRadius() * i;
+            const qreal arc = _uavParams.waypointInterval() / radius;
+            const qreal rightCircleAngle = node->orientation().radians() - PI / 2.0;
+            const QVector2D rightCenterPos(radius * cos(rightCircleAngle),
+                                           radius * sin(rightCircleAngle));
+            const qreal newAngle = rightCircleAngle + PI - arc;
+            const QVector2D pos(rightCenterPos.x() + radius * cos(newAngle),
+                                rightCenterPos.y() + radius * sin(newAngle));
+            const qreal forwardAngle = newAngle - PI / 2.0;
+
+            const Position posLatLon(node->position().longitude() + pos.x() * lonPerMeter,
+                                     node->position().latitude() + pos.y() * latPerMeter);
+            QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
+                                                              UAVOrientation(forwardAngle),
+                                                              node));
+            const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);
+            frontier.insert(sScore, s);
         }
     }
 }
