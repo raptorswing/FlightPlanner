@@ -202,12 +202,31 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
     else
     {
-        const qreal angle = Waypoint::angleBetween(this->pos(), this->next()->pos()) - PI / 2.0;
         painter->save();
-        painter->rotate(angle * 180.0 / PI);
+        painter->rotate(this->angle().radians() * (180.0 / PI) - 90.0);
         painter->drawPolygon(triangle, Qt::OddEvenFill);
         painter->restore();
     }
+}
+
+UAVOrientation Waypoint::angle() const
+{
+    qreal toRet;
+    if (_next.isNull() && _prev.isNull())
+        toRet = 0.0;
+    else if (_next.isNull())
+        toRet = _prev->angle().radians();
+    else if (_prev.isNull())
+        toRet = Waypoint::angleBetween(this->pos(), this->next()->pos());
+    else
+    {
+        UAVOrientation before(Waypoint::angleBetween(this->prev()->pos(), this->pos()));
+        UAVOrientation after(Waypoint::angleBetween(this->pos(), this->next()->pos()));
+        toRet = UAVOrientation::average(before, after).radians();
+    }
+
+
+    return UAVOrientation(toRet);
 }
 
 //public slot
@@ -219,12 +238,12 @@ void Waypoint::setPrev(Waypoint *nPrev)
         disconnect(_prev.data(),
                    SIGNAL(posChanged()),
                    this,
-                   SIGNAL(redrawRequested()));
+                   SLOT(updateLine()));
     }
 
     //Set new prev
     _prev = nPrev;
-    this->redrawRequested();
+    this->updateLine();
 
     //Connect signals
     if (!_prev.isNull())
@@ -232,7 +251,7 @@ void Waypoint::setPrev(Waypoint *nPrev)
         connect(_prev.data(),
                 SIGNAL(posChanged()),
                 this,
-                SIGNAL(redrawRequested()));
+                SLOT(updateLine()));
     }
 }
 
@@ -398,12 +417,10 @@ void Waypoint::updateLine()
         const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
 
         const QPointF startPos(0,0);
-        const qreal startAngle = Waypoint::angleBetween(this->pos(), this->next()->pos());
+        const qreal startAngle = this->angle().radians();
         const QPointF endPos((this->next()->pos().x() - this->pos().x()) / lonPerMeter,
                              (this->next()->pos().y() - this->pos().y()) / latPerMeter);
-        qreal endAngle = startAngle;
-        if (this->next()->next() != 0)
-            endAngle = Waypoint::angleBetween(this->next()->pos(),this->next()->next()->pos());
+        const qreal endAngle = this->next()->angle().radians();
 
         Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius);
 
@@ -420,9 +437,7 @@ void Waypoint::updateLine()
     }
 
     /*
-     * This is a shortcut so that we don't have to connect two signals to our "next" pointer.
-     * That is, redrawing ourselves has nothing to do with redrawing the line.
-     * Every time our line needs to be updated we'll also need to be redrawn.
+     * Every time our line needs to be updated we'll also need to be redrawn probably.
     */
     this->redrawRequested();
 }

@@ -7,6 +7,7 @@
 #include "DubinsLineObject.h"
 #include "MapGraphicsObject.h"
 #include "PlanningProblem.h"
+#include "UAVOrientation.h"
 
 #include "PlanningCommon_global.h"
 
@@ -33,6 +34,8 @@ public:
 
     //pure-virtual from MapGraphicsObject
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    UAVOrientation angle() const;
     
 signals:
     void newWaypointGenerated(Waypoint * newOne);
