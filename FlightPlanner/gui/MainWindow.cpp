@@ -15,6 +15,7 @@
 #include "UAVParametersWidget.h"
 
 #include "gui/CommonFileHandling.h"
+#include "gui/CommonWindowHandling.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _planner(0), _viewAdapter(0)
 {
     ui->setupUi(this);
+
+    //Restore window geometry
+    CommonWindowHandling::restoreGeometry(this);
 
     this->initMap();
     this->initPlanningProblem();
@@ -34,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    //Store window geometry
+    CommonWindowHandling::storeGeometry(this);
     delete ui;
 }
 

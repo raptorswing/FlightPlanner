@@ -9,19 +9,16 @@
 #include <QTimer>
 #include <QFileDialog>
 
-
 #include "gui/CommonFileHandling.h"
-
-const QString SETTINGS_GEOMETRY = "lastGeometry";
-const QString SETTINGS_WINDOWSTATE = "lastWindowState";
+#include "gui/CommonWindowHandling.h"
 
 WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     this->ui->setupUi(this);
+    CommonWindowHandling::restoreGeometry(this);
     this->ui->menuView->addAction(this->ui->toolBar->toggleViewAction());
-    this->restoreGeometry();
 
     this->initProblem();
     this->initMap();
@@ -32,7 +29,7 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 
 WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
 {
-    this->storeGeometry();
+    CommonWindowHandling::storeGeometry(this);
     delete ui;
 }
 
@@ -152,50 +149,6 @@ void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
 {
     Wayset toExport = _waysetManager->wayset();
     CommonFileHandling::doExport(toExport, QString(), this);
-}
-
-//private
-void WaypointPlannerMainWindow::restoreGeometry()
-{
-    QSettings settings;
-    if (!settings.contains(SETTINGS_GEOMETRY))
-        return;
-
-    const QRect rect = settings.value(SETTINGS_GEOMETRY).toRect();
-
-    QDesktopWidget * desktop = QApplication::desktop();
-    bool onScreen = false;
-    for (int i = 0; i < desktop->numScreens() && !onScreen; i++)
-    {
-        if (desktop->availableGeometry(i).contains(rect))
-            onScreen = true;
-    }
-    if (onScreen)
-        this->setGeometry(rect);
-    else
-        qDebug() << "Can't restore geometry off-screen";
-
-    if (!settings.contains(SETTINGS_WINDOWSTATE))
-        return;
-
-    bool ok;
-    const int wStateInt = settings.value(SETTINGS_WINDOWSTATE).toInt(&ok);
-    const Qt::WindowStates wState(wStateInt);
-    if (ok)
-        this->setWindowState(wState);
-}
-
-//private
-void WaypointPlannerMainWindow::storeGeometry()
-{
-    QSettings settings;
-
-    const QRect rect = this->geometry();
-    settings.setValue(SETTINGS_GEOMETRY, rect);
-
-    const Qt::WindowStates wState = this->windowState();
-    const int wStateInt = wState;
-    settings.setValue(SETTINGS_WINDOWSTATE, wStateInt);
 }
 
 //private

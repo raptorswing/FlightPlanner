@@ -50,8 +50,6 @@ private slots:
     void on_actionExport_Solution_triggered();
 
 private:
-    void restoreGeometry();
-    void storeGeometry();
     void initProblem();
     void initMap();
     Ui::MainWindow *ui;
