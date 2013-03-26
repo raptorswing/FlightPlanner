@@ -16,10 +16,7 @@ Wayset::Wayset(const QList<Position> &waypoints) :
 const Position &Wayset::at(int i) const
 {
     if (i < 0 || i >= this->size())
-    {
         qWarning() << "Index" << i << "out of bounds!";
-        return Position();
-    }
     return _waypoints.at(i);
 }
 
