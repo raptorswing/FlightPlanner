@@ -1,33 +1,35 @@
 #ifndef DUBINSLINEOBJECT_H
 #define DUBINSLINEOBJECT_H
 
-#include "LineObject.h"
+#include "MapGraphicsObject.h"
 #include "Dubins.h"
 #include "Position.h"
 
 #include <QPointer>
+#include <QVector>
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT DubinsLineObject : public LineObject
+class PLANNINGCOMMONSHARED_EXPORT DubinsLineObject : public MapGraphicsObject
 {
     Q_OBJECT
 public:
     DubinsLineObject(const Position& rootPos,
                      const Dubins& dubins,
-                     qreal dubinsStart,
                      MapGraphicsObject *parent = 0);
     virtual ~DubinsLineObject();
 
-    //pure-virtual from LineObject
+    //pure-virtual from MapGraphicsObject
+    QRectF boundingRect() const;
+
+    //pure-virtual from MapGraphicsObject
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     
 signals:
     
 public slots:
     void setDubins(Position rootPos,
-                   Dubins dubins,
-                   qreal dubinsStart);
+                   Dubins dubins);
 
 private slots:
     void updateDubins();
@@ -35,9 +37,9 @@ private slots:
 private:
     Position _rootPos;
     Dubins _dubins;
-    qreal _dubinsStart;
 
-    QPointer<DubinsLineObject> _next;
+    QRectF _boundingRect;
+    QVector<QPointF> _drawOffsets;
     
 };
 

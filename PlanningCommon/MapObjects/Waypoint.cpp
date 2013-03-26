@@ -402,6 +402,7 @@ void Waypoint::updateLine()
 {
     if (_problem.isNull())
         return;
+
     QSharedPointer<PlanningProblem> problem = _problem.toStrongRef();
     const qreal minTurnRadius = problem->uavParameters().minTurningRadius();
 
@@ -426,14 +427,12 @@ void Waypoint::updateLine()
 
         if (_lineObj == 0)
         {
-            _lineObj = new DubinsLineObject(Position(this->pos()), dubins, 0);
+            _lineObj = new DubinsLineObject(Position(this->pos()), dubins);
 
             this->newObjectGenerated(_lineObj);
         }
         else
-        {
-            _lineObj->setDubins(Position(this->pos()), dubins, 0);
-        }
+            _lineObj->setDubins(Position(this->pos()), dubins);
     }
 
     /*

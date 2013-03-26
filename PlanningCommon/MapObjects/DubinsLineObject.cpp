@@ -1,93 +1,112 @@
 #include "DubinsLineObject.h"
 
 #include <QtDebug>
-#include <QTimer>
+#include <QtCore>
 
 #include "guts/Conversions.h"
 
-const qreal GRANULARITY = 10.0;
+const qreal GRANULARITY = 20.0;
 
 DubinsLineObject::DubinsLineObject(const Position &rootPos,
                                    const Dubins &dubins,
-                                   qreal dubinsStart,
                                    MapGraphicsObject *parent) :
-    LineObject(Position(), Position(), parent),
-    _rootPos(rootPos), _dubins(dubins), _dubinsStart(dubinsStart)
+    MapGraphicsObject(false, parent),
+    _rootPos(rootPos), _dubins(dubins)
 {
-    QTimer::singleShot(1, this, SLOT(updateDubins()));
-    //this->setDubins(rootPos, dubins, dubinsStart);
+    this->setDubins(rootPos, dubins);
 }
 
 DubinsLineObject::~DubinsLineObject()
 {
-    while (!_next.isNull())
-    {
-        _next->deleteLater();
-        _next = _next->_next;
-    }
 }
 
-void DubinsLineObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+//pure-virtual from MapGraphicsObject
+QRectF DubinsLineObject::boundingRect() const
 {
-    painter->setPen(Qt::red);
-    LineObject::paint(painter, option, widget);
+    return _boundingRect;
+}
+
+//pure-virtual from MapGraphicsObject
+void DubinsLineObject::paint(QPainter *painter,
+                             const QStyleOptionGraphicsItem *option,
+                             QWidget *widget)
+{
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    //painter->setPen(QPen(Qt::black, 3.0));
+    for (int i = 1; i < _drawOffsets.size() - 1; i++)
+    {
+        const QPointF& next = _drawOffsets.at(i);
+        const QPointF& prev = _drawOffsets.at(i-1);
+
+        painter->drawLine(prev, next);
+    }
 }
 
 //public slot
 void DubinsLineObject::setDubins(Position rootPos,
-                                 Dubins dubins,
-                                 qreal dubinsStart)
+                                 Dubins dubins)
 {
+    _rootPos = rootPos;
+    _dubins = dubins;
+    _drawOffsets.clear();
     if (!dubins.isValid())
     {
         qDebug() << "Invalid dubins";
         return;
     }
 
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(rootPos.latitude());
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(rootPos.latitude());
+    qreal maxX = rootPos.longitude();
+    qreal maxY = rootPos.latitude();
+    qreal minX = maxX;
+    qreal minY = maxY;
 
-    const qreal startTime = dubinsStart;
-    const qreal endTime = qMin<qreal>(dubinsStart + GRANULARITY,
-                                      dubins.length() - 0.5);
+    QList<Position> tempPositions;
 
-    QPointF startPosMeters, endPosMeters;
-    qreal outAngle;
-    if (!dubins.sample(startTime, startPosMeters, outAngle))
-        qDebug() << "Bad start sample";
-    if (!dubins.sample(endTime, endPosMeters, outAngle))
-        qDebug() << "Bad end sample";
-
-    Position startPos(rootPos.longitude() + startPosMeters.x() * lonPerMeter,
-                      rootPos.latitude() + startPosMeters.y() * latPerMeter);
-    Position endPos(rootPos.longitude() + endPosMeters.x() * lonPerMeter,
-                    rootPos.latitude() + endPosMeters.y() * latPerMeter);
-
-    this->setEndPoints(startPos, endPos);
-
-    if (endTime >= dubins.length() - 0.6 && !_next.isNull())
+    const int numChecks = qCeil(dubins.length() / GRANULARITY) + 2;
+    for (int i = 0; i < numChecks; i++)
     {
-        while (!_next.isNull())
-        {
-            _next->deleteLater();
-            _next = _next->_next;
-        }
+        const qreal dubinPos = qMin<qreal>(GRANULARITY * i,
+                                           dubins.length() - 0.1);
+        QPointF offset;
+        qreal outAngle;
+        dubins.sample(dubinPos, offset, outAngle);
+
+        const Position latLon = rootPos.flatOffsetToPosition(offset);
+        tempPositions.append(latLon);
+
+        if (latLon.longitude() > maxX)
+            maxX = latLon.longitude();
+        if (latLon.longitude() < minX)
+            minX = latLon.longitude();
+        if (latLon.latitude() > maxY)
+            maxY = latLon.latitude();
+        if (latLon.latitude() < minY)
+            minY = latLon.latitude();
     }
-    else if (endTime < dubins.length() - 0.6)
+
+    const QRectF latLonRect(minX, minY, maxX - minX, maxY - minY);
+    const Position center(latLonRect.center().x(), latLonRect.center().y());
+
+    foreach(const Position& tempPos, tempPositions)
     {
-        if (_next.isNull())
-        {
-            _next = new DubinsLineObject(rootPos, dubins, endTime);
-            this->newObjectGenerated(_next);
-        }
-        else
-            _next->setDubins(rootPos, dubins, endTime);
+        QVector2D offset = center.flatOffsetMeters(tempPos);
+        _drawOffsets.append(offset.toPointF());
     }
+
+    const qreal lonPerMeter = Conversions::degreesLonPerMeter(center.latitude());
+    const qreal latPerMeter = Conversions::degreesLatPerMeter(center.latitude());
+    const qreal widthMeters = qAbs<qreal>(maxX - minX) / lonPerMeter;
+    const qreal heightMeters = qAbs<qreal>(maxY - minY) / latPerMeter;
+    _boundingRect = QRectF(-2*widthMeters, -2*heightMeters,
+                           4*widthMeters, 4*heightMeters);
+
+
+    this->setPos(latLonRect.center());
     this->redrawRequested();
 }
 
 //private slot
 void DubinsLineObject::updateDubins()
 {
-    this->setDubins(_rootPos, _dubins, _dubinsStart);
+    this->setDubins(_rootPos, _dubins);
 }
