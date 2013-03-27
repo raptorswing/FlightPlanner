@@ -9,6 +9,7 @@ const qreal GRANULARITY = 300.0;
 #include "QVectorND.h"
 #include "guts/Conversions.h"
 #include "HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h"
+#include "Dubins.h"
 
 AstarPRMIntermediatePlanner::AstarPRMIntermediatePlanner(const UAVParameters& uavParams,
                                                          const Position &startPos,
@@ -129,18 +130,53 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
     }
     orientations.append(this->endPose());
 
+    qreal totalDubinLength = 0.0;
+    QList<Dubins> dubins;
     for (int i = 0; i < metaPlan.size() - 1; i++)
     {
         const Position& startPos = metaPlan.at(i);
-        const UAVOrientation& startPose = orientations.at(i);
         const Position& endPos = metaPlan.at(i + 1);
-        const UAVOrientation& endPose = orientations.at(i + 1);
-        IntermediatePlanner * intermed = new DubinsIntermediatePlanner(this->uavParams(),
-                                                                       startPos, startPose,
-                                                                       endPos, endPose,
-                                                                       this->obstacles());
-        intermed->plan();
-        _results.append(intermed->results());
-        delete intermed;
+        const QPointF startMeters(0.0, 0.0);
+        const QPointF endMeters = startPos.flatOffsetMeters(endPos).toPointF();
+
+        const UAVOrientation& startAngle = orientations.at(i);
+        const UAVOrientation& endAngle = orientations.at(i + 1);
+        Dubins d(startMeters, startAngle.radians(), endMeters, endAngle.radians(),
+                 this->uavParams().minTurningRadius());
+        dubins.append(d);
+        totalDubinLength += d.length();
+    }
+
+    const int numSamples = qRound(totalDubinLength / this->uavParams().waypointInterval());
+    qDebug() << "Do" << numSamples << "samples";
+    for (int i = 0; i < numSamples; i++)
+    {
+        const qreal totalSamplePos = this->uavParams().waypointInterval() * i;
+
+        qreal groundCovered = 0.0;
+        Dubins current;
+        Position dubinRoot;
+        for (int j = 0; j < dubins.size(); j++)
+        {
+            const Dubins & d = dubins.at(j);
+            const qreal extent = groundCovered + d.length();
+            if (extent > totalSamplePos)
+            {
+                current = d;
+                dubinRoot = metaPlan.at(j);
+                break;
+            }
+            groundCovered += d.length();
+        }
+
+        if (!current.isValid())
+            qWarning() << this << "has invalid dubins!";
+
+        QPointF sampleOffset;
+        qreal angleResult;
+        current.sample(totalSamplePos - groundCovered, sampleOffset, angleResult);
+
+        Position sampleResult = dubinRoot.flatOffsetToPosition(sampleOffset);
+        _results.append(Position(sampleResult));
     }
 }
