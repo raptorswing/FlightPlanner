@@ -228,9 +228,20 @@ UAVOrientation Waypoint::angle() const
         toRet = Waypoint::angleBetween(this->pos(), this->next()->pos());
     else
     {
-        UAVOrientation before(Waypoint::angleBetween(this->prev()->pos(), this->pos()));
-        UAVOrientation after(Waypoint::angleBetween(this->pos(), this->next()->pos()));
-        toRet = UAVOrientation::average(before, after).radians();
+        const UAVOrientation before(Waypoint::angleBetween(this->prev()->pos(), this->pos()));
+        const UAVOrientation after(Waypoint::angleBetween(this->pos(), this->next()->pos()));
+        const Position prevPos(this->prev()->pos());
+        const Position pos(this->pos());
+        const Position nextPos(this->next()->pos());
+
+        const qreal prevDist = prevPos.flatDistanceEstimate(pos);
+        const qreal nextDist = pos.flatDistanceEstimate(nextPos);
+        const qreal totalDist = prevDist + nextDist;
+
+        qreal prevWeight = 1.0 - prevDist / totalDist;
+        qreal nextWeight = 1.0 - nextDist / totalDist;
+
+        toRet = UAVOrientation::average(before, after, prevWeight, nextWeight).radians();
     }
 
 
