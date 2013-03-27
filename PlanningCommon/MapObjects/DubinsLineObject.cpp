@@ -8,10 +8,10 @@
 const qreal GRANULARITY = 20.0;
 
 DubinsLineObject::DubinsLineObject(const Position &rootPos,
-                                   const Dubins &dubins,
+                                   const Dubins &dubins, qreal thickness,
                                    MapGraphicsObject *parent) :
     MapGraphicsObject(false, parent),
-    _rootPos(rootPos), _dubins(dubins)
+    _rootPos(rootPos), _dubins(dubins), _thickness(thickness)
 {
     this->setDubins(rootPos, dubins);
 }
@@ -31,8 +31,14 @@ void DubinsLineObject::paint(QPainter *painter,
                              const QStyleOptionGraphicsItem *option,
                              QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
     painter->setRenderHint(QPainter::Antialiasing, true);
-    //painter->setPen(QPen(Qt::black, 3.0));
+    QPen pen = painter->pen();
+    pen.setWidthF(_thickness);
+    painter->setPen(pen);
+
     for (int i = 1; i < _drawOffsets.size() - 1; i++)
     {
         const QPointF& next = _drawOffsets.at(i);
@@ -40,6 +46,17 @@ void DubinsLineObject::paint(QPainter *painter,
 
         painter->drawLine(prev, next);
     }
+}
+
+qreal DubinsLineObject::thickness() const
+{
+    return _thickness;
+}
+
+void DubinsLineObject::setThickness(qreal nThick)
+{
+    _thickness = nThick;
+    this->redrawRequested();
 }
 
 //public slot
@@ -97,8 +114,8 @@ void DubinsLineObject::setDubins(Position rootPos,
     const qreal latPerMeter = Conversions::degreesLatPerMeter(center.latitude());
     const qreal widthMeters = qAbs<qreal>(maxX - minX) / lonPerMeter;
     const qreal heightMeters = qAbs<qreal>(maxY - minY) / latPerMeter;
-    _boundingRect = QRectF(-2*widthMeters, -2*heightMeters,
-                           4*widthMeters, 4*heightMeters);
+    _boundingRect = QRectF(-1*widthMeters, -1*heightMeters,
+                           2*widthMeters, 2*heightMeters);
 
 
     this->setPos(latLonRect.center());

@@ -16,6 +16,7 @@ class PLANNINGCOMMONSHARED_EXPORT DubinsLineObject : public MapGraphicsObject
 public:
     DubinsLineObject(const Position& rootPos,
                      const Dubins& dubins,
+                     qreal thickness = 0.0,
                      MapGraphicsObject *parent = 0);
     virtual ~DubinsLineObject();
 
@@ -24,6 +25,9 @@ public:
 
     //pure-virtual from MapGraphicsObject
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    qreal thickness() const;
+    void setThickness(qreal nThick);
     
 signals:
     
@@ -37,6 +41,7 @@ private slots:
 private:
     Position _rootPos;
     Dubins _dubins;
+    qreal _thickness;
 
     QRectF _boundingRect;
     QVector<QPointF> _drawOffsets;
