@@ -4,7 +4,6 @@
 #include <QPointer>
 #include <QWeakPointer>
 
-#include "DubinsLineObject.h"
 #include "MapGraphicsObject.h"
 #include "PlanningProblem.h"
 #include "UAVOrientation.h"
@@ -15,9 +14,17 @@ class PLANNINGCOMMONSHARED_EXPORT Waypoint : public MapGraphicsObject
 {
     Q_OBJECT
 public:
+    enum WaypointLineMode
+    {
+        DubinLineMode,
+        StraightLineMode
+    };
+
+public:
     Waypoint(const QWeakPointer<PlanningProblem>& problem,
              Waypoint * prev = 0,
-             Waypoint * next = 0);
+             Waypoint * next = 0,
+             WaypointLineMode lMode = DubinLineMode);
     ~Waypoint();
 
     Waypoint * prev() const;
@@ -70,7 +77,8 @@ private:
 
     QWeakPointer<PlanningProblem> _problem;
 
-    DubinsLineObject *_lineObj;
+     MapGraphicsObject *_lineObj;
+    const WaypointLineMode _lMode;
     
 };
 

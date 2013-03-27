@@ -15,12 +15,13 @@ class PLANNINGCOMMONSHARED_EXPORT WaysetDisplayManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit WaysetDisplayManager(MapGraphicsScene * scene,
-                                  QSharedPointer<PlanningProblem> problem,
-                                  QObject *parent = 0);
+    WaysetDisplayManager(MapGraphicsScene * scene,
+                         QSharedPointer<PlanningProblem> problem,
+                         Waypoint::WaypointLineMode lineMode = Waypoint::DubinLineMode,
+                         QObject *parent = 0);
 
     Wayset wayset() const;
-    void setWayset(const Wayset& wayset);
+    void setWayset(const Wayset& wayset, Waypoint::WaypointLineMode lMode = Waypoint::DubinLineMode);
 
     void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
     
@@ -40,6 +41,7 @@ private slots:
 private:
     MapGraphicsScene * _scene;
     QWeakPointer<PlanningProblem> _problem;
+    Waypoint::WaypointLineMode _lineMode;
 
     QPointer<Waypoint> _first;
     bool _mouseInteraction;

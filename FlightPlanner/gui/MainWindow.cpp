@@ -285,7 +285,7 @@ void MainWindow::initPlanningProblem()
                                           _scene,
                                           this);
 
-    _waysetManager = new WaysetDisplayManager(_scene, _problem, this);
+    _waysetManager = new WaysetDisplayManager(_scene, _problem, Waypoint::StraightLineMode, this);
     _waysetManager->enableMouseInteraction(true);
 }
 
@@ -337,5 +337,5 @@ void MainWindow::initPlanningControlConnections()
 void MainWindow::updateDisplayedFlight()
 {
     _waysetManager->setPlanningProblem(_problem);
-    _waysetManager->setWayset(_planner->bestFlightSoFar());
+    _waysetManager->setWayset(_planner->bestFlightSoFar(), Waypoint::StraightLineMode);
 }

@@ -6,14 +6,22 @@
 
 #include "guts/Conversions.h"
 
+#include "DubinsLineObject.h"
+#include "LineObject.h"
+
 #include "Dubins.h"
 
 const qreal PI = 3.14159265359;
 
 Waypoint::Waypoint(const QWeakPointer<PlanningProblem> &problem,
                    Waypoint *prev,
-                   Waypoint *next) :
-    MapGraphicsObject(true), _displaySize(15.0), _problem(problem), _lineObj(0)
+                   Waypoint *next,
+                   WaypointLineMode lMode) :
+    MapGraphicsObject(true),
+    _displaySize(15.0),
+    _problem(problem),
+    _lineObj(0),
+    _lMode(lMode)
 {
     this->setPrev(prev);
     this->setNext(next);
@@ -311,7 +319,7 @@ void Waypoint::insertNewAfter()
 
     const QPointF avg = (this->pos() + this->next()->pos()) / 2.0;
 
-    Waypoint * wpt = new Waypoint(_problem);
+    Waypoint * wpt = new Waypoint(_problem, 0, 0, _lMode);
     wpt->setPos(avg);
 
     //Announce the new waypoint before setting links
@@ -334,7 +342,7 @@ void Waypoint::insertNewBefore()
 
     const QPointF avg = (this->pos() + this->prev()->pos()) / 2.0;
 
-    Waypoint * wpt = new Waypoint(_problem);
+    Waypoint * wpt = new Waypoint(_problem, 0, 0, _lMode);
     wpt->setPos(avg);
 
     //Announce the new waypoint before setting links
@@ -427,12 +435,26 @@ void Waypoint::updateLine()
 
         if (_lineObj == 0)
         {
-            _lineObj = new DubinsLineObject(Position(this->pos()), dubins);
+            if (_lMode == DubinLineMode)
+                _lineObj = new DubinsLineObject(Position(this->pos()), dubins);
+            else
+                _lineObj = new LineObject(this->pos(), this->next()->pos());
 
             this->newObjectGenerated(_lineObj);
         }
         else
-            _lineObj->setDubins(Position(this->pos()), dubins);
+        {
+            if (_lMode == DubinLineMode)
+            {
+                DubinsLineObject * dubinLine = qobject_cast<DubinsLineObject *>(_lineObj);
+                dubinLine->setDubins(Position(this->pos()), dubins);
+            }
+            else
+            {
+                LineObject * line = qobject_cast<LineObject *>(_lineObj);
+                line->setEndPoints(this->pos(), this->next()->pos());
+            }
+        }
     }
 
     /*

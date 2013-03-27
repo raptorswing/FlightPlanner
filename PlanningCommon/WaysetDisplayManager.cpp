@@ -5,8 +5,9 @@
 
 WaysetDisplayManager::WaysetDisplayManager(MapGraphicsScene *scene,
                                            QSharedPointer<PlanningProblem> problem,
+                                           Waypoint::WaypointLineMode lineMode,
                                            QObject *parent) :
-    QObject(parent), _scene(scene), _problem(problem)
+    QObject(parent), _scene(scene), _problem(problem), _lineMode(lineMode)
 {
 }
 
@@ -24,8 +25,11 @@ Wayset WaysetDisplayManager::wayset() const
     return toRet;
 }
 
-void WaysetDisplayManager::setWayset(const Wayset &wayset)
+void WaysetDisplayManager::setWayset(const Wayset &wayset,
+                                     Waypoint::WaypointLineMode lMode)
 {
+    _lineMode = lMode;
+
     if (!_first.isNull())
     {
         disconnect(_first.data(),
@@ -54,7 +58,7 @@ void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProbl
 //public slot
 void WaysetDisplayManager::appendWaypoint(Position pos)
 {
-    Waypoint * wpt = new Waypoint(_problem);
+    Waypoint * wpt = new Waypoint(_problem, 0, 0, _lineMode);
     wpt->setPos(pos.lonLat());
     _scene->addObject(wpt);
 
