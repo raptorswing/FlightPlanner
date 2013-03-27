@@ -31,7 +31,8 @@ public:
 
     void setRadians(qreal rad);
 
-    static UAVOrientation average(const UAVOrientation& a, const UAVOrientation& b);
+    static UAVOrientation average(const UAVOrientation& a, const UAVOrientation& b,
+                                  qreal weightA = 0.5, qreal weightB = 0.5);
 
 private:
     qreal _radians;

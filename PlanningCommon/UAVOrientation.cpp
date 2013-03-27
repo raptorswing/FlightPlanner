@@ -66,14 +66,23 @@ void UAVOrientation::setRadians(qreal radians)
     _radians = radians;
 }
 
-UAVOrientation UAVOrientation::average(const UAVOrientation &a, const UAVOrientation &b)
+UAVOrientation UAVOrientation::average(const UAVOrientation &a,const UAVOrientation &b,
+                                       qreal weightA, qreal weightB)
 {
     const qreal smallAngle1 = qMin<qreal>(a.radians(), b.radians());
     const qreal smallAngle2 = smallAngle1 + (2.0 * PI);
     const qreal bigAngle = qMax<qreal>(a.radians(), b.radians());
 
+    qreal smallWeight = weightA;
+    qreal bigWeight = weightB;
+    if (bigAngle == a.radians())
+    {
+        smallWeight = weightB;
+        bigWeight = weightA;
+    }
+
     if (qAbs<qreal>(smallAngle1 - bigAngle) < qAbs<qreal>(smallAngle2 - bigAngle))
-        return UAVOrientation((smallAngle1 + bigAngle) / 2.0);
+        return UAVOrientation(smallWeight * smallAngle1 + bigWeight * bigAngle);
     else
-        return UAVOrientation((smallAngle2 + bigAngle) / 2.0);
+        return UAVOrientation(smallWeight * smallAngle2 + bigWeight * bigAngle);
 }
