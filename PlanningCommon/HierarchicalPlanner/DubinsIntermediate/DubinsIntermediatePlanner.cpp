@@ -19,8 +19,9 @@ bool DubinsIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->startPos().latitude());
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(this->startPos().latitude());
+    const qreal avgLat = (this->startPos().latitude() + this->endPos().latitude()) / 2.0;
+    const qreal lonPerMeter = Conversions::degreesLonPerMeter(avgLat);
+    const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
 
     const QPointF startPos(0.0001, 0.0001);
     const qreal startAngle = this->startPose().radians();
