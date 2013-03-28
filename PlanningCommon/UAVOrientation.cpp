@@ -19,7 +19,7 @@ UAVOrientation::UAVOrientation(QDataStream &stream)
 }
 
 //pure-virtual from Serializable
-QString UAVOrientation::serializationKey() const
+QString UAVOrientation::serializationType() const
 {
     return "UAVOrientation";
 }

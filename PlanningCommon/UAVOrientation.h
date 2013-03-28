@@ -8,7 +8,7 @@
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT UAVOrientation
+class PLANNINGCOMMONSHARED_EXPORT UAVOrientation : public Serializable
 {
 public:
     UAVOrientation();
@@ -18,7 +18,7 @@ public:
     UAVOrientation(QDataStream& stream);
 
     //pure-virtual from Serializable
-    virtual QString serializationKey() const;
+    virtual QString serializationType() const;
 
     //pure-virtual from Serializable
     virtual void serialize(QDataStream& stream) const;
