@@ -58,9 +58,9 @@ private:
 
     QSharedPointer<PlanningProblem> _problem;
     QPointer<FlightPlanner> _planner;
-    ProblemViewAdapter * _viewAdapter;
+    QPointer<ProblemViewAdapter> _viewAdapter;
 
-    WaysetDisplayManager * _waysetManager;
+    QPointer<WaysetDisplayManager> _waysetManager;
 };
 
 #endif // MAINWINDOW_H

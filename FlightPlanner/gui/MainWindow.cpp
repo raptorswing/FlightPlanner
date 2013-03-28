@@ -20,9 +20,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    _view(0), _scene(0),
-    _planner(0), _viewAdapter(0)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -50,6 +48,8 @@ void MainWindow::updateDisplayedFlight()
         qWarning() << "Can't update displayed flight - problem is null";
     else if (_planner.isNull())
         qWarning() << "Can't update displayed flight - planner is null";
+    else if (_waysetManager.isNull())
+        qWarning() << "Can't update dispalyed flight - wayset manager is null";
     else
     {
         _waysetManager->setPlanningProblem(_problem);
@@ -278,5 +278,5 @@ void MainWindow::initPlanningProblem()
                                           this);
 
     _waysetManager = new WaysetDisplayManager(_scene, _problem, Waypoint::StraightLineMode, this);
-    _waysetManager->enableMouseInteraction(true);
+    _waysetManager->enableMouseInteraction(false);
 }
