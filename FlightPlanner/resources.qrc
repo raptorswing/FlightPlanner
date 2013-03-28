@@ -25,5 +25,17 @@
     </qresource>
     <qresource prefix="/icons/32x32">
         <file>gui/images/32x32/apps/spire.png</file>
+        <file>gui/images/32x32/reset or undo.png</file>
+        <file>gui/images/32x32/start or accept.png</file>
+        <file>gui/images/32x32/polygon.png</file>
+        <file>gui/images/32x32/startCircle.png</file>
+    </qresource>
+    <qresource prefix="/icons/48">
+        <file>gui/images/48/48px-Document-new.svg.png</file>
+        <file>gui/images/48/48px-Document-open.svg.png</file>
+        <file>gui/images/48/48px-Document-save.svg.png</file>
+        <file>gui/images/48/48px-Document-save-as.svg.png</file>
+        <file>gui/images/48/48px-System-log-out.svg.png</file>
+        <file>gui/images/48/48px-Applications-system.svg.png</file>
     </qresource>
 </RCC>

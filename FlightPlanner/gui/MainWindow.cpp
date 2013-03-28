@@ -8,6 +8,7 @@
 
 #include "MapGraphicsView.h"
 #include "MapGraphicsScene.h"
+#include "tileSources/CompositeTileSource.h"
 #include "tileSources/OSMTileSource.h"
 
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
@@ -30,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->initMap();
     this->initPlanningProblem();
-    this->initPaletteConnections();
-    this->initPlanningControlConnections();
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
 }
@@ -40,23 +39,34 @@ MainWindow::~MainWindow()
 {
     //Store window geometry
     CommonWindowHandling::storeGeometry(this);
+
     delete ui;
 }
 
 //private slot
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::updateDisplayedFlight()
 {
-    const QString filePath = QFileDialog::getOpenFileName(this,
-                                                          "Select file to load");
-    if (filePath.isEmpty())
-        return;
+    if (_problem.isNull())
+        qWarning() << "Can't update displayed flight - problem is null";
+    else if (_planner.isNull())
+        qWarning() << "Can't update displayed flight - planner is null";
+    else
+    {
+        _waysetManager->setPlanningProblem(_problem);
+        _waysetManager->setWayset(_planner->bestFlightSoFar(), Waypoint::StraightLineMode);
+    }
+}
 
+//private slot
+void MainWindow::openProblem(const QString &filePath)
+{
     QFile fp(filePath);
     if (!fp.exists())
         return;
     else if (!fp.open(QFile::ReadOnly))
     {
-        QMessageBox::warning(this, "Error", "Failed to open file for reading");
+        QMessageBox::warning(this, "Error - cannot open file",
+                             "Failed to open file " + filePath + " for reading");
         return;
     }
 
@@ -72,6 +82,46 @@ void MainWindow::on_actionOpen_triggered()
 }
 
 //private slot
+void MainWindow::saveProblem(const QString &filePath)
+{
+    QFile fp(filePath);
+    if (!fp.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        QMessageBox::warning(this,
+                             "Error",
+                             "Failed to open save file " + filePath + " for writing.");
+        return;
+    }
+
+    QDataStream stream(&fp);
+    _problem->serialize(stream);
+}
+
+//private slot
+void MainWindow::resetAll()
+{
+    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
+    _planner->setProblem(_problem);
+    _viewAdapter->setModel(_problem);
+
+    connect(_problem.data(),
+            SIGNAL(planningProblemChanged()),
+            _planner,
+            SLOT(resetPlanning()));
+}
+
+//private slot
+void MainWindow::on_actionOpen_triggered()
+{
+    const QString filePath = QFileDialog::getOpenFileName(this,
+                                                          "Select file to load");
+    if (filePath.isEmpty())
+        return;
+
+    this->openProblem(filePath);
+}
+
+//private slot
 void MainWindow::on_actionSave_Planning_Problem_triggered()
 {
     if (_problem.isNull())
@@ -82,49 +132,19 @@ void MainWindow::on_actionSave_Planning_Problem_triggered()
     if (filePath.isEmpty())
         return;
 
-    QFile fp(filePath);
-    if (!fp.open(QFile::WriteOnly))
-    {
-        QMessageBox::warning(this,
-                             "Error",
-                             "Failed to open save file for writing.");
-        return;
-    }
-
-    QDataStream stream(&fp);
-    _problem->serialize(stream);
-}
-
-//private slot
-void MainWindow::on_actionSave_As_triggered()
-{
-
+    this->saveProblem(filePath);
 }
 
 //private slot
 void MainWindow::on_actionNew_triggered()
 {
-    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
-    _planner->setProblem(_problem);
-    _viewAdapter->setModel(_problem);
-
-    connect(_problem.data(),
-            SIGNAL(planningProblemChanged()),
-            _planner,
-            SLOT(resetPlanning()));
+    this->resetAll();
 }
 
 //private slot
 void MainWindow::on_actionClose_triggered()
 {
-    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
-    _planner->setProblem(_problem);
-    _viewAdapter->setModel(_problem);
-
-    connect(_problem.data(),
-            SIGNAL(planningProblemChanged()),
-            _planner,
-            SLOT(resetPlanning()));
+    this->resetAll();
 }
 
 //private slot
@@ -132,18 +152,6 @@ void MainWindow::on_actionExport_Solution_triggered()
 {
     const Wayset& solution = _planner->bestFlightSoFar();
     CommonFileHandling::doExport(solution, QString(), this);
-}
-
-//private slot
-void MainWindow::on_actionUndo_triggered()
-{
-
-}
-
-//private slot
-void MainWindow::on_actionRedo_triggered()
-{
-
 }
 
 //private slot
@@ -178,64 +186,53 @@ void MainWindow::on_actionImport_Solution_triggered()
 }
 
 //private slot
-void MainWindow::on_actionSensor_Parameters_triggered()
+void MainWindow::on_actionPlan_Flight_triggered()
 {
-
-}
-
-//private slot
-void MainWindow::handleAddStartPointRequested()
-{
-    _problem->setStartingPosition(Position(_view->center(), 0.0));
-    _problem->setStartingOrientation(0.0);
-}
-
-//private slot
-void MainWindow::handleAddTaskAreaRequested()
-{
-    _problem->addTaskArea(_view->center());
-}
-
-//private slot
-void MainWindow::handlePlanningStartRequested()
-{
-    if (!_problem->startingOrientationDefined() || !_problem->startingPositionDefined())
+    if (_problem.isNull())
+        qWarning() << "Can't start planning - problem is null";
+    else if (_planner.isNull())
+        qWarning() << "Can't start planning - planner is null";
+    else if (!_problem->startingOrientationDefined() || !_problem->startingPositionDefined())
     {
-        QMessageBox::information(this,
-                                 "Can't Start Planning",
+        QMessageBox::information(this, "Can't start planning",
                                  "Planning cannot begin until a start point is defined");
-        return;
     }
-    _planner->startPlanning();
+    else
+        _planner->startPlanning();
 }
 
 //private slot
-void MainWindow::handlePlanningPauseRequested()
+void MainWindow::on_actionReset_Flight_triggered()
 {
-    _planner->pausePlanning();
+    if (_planner.isNull())
+        qWarning() << "Can't reset planning - planner is null";
+    else
+        _planner->resetPlanning();
 }
 
 //private slot
-void MainWindow::handlePlanningClearRequested()
+void MainWindow::on_actionPlace_Start_Point_triggered()
 {
-    _planner->pausePlanning();
-    _planner->resetPlanning();
+    if (_view.isNull())
+        qWarning() << "Can't place start position - view is null";
+    else
+    {
+        const Position startPos(_view->center());
+
+        _problem->setStartingPosition(startPos);
+        _problem->setStartingOrientation(0.0);
+    }
 }
 
 //private slot
-void MainWindow::handlePlannerProgressChanged(qreal fitness, quint32 iterations)
+void MainWindow::on_actionPlace_Task_Area_triggered()
 {
-    this->ui->planningControlWidget->setPlanningProgress(iterations, fitness);
+    if (_view.isNull())
+        qWarning() << "Can't place task area - view is null";
+    else
+        _problem->addTaskArea(_view->center());
 }
 
-//private slot
-void MainWindow::handlePlannerStatusChanged(FlightPlanner::PlanningStatus status)
-{
-    this->ui->planningControlWidget->setPlanningState(status);
-
-    if (status == FlightPlanner::Paused || status == FlightPlanner::Stopped)
-        this->updateDisplayedFlight();
-}
 
 //private
 void MainWindow::initMap()
@@ -247,14 +244,9 @@ void MainWindow::initMap()
 
     //Setup Map tile sources
     QSharedPointer<CompositeTileSource> composite(new CompositeTileSource());
-    QSharedPointer<MapTileSource> osm(new OSMTileSource());
-    QSharedPointer<MapTileSource> mqSat(new OSMTileSource(OSMTileSource::MapQuestAerialTiles));
-    composite->addSourceBottom(osm,0.75);
-    composite->addSourceBottom(mqSat);
+    QSharedPointer<MapTileSource> osm(new OSMTileSource(OSMTileSource::MapQuestOSMTiles));
+    composite->addSourceBottom(osm);
     _view->setTileSource(composite);
-
-    //Provide our "map layers" dock widget with the composite tile source to be configured
-    this->ui->mapLayersWidget->setComposite(composite);
 
     //Zoom into BYU campus by default
     QPointF place(-111.649253,40.249707);
@@ -266,20 +258,20 @@ void MainWindow::initMap()
 void MainWindow::initPlanningProblem()
 {
     _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
-    //_planner = new GreedyFlightPlanner(_problem, this);
+
     _planner = new HierarchicalPlanner(_problem, this);
-    connect(_planner,
-            SIGNAL(plannerStatusChanged(FlightPlanner::PlanningStatus)),
-            this,
-            SLOT(handlePlannerStatusChanged(FlightPlanner::PlanningStatus)));
-    connect(_planner,
-            SIGNAL(plannerProgressChanged(qreal,quint32)),
-            this,
-            SLOT(handlePlannerProgressChanged(qreal,quint32)));
+
+    //When the problem changes the planner should reset
     connect(_problem.data(),
             SIGNAL(planningProblemChanged()),
             _planner,
             SLOT(resetPlanning()));
+
+    //When the planner's state changes we should update our display
+    connect(_planner.data(),
+            SIGNAL(plannerStatusChanged(FlightPlanner::PlanningStatus)),
+            this,
+            SLOT(updateDisplayedFlight()));
 
     _viewAdapter = new ProblemViewAdapter(_problem,
                                           _scene,
@@ -287,55 +279,4 @@ void MainWindow::initPlanningProblem()
 
     _waysetManager = new WaysetDisplayManager(_scene, _problem, Waypoint::StraightLineMode, this);
     _waysetManager->enableMouseInteraction(true);
-}
-
-//private
-void MainWindow::initPaletteConnections()
-{
-    if (!this->ui->paletteWidget)
-    {
-        qWarning() << "Palette widget not initialized";
-        return;
-    }
-
-    connect(this->ui->paletteWidget,
-            SIGNAL(addStartPointRequested()),
-            this,
-            SLOT(handleAddStartPointRequested()));
-
-    connect(this->ui->paletteWidget,
-            SIGNAL(addTaskAreaRequested()),
-            this,
-            SLOT(handleAddTaskAreaRequested()));
-}
-
-//private
-void MainWindow::initPlanningControlConnections()
-{
-    if (!this->ui->planningControlWidget)
-    {
-        qWarning() << "Planning control widget not initialized";
-        return;
-    }
-
-    connect(this->ui->planningControlWidget,
-            SIGNAL(planningStartRequested()),
-            this,
-            SLOT(handlePlanningStartRequested()));
-
-    connect(this->ui->planningControlWidget,
-            SIGNAL(planningPauseRequested()),
-            this,
-            SLOT(handlePlanningPauseRequested()));
-
-    connect(this->ui->planningControlWidget,
-            SIGNAL(planningClearRequested()),
-            this,
-            SLOT(handlePlanningClearRequested()));
-}
-
-void MainWindow::updateDisplayedFlight()
-{
-    _waysetManager->setPlanningProblem(_problem);
-    _waysetManager->setWayset(_planner->bestFlightSoFar(), Waypoint::StraightLineMode);
 }

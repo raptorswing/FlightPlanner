@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSharedPointer>
 #include <QList>
+#include <QPointer>
 
 #include "MapGraphicsView.h"
 #include "MapGraphicsScene.h"
@@ -26,47 +27,37 @@ public:
     ~MainWindow();
     
 private slots:
+    void updateDisplayedFlight();
+    void openProblem(const QString& filePath);
+    void saveProblem(const QString& filePath);
+    void resetAll();
+
     //MainWindow actions
     void on_actionOpen_triggered();
     void on_actionSave_Planning_Problem_triggered();
-    void on_actionSave_As_triggered();
     void on_actionNew_triggered();
     void on_actionClose_triggered();
     void on_actionExport_Solution_triggered();
-    void on_actionUndo_triggered();
-    void on_actionRedo_triggered();
     void on_actionExit_triggered();
     void on_actionUAV_Parameters_triggered();
-    void on_actionSensor_Parameters_triggered();
     void on_actionImport_Solution_triggered();
-
-    //Palette Widget actions
-    void handleAddStartPointRequested();
-    void handleAddTaskAreaRequested();
-
-    //Planning control widget actions
-    void handlePlanningStartRequested();
-    void handlePlanningPauseRequested();
-    void handlePlanningClearRequested();
-
-    //Planner events
-    void handlePlannerProgressChanged(qreal fitness, quint32 iterations);
-    void handlePlannerStatusChanged(FlightPlanner::PlanningStatus status);
+    void on_actionPlan_Flight_triggered();
+    void on_actionReset_Flight_triggered();
+    void on_actionPlace_Start_Point_triggered();
+    void on_actionPlace_Task_Area_triggered();
 
 private:
-    inline void initMap();
-    inline void initPlanningProblem();
-    inline void initPaletteConnections();
-    inline void initPlanningControlConnections();
-    void updateDisplayedFlight();
+    void initMap();
+    void initPlanningProblem();
+    void initPaletteConnections();
 
     Ui::MainWindow *ui;
 
-    MapGraphicsView * _view;
-    MapGraphicsScene * _scene;
+    QPointer<MapGraphicsView> _view;
+    QPointer<MapGraphicsScene> _scene;
 
     QSharedPointer<PlanningProblem> _problem;
-    FlightPlanner * _planner;
+    QPointer<FlightPlanner> _planner;
     ProblemViewAdapter * _viewAdapter;
 
     WaysetDisplayManager * _waysetManager;
