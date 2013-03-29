@@ -24,7 +24,7 @@ PlanningProblem::PlanningProblem(QDataStream &stream)
     for (int i = 0; i < numAreas; i++)
     {
         QSharedPointer<FlightTaskArea> area(new FlightTaskArea(stream));
-        _areas.insert(area);
+        this->addTaskArea(area);
     }
 
     //Resolve dependencies between flight tasks. This requires a "second pass" here.
