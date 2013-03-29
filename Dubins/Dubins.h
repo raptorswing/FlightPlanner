@@ -30,6 +30,16 @@ public:
     qreal length() const;
     bool sample(qreal t, QPointF& outPos, qreal& outAngle);
 
+    const QPointF& posA() const;
+    const QPointF& posB() const;
+
+    qreal angleA() const;
+    qreal angleB() const;
+
+    void setAngleA(qreal a);
+    void setAngleB(qreal b);
+    void setAngles(qreal a, qreal b);
+
 
 private:
     void _solvePath();
