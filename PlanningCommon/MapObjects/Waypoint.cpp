@@ -21,7 +21,26 @@ Waypoint::Waypoint(const QWeakPointer<PlanningProblem> &problem,
     _displaySize(15.0),
     _problem(problem),
     _lineObj(0),
-    _lMode(lMode)
+    _lMode(lMode),
+    _manualAngleSet(false)
+{
+    this->setPrev(prev);
+    this->setNext(next);
+    this->setZValue(6.0);
+}
+
+Waypoint::Waypoint(const QWeakPointer<PlanningProblem> &problem,
+                   const UAVOrientation &angle,
+                   Waypoint *prev,
+                   Waypoint *next,
+                   Waypoint::WaypointLineMode lMode) :
+    MapGraphicsObject(true),
+    _displaySize(15.0),
+    _problem(problem),
+    _lineObj(0),
+    _lMode(lMode),
+    _manualAngleSet(true),
+    _manualAngle(angle)
 {
     this->setPrev(prev);
     this->setNext(next);
@@ -219,6 +238,9 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 UAVOrientation Waypoint::angle() const
 {
+    if (_manualAngleSet)
+        return _manualAngle;
+
     qreal toRet;
     if (_next.isNull() && _prev.isNull())
         toRet = 0.0;

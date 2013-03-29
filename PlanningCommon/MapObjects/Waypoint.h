@@ -25,6 +25,11 @@ public:
              Waypoint * prev = 0,
              Waypoint * next = 0,
              WaypointLineMode lMode = DubinLineMode);
+    Waypoint(const QWeakPointer<PlanningProblem>& problem,
+             const UAVOrientation& angle,
+             Waypoint * prev = 0,
+             Waypoint * next = 0,
+             WaypointLineMode lMode = DubinLineMode);
     ~Waypoint();
 
     Waypoint * prev() const;
@@ -79,6 +84,9 @@ private:
 
      MapGraphicsObject *_lineObj;
     const WaypointLineMode _lMode;
+
+    bool _manualAngleSet;
+    UAVOrientation _manualAngle;
     
 };
 

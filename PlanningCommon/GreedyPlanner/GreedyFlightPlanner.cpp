@@ -34,7 +34,7 @@ void GreedyFlightPlanner::doIteration()
     if (_frontier.isEmpty())
     {
         UAVOrientation lastOrientation;
-        Position lastPos = _bestPathThisIteration.last();
+        Position lastPos = _bestPathThisIteration.last().pos();
         if (this->bestFlightSoFar().size() >= 2)
             lastOrientation.setRadians(_lastOrientation);
         QSharedPointer<GreedyPlanningNode> iterTopNode(new GreedyPlanningNode(lastPos,

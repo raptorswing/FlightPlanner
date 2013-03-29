@@ -10,7 +10,7 @@ bool GPXExporter::doExport(QByteArray *output)
 {
     GPX gpx;
 
-    foreach(const Position& pos, this->solution().waypoints())
+    foreach(const Position& pos, this->solution().positions())
     {
         GPXPoint point;
         point.longitude = pos.longitude();

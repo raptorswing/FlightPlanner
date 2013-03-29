@@ -32,7 +32,8 @@ void SubFlightNode::setParent(const QSharedPointer<SubFlightNode> &parent)
     if (!_parent.isNull())
         _path = _parent->path();
 
-    _path.append(this->position());
+    _path.append(this->position(),
+                 this->orientation());
 }
 
 const Wayset &SubFlightNode::path() const

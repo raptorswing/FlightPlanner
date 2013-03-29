@@ -118,9 +118,9 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
     orientations.append(this->startPose());
     for (int i = 1; i < metaPlan.size() - 1; i++)
     {
-        const Position& prev = metaPlan.at(i-1);
-        const Position& current = metaPlan.at(i);
-        const Position& next = metaPlan.at(i+1);
+        const Position& prev = metaPlan.at(i-1).pos();
+        const Position& current = metaPlan.at(i).pos();
+        const Position& next = metaPlan.at(i+1).pos();
 
         const UAVOrientation prevAngle(prev.angleTo(current));
         const UAVOrientation nextAngle(current.angleTo(next));
@@ -134,8 +134,8 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
     QList<Dubins> dubins;
     for (int i = 0; i < metaPlan.size() - 1; i++)
     {
-        const Position& startPos = metaPlan.at(i);
-        const Position& endPos = metaPlan.at(i + 1);
+        const Position& startPos = metaPlan.at(i).pos();
+        const Position& endPos = metaPlan.at(i + 1).pos();
         const QPointF startMeters(0.0, 0.0);
         const QPointF endMeters = startPos.flatOffsetMeters(endPos).toPointF();
 
@@ -163,7 +163,7 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
             if (extent > totalSamplePos)
             {
                 current = d;
-                dubinRoot = metaPlan.at(j);
+                dubinRoot = metaPlan.at(j).pos();
                 break;
             }
             groundCovered += d.length();
@@ -177,6 +177,6 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
         current.sample(totalSamplePos - groundCovered, sampleOffset, angleResult);
 
         Position sampleResult = dubinRoot.flatOffsetToPosition(sampleOffset);
-        _results.append(Position(sampleResult));
+        _results.append(Position(sampleResult), UAVOrientation(angleResult));
     }
 }

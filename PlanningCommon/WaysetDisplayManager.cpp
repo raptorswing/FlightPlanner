@@ -18,7 +18,8 @@ Wayset WaysetDisplayManager::wayset() const
     QPointer<Waypoint> current = _first;
     while (!current.isNull())
     {
-        toRet.append(Position(current->pos()));
+        toRet.append(Position(current->pos()),
+                     current->angle());
         current = current->next();
     }
 
@@ -46,8 +47,8 @@ void WaysetDisplayManager::setWayset(const Wayset &wayset,
     }
     _first = 0;
 
-    foreach(const Position& pos, wayset.waypoints())
-        this->appendWaypoint(pos);
+    foreach(const UAVPose& pose, wayset.poses())
+        this->appendWaypoint(pose.pos(), pose.angle());
 }
 
 void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProblem> &problem)
@@ -56,9 +57,24 @@ void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProbl
 }
 
 //public slot
-void WaysetDisplayManager::appendWaypoint(Position pos)
+void WaysetDisplayManager::appendWaypoint(const Position& pos)
 {
     Waypoint * wpt = new Waypoint(_problem, 0, 0, _lineMode);
+    wpt->setPos(pos.lonLat());
+    _scene->addObject(wpt);
+
+    if (_first.isNull())
+        this->setNewFirst(wpt);
+    else
+        _first->append(wpt);
+
+    this->handleNewWaypoint(wpt);
+}
+
+//public slot
+void WaysetDisplayManager::appendWaypoint(const Position &pos, const UAVOrientation &orientation)
+{
+    Waypoint * wpt = new Waypoint(_problem, orientation, 0, 0, _lineMode);
     wpt->setPos(pos.lonLat());
     _scene->addObject(wpt);
 

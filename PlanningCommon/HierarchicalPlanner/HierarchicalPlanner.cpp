@@ -460,7 +460,7 @@ bool HierarchicalPlanner::_interpolatePath(const Wayset &path,
     }
     else if (path.size() == 1)
     {
-        *outPosition = path.at(0);
+        *outPosition = path.at(0).pos();
         *outOrientation = startingOrientation;
         return true;
     }
@@ -474,8 +474,8 @@ bool HierarchicalPlanner::_interpolatePath(const Wayset &path,
 
     for (int i = 1; i < path.size(); i++)
     {
-        const Position& pos = path.at(i);
-        const Position& lastPos = path.at(i-1);
+        const Position& pos = path.at(i).pos();
+        const Position& lastPos = path.at(i-1).pos();
         //const qreal distance = (Conversions::lla2xyz(pos) - Conversions::lla2xyz(lastPos)).length();
         const qreal intervalDistance = params.waypointInterval();
         distanceSoFar += intervalDistance;

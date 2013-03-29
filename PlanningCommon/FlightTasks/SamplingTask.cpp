@@ -43,7 +43,10 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
 {
     qreal toRet = 0.0;
 
-    foreach(const Position& pos, positions.waypoints())
+    const Wayset resampled = positions.resample(uavParams.waypointInterval(),
+                                                uavParams);
+
+    foreach(const Position& pos, resampled.positions())
     {
         if (!geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
             continue;

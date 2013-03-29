@@ -36,7 +36,7 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
                                                  const UAVParameters &)
 {
     //First, see if one of the points is within the polygon
-    foreach(const Position& pos, positions.waypoints())
+    foreach(const Position& pos, positions.positions())
     {
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
             return this->maxTaskPerformance();
@@ -44,9 +44,9 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
 
     //if that fails, take the distance to the last point
     Position goalPos(geoPoly.boundingRect().center(),
-                     positions.first().altitude());
+                     positions.first().pos().altitude());
 
-    const Position& last = positions.last();
+    const Position& last = positions.last().pos();
     QVector3D enuPos = Conversions::lla2enu(last, goalPos);
     qreal dist = enuPos.length();
 

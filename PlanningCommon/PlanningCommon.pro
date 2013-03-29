@@ -45,7 +45,8 @@ SOURCES += \
     MapObjects/DubinsLineObject.cpp \
     WaysetDisplayManager.cpp \
     Wayset.cpp \
-    gui/CommonWindowHandling.cpp
+    gui/CommonWindowHandling.cpp \
+    UAVPose.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -82,7 +83,8 @@ HEADERS +=\
     MapObjects/DubinsLineObject.h \
     WaysetDisplayManager.h \
     Wayset.h \
-    gui/CommonWindowHandling.h
+    gui/CommonWindowHandling.h \
+    UAVPose.h
 
 unix:!symbian {
     maemo5 {

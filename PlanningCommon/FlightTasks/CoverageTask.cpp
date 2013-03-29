@@ -36,11 +36,11 @@ QString CoverageTask::taskType() const
     return "Coverage";
 }
 
-qreal CoverageTask::calculateFlightPerformance(const Wayset &positions,
+qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
                                                const QPolygonF &geoPoly,
                                                const UAVParameters &)
 {
-    if (positions.isEmpty())
+    if (wayset.isEmpty())
         return 0.0;
 
     if (geoPoly != _lastGeoPoly || _bins.isEmpty())
@@ -50,7 +50,7 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &positions,
 
     QSet<int> satisfiedBins;
 
-    foreach(const Position& pos, positions.waypoints())
+    foreach(const Position& pos, wayset.positions())
     {
         const QVector3D xyz = Conversions::lla2xyz(pos);
         for (int i = 0; i < _bins.size(); i++)
@@ -66,7 +66,7 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &positions,
     const qreal reward = satisfiedBins.size();
 
     qreal enticement = 0.0;
-    const QVector3D lastPosXYZ = Conversions::lla2xyz(positions.last());
+    const QVector3D lastPosXYZ = Conversions::lla2xyz(wayset.last().pos());
     for (int i = 0; i < _bins.size(); i++)
     {
         if (satisfiedBins.contains(i))

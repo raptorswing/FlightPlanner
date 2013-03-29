@@ -28,7 +28,8 @@ public:
 signals:
     
 public slots:
-    void appendWaypoint(Position pos);
+    void appendWaypoint(const Position& pos);
+    void appendWaypoint(const Position& pos, const UAVOrientation& orientation);
     void enableMouseInteraction(bool enable=true);
     void fixKinematics();
     void fixDistances();
