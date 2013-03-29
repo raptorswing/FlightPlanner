@@ -124,7 +124,9 @@ void WaypointPlannerMainWindow::on_actionCreate_Mode_triggered()
 //private slot
 void WaypointPlannerMainWindow::on_actionAuto_Fix_triggered()
 {
-    _waysetManager->fixAll();
+    Wayset wset = _waysetManager->wayset();
+    wset.optimizeAngles(_problem->uavParameters());
+    _waysetManager->setWayset(wset);
 }
 
 //private slot
