@@ -22,14 +22,14 @@ bool RRTIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const QVectorND goal = _toVec(this->endPos(), this->endPose());
+    const QVectorND goal = _toVec(this->endPos(), this->endAngle());
 
     QKDTree kdtree(3, false,
                    new RRTDistanceMetric(this->endPos().latitude(),
                                          this->uavParams().minTurningRadius()));
 
     QHash<QVectorND, QVectorND> parents;
-    kdtree.add(_toVec(this->startPos(), this->startPose()), 1);
+    kdtree.add(_toVec(this->startPos(), this->startAngle()), 1);
 
     const quint32 squareSize = 3.0 * (Conversions::lla2xyz(this->startPos()) - Conversions::lla2xyz(this->endPos())).length();
     const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->startPos().latitude());

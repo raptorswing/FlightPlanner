@@ -9,9 +9,9 @@ class AstarPRMIntermediatePlanner : public IntermediatePlanner
 public:
     AstarPRMIntermediatePlanner(const UAVParameters& uavParams,
                                 const Position& startPos,
-                                const UAVOrientation& startPose,
+                                const UAVOrientation& startAngle,
                                 const Position& endPos,
-                                const UAVOrientation& endPose,
+                                const UAVOrientation& endAngle,
                                 const QList<QPolygonF>& obstacles);
 
     virtual bool plan();

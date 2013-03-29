@@ -29,12 +29,12 @@ const Position &IntermediatePlanner::endPos() const
     return _endPos;
 }
 
-const UAVOrientation &IntermediatePlanner::startPose() const
+const UAVOrientation &IntermediatePlanner::startAngle() const
 {
     return _startPose;
 }
 
-const UAVOrientation &IntermediatePlanner::endPose() const
+const UAVOrientation &IntermediatePlanner::endAngle() const
 {
     return _endPose;
 }

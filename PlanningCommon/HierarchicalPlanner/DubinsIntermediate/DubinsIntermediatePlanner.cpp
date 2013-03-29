@@ -24,10 +24,10 @@ bool DubinsIntermediatePlanner::plan()
     const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
 
     const QPointF startPos(0.0001, 0.0001);
-    const qreal startAngle = this->startPose().radians();
+    const qreal startAngle = this->startAngle().radians();
     const QPointF endPos((this->endPos().longitude() - this->startPos().longitude()) / lonPerMeter,
                          (this->endPos().latitude() - this->startPos().latitude()) / latPerMeter);
-    const qreal endAngle = this->endPose().radians();
+    const qreal endAngle = this->endAngle().radians();
     const qreal minTurnRadius = this->uavParams().minTurningRadius();
 
     Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius);

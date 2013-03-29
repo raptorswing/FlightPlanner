@@ -115,7 +115,7 @@ Wayset AstarPRMIntermediatePlanner::results() const
 void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
 {
     QList<UAVOrientation> orientations;
-    orientations.append(this->startPose());
+    orientations.append(this->startAngle());
     for (int i = 1; i < metaPlan.size() - 1; i++)
     {
         const Position& prev = metaPlan.at(i-1).pos();
@@ -128,7 +128,7 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
 
         orientations.append(UAVOrientation(avg));
     }
-    orientations.append(this->endPose());
+    orientations.append(this->endAngle());
 
     qreal totalDubinLength = 0.0;
     QList<Dubins> dubins;

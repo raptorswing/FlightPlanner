@@ -14,9 +14,9 @@ class IntermediatePlanner
 public:
     IntermediatePlanner(const UAVParameters& uavParams,
                         const Position& startPos,
-                        const UAVOrientation& startPose,
+                        const UAVOrientation& startAngle,
                         const Position& endPos,
-                        const UAVOrientation& endPose,
+                        const UAVOrientation& endAngle,
                         const QList<QPolygonF>& obstacles);
     virtual ~IntermediatePlanner();
 
@@ -28,8 +28,8 @@ public:
     const Position& startPos() const;
     const Position& endPos() const;
 
-    const UAVOrientation& startPose() const;
-    const UAVOrientation& endPose() const;
+    const UAVOrientation& startAngle() const;
+    const UAVOrientation& endAngle() const;
 
     const QList<QPolygonF>& obstacles() const;
 

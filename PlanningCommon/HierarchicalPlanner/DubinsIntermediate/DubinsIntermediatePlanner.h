@@ -8,9 +8,9 @@ class DubinsIntermediatePlanner : public IntermediatePlanner
 public:
     DubinsIntermediatePlanner(const UAVParameters& uavParams,
                               const Position& startPos,
-                              const UAVOrientation& startPose,
+                              const UAVOrientation& startAngle,
                               const Position& endPos,
-                              const UAVOrientation& endPose,
+                              const UAVOrientation& endAngle,
                               const QList<QPolygonF>& obstacles);
 
     virtual bool plan();
