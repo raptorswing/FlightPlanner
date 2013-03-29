@@ -28,6 +28,7 @@ public:
     qreal timeToFly(const UAVParameters& uavParams) const;
     Wayset resample(qreal granularityMeters, const UAVParameters& uavParams) const;
     QList<Dubins> dubins(const UAVParameters& uavParams) const;
+    void optimizeAngles(const UAVParameters& uavParams);
 
     void clear();
 

@@ -132,6 +132,67 @@ QList<Dubins> Wayset::dubins(const UAVParameters& uavParams) const
     return toRet;
 }
 
+void Wayset::optimizeAngles(const UAVParameters &uavParams)
+{
+    qDebug() << "Optimize wayset angles";
+    int count = 0;
+    bool changes = true;
+    while (changes)
+    {
+        changes = false;
+        for (int i = 0; i < this->size(); i++)
+        {
+            const UAVOrientation& currentAngle = this->poses().at(i).angle();
+            const qreal currentLength = this->lengthMeters(uavParams);
+
+            const UAVOrientation lessOneAngle(currentAngle.degrees() - 1.0, false);
+            _poses[i].setAngle(lessOneAngle);
+            const qreal lessOneLength = this->lengthMeters(uavParams);
+
+            const UAVOrientation addOneAngle(currentAngle.degrees() + 1.0, false);
+            _poses[i].setAngle(addOneAngle);
+            const qreal addOneLength = this->lengthMeters(uavParams);
+
+            _poses[i].setAngle(currentAngle);
+
+            qreal shortestLength = currentLength;
+            if (lessOneLength < shortestLength)
+            {
+                _poses[i].setAngle(lessOneAngle);
+                shortestLength = lessOneLength;
+                changes = true;
+            }
+            if (addOneLength < shortestLength)
+            {
+                _poses[i].setAngle(addOneAngle);
+                shortestLength = addOneLength;
+                changes = true;
+            }
+        }
+        count++;
+    }
+    qDebug() << "Optimized in" << count << "iterations";
+
+//    for (int i = 0; i < this->size(); i++)
+//    {
+//        UAVOrientation bestAngleSoFar = this->poses().at(i).angle();
+//        qreal bestLengthSoFar = this->lengthMeters(uavParams);
+//        for (int j = 0; j < 360; j++)
+//        {
+//            const UAVOrientation angle(j, false);
+//            _poses[i].setAngle(angle);
+//            const qreal length = this->lengthMeters(uavParams);
+
+//            if (length < bestLengthSoFar)
+//            {
+//                bestLengthSoFar = length;
+//                bestAngleSoFar = angle;
+//            }
+//        }
+//        _poses[i].setAngle(bestAngleSoFar);
+//    }
+}
+
 void Wayset::clear()
 {
     _poses.clear();
