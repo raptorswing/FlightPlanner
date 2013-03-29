@@ -55,10 +55,6 @@ void HierarchicalPlanner::doIteration()
     */
     if (!_buildSchedule())
         qDebug() << "Scheduling failed";
-
-    Wayset wset = this->bestFlightSoFar();
-    wset.optimizeAngles(this->problem()->uavParameters());
-    this->setBestFlightSoFar(wset);
     this->pausePlanning();
 }
 
