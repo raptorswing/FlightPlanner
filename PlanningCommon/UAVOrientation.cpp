@@ -7,9 +7,12 @@ UAVOrientation::UAVOrientation()
     _radians = 0.0;
 }
 
-UAVOrientation::UAVOrientation(qreal radians)
+UAVOrientation::UAVOrientation(qreal angle, bool radians)
 {
-    this->setRadians(radians);
+    if (radians)
+        this->setRadians(angle);
+    else
+        this->setDegrees(angle);
 }
 
 //For de-serializing
@@ -64,6 +67,11 @@ void UAVOrientation::setRadians(qreal radians)
     while (radians < 0.0)
         radians += 2*PI;
     _radians = radians;
+}
+
+void UAVOrientation::setDegrees(qreal deg)
+{
+    this->setRadians(deg * PI / 180.0);
 }
 
 UAVOrientation UAVOrientation::average(const UAVOrientation &a,const UAVOrientation &b,

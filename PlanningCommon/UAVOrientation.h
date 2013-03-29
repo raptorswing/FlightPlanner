@@ -12,7 +12,7 @@ class PLANNINGCOMMONSHARED_EXPORT UAVOrientation : public Serializable
 {
 public:
     UAVOrientation();
-    UAVOrientation(qreal radians);
+    UAVOrientation(qreal angle, bool radians = true);
 
     //for de-serializing
     UAVOrientation(QDataStream& stream);
@@ -30,6 +30,7 @@ public:
     bool operator !=(const UAVOrientation& other) const;
 
     void setRadians(qreal rad);
+    void setDegrees(qreal deg);
 
     static UAVOrientation average(const UAVOrientation& a, const UAVOrientation& b,
                                   qreal weightA = 0.5, qreal weightB = 0.5);
