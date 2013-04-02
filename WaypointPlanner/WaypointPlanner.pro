@@ -13,11 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    WaypointMapView.cpp \
+    gui/WaypointMapView.cpp \
     gui/MainWindow.cpp
 
 HEADERS  += \
-    WaypointMapView.h \
+    gui/WaypointMapView.h \
     gui/MainWindow.h
 
 FORMS    += \
