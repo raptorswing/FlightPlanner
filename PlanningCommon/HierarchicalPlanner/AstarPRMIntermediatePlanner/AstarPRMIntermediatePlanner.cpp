@@ -1,6 +1,6 @@
 #include "AstarPRMIntermediatePlanner.h"
 
-const qreal GRANULARITY = 300.0;
+const qreal GRANULARITY = 75.0;
 
 #include <QMultiMap>
 #include <QSet>
