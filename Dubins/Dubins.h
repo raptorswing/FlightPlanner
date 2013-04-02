@@ -44,6 +44,9 @@ public:
     void setSecondAngle(qreal b);
     void setAngles(qreal a, qreal b);
 
+    qreal minTurnRadius() const;
+    void setMinTurnRadius(qreal nRadius);
+
 
 private:
     void _solvePath();

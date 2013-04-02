@@ -116,6 +116,17 @@ void Dubins::setAngles(qreal a, qreal b)
     _solvePath();
 }
 
+qreal Dubins::minTurnRadius() const
+{
+    return _minTurnRadius;
+}
+
+void Dubins::setMinTurnRadius(qreal nRadius)
+{
+    _minTurnRadius = nRadius;
+    _solvePath();
+}
+
 //private
 void Dubins::_solvePath()
 {
