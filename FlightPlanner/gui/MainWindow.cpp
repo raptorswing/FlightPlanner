@@ -151,7 +151,10 @@ void MainWindow::on_actionClose_triggered()
 void MainWindow::on_actionExport_Solution_triggered()
 {
     const Wayset& solution = _planner->bestFlightSoFar();
-    CommonFileHandling::doExport(solution, QString(), this);
+    UAVParameters params = _problem->uavParameters();
+    params.setMinTurningRadius(params.minTurningRadius() * 0.99);
+    Wayset toExport = solution.resample(3.0, params);
+    CommonFileHandling::doExport(toExport, QString(), this);
 }
 
 //private slot
