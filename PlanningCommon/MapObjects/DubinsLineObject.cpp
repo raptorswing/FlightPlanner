@@ -118,8 +118,10 @@ void DubinsLineObject::setDubins(Position rootPos,
 
     const qreal lonPerMeter = Conversions::degreesLonPerMeter(center.latitude());
     const qreal latPerMeter = Conversions::degreesLatPerMeter(center.latitude());
-    const qreal widthMeters = qAbs<qreal>(maxX - minX) / lonPerMeter;
-    const qreal heightMeters = qAbs<qreal>(maxY - minY) / latPerMeter;
+    const qreal widthMeters = qMax<qreal>(qAbs<qreal>(maxX - minX) / lonPerMeter,
+                                          5.0);
+    const qreal heightMeters = qMax<qreal>(qAbs<qreal>(maxY - minY) / latPerMeter,
+                                           5.0);
     _boundingRect = QRectF(-1*widthMeters, -1*heightMeters,
                            2*widthMeters, 2*heightMeters);
 
