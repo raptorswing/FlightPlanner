@@ -39,6 +39,9 @@ public slots:
     void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
     
 private slots:
+    void handleWaysetChanged();
+    void handleWaysetSelectionChanged();
+
     void doInitialMapCentering();
     void handleMapClick(QPoint pos);
     void on_actionExit_triggered();

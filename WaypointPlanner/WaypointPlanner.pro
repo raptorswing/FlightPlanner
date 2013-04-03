@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     gui/WaypointMapView.cpp \
-    gui/MainWindow.cpp
+    gui/MainWindow.cpp \
+    gui/WaysetTimelineWidget.cpp
 
 HEADERS  += \
     gui/WaypointMapView.h \
-    gui/MainWindow.h
+    gui/MainWindow.h \
+    gui/WaysetTimelineWidget.h
 
 FORMS    += \
     gui/MainWindow.ui

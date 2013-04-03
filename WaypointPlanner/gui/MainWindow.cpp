@@ -73,6 +73,20 @@ void WaypointPlannerMainWindow::setPlanningProblem(const QSharedPointer<Planning
 }
 
 //private slot
+void WaypointPlannerMainWindow::handleWaysetChanged()
+{
+    this->ui->timelineView->setWayset(_waysetManager->wayset());
+    this->ui->timelineView->setUAVParameters(_problem->uavParameters());
+    this->handleWaysetSelectionChanged();
+}
+
+//private slot
+void WaypointPlannerMainWindow::handleWaysetSelectionChanged()
+{
+    this->ui->timelineView->setSelectedIndices(_waysetManager->selectedIndices());
+}
+
+//private slot
 void WaypointPlannerMainWindow::doInitialMapCentering()
 {
     _view->setZoomLevel(16);
@@ -163,7 +177,8 @@ void WaypointPlannerMainWindow::initProblem()
 void WaypointPlannerMainWindow::initMap()
 {
     _scene = new MapGraphicsScene(this);
-    _view = new WaypointMapView(_scene, this);
+    _view = this->ui->mapView;
+    _view->setScene(_scene);
 
     QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::MapQuestOSMTiles));
     _view->setTileSource(tileSource);
@@ -173,9 +188,15 @@ void WaypointPlannerMainWindow::initMap()
             this,
             SLOT(handleMapClick(QPoint)));
 
-    this->setCentralWidget(_view);
-
     _waysetManager = new WaysetDisplayManager(_scene, _problem, Waypoint::DubinLineMode, this);
+    connect(_waysetManager,
+            SIGNAL(waysetChanged()),
+            this,
+            SLOT(handleWaysetChanged()));
+    connect(_waysetManager,
+            SIGNAL(waysetSelectionsChanged(QSet<int>)),
+            this,
+            SLOT(handleWaysetSelectionChanged()));
 
     this->setMouseMode(CreateMode);
 }
