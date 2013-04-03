@@ -10,7 +10,9 @@
 #include "UAVOrientation.h"
 #include "UAVParameters.h"
 
-class SubFlightPlanner
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT SubFlightPlanner
 {
 public:
     SubFlightPlanner(const UAVParameters& uavParams,
