@@ -51,9 +51,16 @@ void WaysetDisplayManager::setWayset(const Wayset &wayset,
         this->appendWaypoint(pose.pos(), pose.angle());
 }
 
+const QSet<int> WaysetDisplayManager::selectedIndices() const
+{
+    return _selectedIndices;
+}
+
 void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProblem> &problem)
 {
     _problem = problem.toWeakRef();
+
+    this->waysetChanged();
 }
 
 //public slot
@@ -163,6 +170,49 @@ void WaysetDisplayManager::handleNewWaypoint(Waypoint *wpt)
             this,
             SLOT(handleNewWaypoint(Waypoint*)));
 
+    connect(wpt,
+            SIGNAL(destroyed()),
+            this,
+            SIGNAL(waysetChanged()));
+    connect(wpt,
+            SIGNAL(destroyed()),
+            this,
+            SLOT(handleSelectionChanged()));
+
+    connect(wpt,
+            SIGNAL(posChanged()),
+            this,
+            SIGNAL(waysetChanged()));
+
+    connect(wpt,
+            SIGNAL(selectedChanged()),
+            this,
+            SLOT(handleSelectionChanged()));
+
     wpt->setFlag(MapGraphicsObject::ObjectIsSelectable, _mouseInteraction);
     wpt->setFlag(MapGraphicsObject::ObjectIsMovable, _mouseInteraction);
+
+    QTimer::singleShot(0, this, SIGNAL(waysetChanged()));
+    QTimer::singleShot(0, this, SLOT(handleSelectionChanged()));
+}
+
+//private slot
+void WaysetDisplayManager::handleSelectionChanged()
+{
+    QSet<int> indices;
+
+    QPointer<Waypoint> current = _first;
+
+    int count = 0;
+    while (!current.isNull())
+    {
+        if (current->isSelected())
+            indices.insert(count);
+        count++;
+
+        current = current->next();
+    }
+
+    _selectedIndices = indices;
+    this->waysetSelectionsChanged(indices);
 }

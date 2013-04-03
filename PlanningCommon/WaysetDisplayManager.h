@@ -23,9 +23,13 @@ public:
     Wayset wayset() const;
     void setWayset(const Wayset& wayset, Waypoint::WaypointLineMode lMode = Waypoint::DubinLineMode);
 
+    const QSet<int> selectedIndices() const;
+
     void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
     
 signals:
+    void waysetChanged();
+    void waysetSelectionsChanged(QSet<int> indices);
     
 public slots:
     void appendWaypoint(const Position& pos);
@@ -38,6 +42,7 @@ public slots:
 private slots:
     void setNewFirst(Waypoint * wpt);
     void handleNewWaypoint(Waypoint * obj);
+    void handleSelectionChanged();
 
 private:
     MapGraphicsScene * _scene;
@@ -46,6 +51,8 @@ private:
 
     QPointer<Waypoint> _first;
     bool _mouseInteraction;
+
+    QSet<int> _selectedIndices;
     
 };
 
