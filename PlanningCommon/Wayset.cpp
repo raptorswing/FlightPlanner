@@ -55,6 +55,25 @@ qreal Wayset::lengthMeters(const UAVParameters &uavParams) const
     return toRet;
 }
 
+QList<qreal> Wayset::waypointSubLengthsMeters(const UAVParameters &uavParams) const
+{
+    QList<qreal> toRet;
+
+    const QList<Dubins> dubins = this->dubins(uavParams);
+
+    qreal total = 0.0;
+    foreach(const Dubins& d, dubins)
+    {
+        toRet.append(total);
+        total += d.length();
+    }
+
+    //Plus the last one
+    toRet.append(total);
+
+    return toRet;
+}
+
 qreal Wayset::timeToFly(const UAVParameters &uavParams) const
 {
     const qreal meters = this->lengthMeters(uavParams);

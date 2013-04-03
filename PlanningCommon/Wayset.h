@@ -25,6 +25,7 @@ public:
     bool isEmpty() const;
 
     qreal lengthMeters(const UAVParameters& uavParams) const;
+    QList<qreal> waypointSubLengthsMeters(const UAVParameters& uavParams) const;
     qreal timeToFly(const UAVParameters& uavParams) const;
     Wayset resample(qreal granularityMeters, const UAVParameters& uavParams) const;
     QList<Dubins> dubins(const UAVParameters& uavParams) const;
