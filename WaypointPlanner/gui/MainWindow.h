@@ -52,6 +52,7 @@ private slots:
     void on_actionCoverage_Helper_triggered();
     void on_actionImport_Solution_triggered();
     void on_actionExport_Solution_triggered();
+    void on_actionReset_Flight_triggered();
 
 private:
     void initProblem();

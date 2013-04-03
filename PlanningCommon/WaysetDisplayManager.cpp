@@ -63,6 +63,11 @@ void WaysetDisplayManager::setPlanningProblem(const QSharedPointer<PlanningProbl
     this->waysetChanged();
 }
 
+Waypoint::WaypointLineMode WaysetDisplayManager::lineMode() const
+{
+    return _lineMode;
+}
+
 //public slot
 void WaysetDisplayManager::appendWaypoint(const Position& pos)
 {

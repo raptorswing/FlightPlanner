@@ -26,6 +26,8 @@ public:
     const QSet<int> selectedIndices() const;
 
     void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
+
+    Waypoint::WaypointLineMode lineMode() const;
     
 signals:
     void waysetChanged();

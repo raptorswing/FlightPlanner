@@ -27,5 +27,12 @@
         <file>images/editWaypointCursor.png</file>
         <file>images/fixIcon.png</file>
         <file>images/coverageHelperIcon.png</file>
+        <file>images/48/48px-Applications-system.svg.png</file>
+        <file>images/48/48px-Document-new.svg.png</file>
+        <file>images/48/48px-Document-open.svg.png</file>
+        <file>images/48/48px-Document-save.svg.png</file>
+        <file>images/48/48px-Document-save-as.svg.png</file>
+        <file>images/48/48px-System-log-out.svg.png</file>
+        <file>images/32x32/reset or undo.png</file>
     </qresource>
 </RCC>

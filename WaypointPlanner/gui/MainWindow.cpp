@@ -22,7 +22,6 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 {
     this->ui->setupUi(this);
     CommonWindowHandling::restoreGeometry(this);
-    this->ui->menuView->addAction(this->ui->toolBar->toggleViewAction());
 
     this->initProblem();
     this->initMap();
@@ -218,6 +217,12 @@ void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
 {
     Wayset toExport = _waysetManager->wayset();
     CommonFileHandling::doExport(toExport, QString(), this);
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionReset_Flight_triggered()
+{
+    _waysetManager->setWayset(Wayset(), _waysetManager->lineMode());
 }
 
 //private
