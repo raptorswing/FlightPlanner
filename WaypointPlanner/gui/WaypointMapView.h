@@ -9,7 +9,8 @@ class WaypointMapView : public MapGraphicsView
 {
     Q_OBJECT
 public:
-    explicit WaypointMapView(MapGraphicsScene * scene=0, QWidget * parent = 0);
+    explicit WaypointMapView(QWidget * parent = 0);
+    WaypointMapView(MapGraphicsScene * scene, QWidget * parent = 0);
     
 signals:
     void mapClicked(QPoint pos);

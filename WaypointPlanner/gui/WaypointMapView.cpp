@@ -2,6 +2,11 @@
 
 #include <QtDebug>
 
+WaypointMapView::WaypointMapView(QWidget *parent) :
+    MapGraphicsView(0, parent)
+{
+}
+
 WaypointMapView::WaypointMapView(MapGraphicsScene *scene, QWidget *parent) :
     MapGraphicsView(scene, parent)
 {
