@@ -12,6 +12,10 @@
 #include "gui/CommonFileHandling.h"
 #include "gui/CommonWindowHandling.h"
 
+#include "FlightTaskArea.h"
+#include "FlightTasks/CoverageTask.h"
+#include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
+
 WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -40,6 +44,9 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
 
     bool select = false, create = false, coverage = false;
 
+    if (!_coveragePolygon.isNull())
+        this->finishCoverageHelper();
+
     switch(_mouseMode)
     {
     case SelectMode:
@@ -51,8 +58,6 @@ void WaypointPlannerMainWindow::setMouseMode(WaypointPlannerMainWindow::MouseMod
         break;
 
     case CoverageHelperMode:
-        if (!_coveragePolygon.isNull())
-            _coveragePolygon->deleteLater();
         coverage = true;
         break;
     }
@@ -84,6 +89,54 @@ void WaypointPlannerMainWindow::handleWaysetChanged()
 void WaypointPlannerMainWindow::handleWaysetSelectionChanged()
 {
     this->ui->timelineView->setSelectedIndices(_waysetManager->selectedIndices());
+}
+
+void WaypointPlannerMainWindow::finishCoverageHelper()
+{
+    if (_coveragePolygon.isNull())
+        return;
+
+    Position startPos(_coveragePolygon->geoPoly().at(0));
+    UAVOrientation startAngle(0);
+
+    //If the start of the wayset is not empty we can do better for our starting pose
+    const Wayset soFar = _waysetManager->wayset();
+    if (!soFar.isEmpty())
+    {
+        const Position& lastPos = soFar.last().pos();
+
+        qreal bestDist = startPos.flatDistanceEstimate(lastPos);
+        Position bestPos = startPos;
+        for (int i = 0; i < _coveragePolygon->geoPoly().size(); i++)
+        {
+            Position pos(_coveragePolygon->geoPoly().at(i));
+            const qreal dist = pos.flatDistanceEstimate(lastPos);
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                bestPos = pos;
+            }
+        }
+        startPos = bestPos;
+
+        startAngle = lastPos.angleTo(startPos);
+    }
+
+
+    QSharedPointer<FlightTaskArea> area(new FlightTaskArea(_coveragePolygon->geoPoly()));
+    QSharedPointer<CoverageTask> task(new CoverageTask());
+    SubFlightPlanner planner(_problem->uavParameters(),
+                             task,
+                             area,
+                             startPos,
+                             startAngle);
+    planner.plan();
+
+    const Wayset& result = planner.results();
+    foreach(const UAVPose& pose, result.poses())
+        _waysetManager->appendWaypoint(pose.pos(), pose.angle());
+
+    _coveragePolygon->deleteLater();
 }
 
 //private slot
