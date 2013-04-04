@@ -46,8 +46,8 @@ bool CommonFileHandling::doExport(const Wayset &toExport,
 
 //static
 Wayset CommonFileHandling::doImport(bool &ok,
-                                             QString destFile,
-                                             QWidget *parent)
+                                    QString destFile,
+                                    QWidget *parent)
 {
     ok = true; //by default
     Wayset toRet;
@@ -68,6 +68,28 @@ Wayset CommonFileHandling::doImport(bool &ok,
         return toRet;
     }
     toRet = importer->results();
+
+    return toRet;
+}
+
+//static
+QSharedPointer<PlanningProblem> CommonFileHandling::readProblemFromFile(QWidget *parent,
+                                                                        const QString &filePath)
+{
+    QSharedPointer<PlanningProblem> toRet;
+
+    QFile fp(filePath);
+    if (!fp.exists())
+        return toRet;
+    else if (!fp.open(QFile::ReadOnly))
+    {
+        qWarning() << "Failed to open file" << filePath << "for reading of problem";
+        QMessageBox::warning(parent, "Error", "Failed to open file " + filePath + " for reading");
+        return toRet;
+    }
+
+    QDataStream stream(&fp);
+    toRet = QSharedPointer<PlanningProblem>(new PlanningProblem(stream));
 
     return toRet;
 }

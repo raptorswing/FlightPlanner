@@ -2,9 +2,12 @@
 #define COMMONFILEHANDLING_H
 
 #include <QWidget>
+#include <QSharedPointer>
 
 #include "Importers/Importer.h"
 #include "Exporters/Exporter.h"
+
+#include "PlanningProblem.h"
 
 #include "PlanningCommon_global.h"
 
@@ -15,8 +18,11 @@ public:
                          QString destFile = QString(),
                          QWidget * parent = 0);
     static Wayset doImport(bool &ok,
-                                             QString destFile = QString(),
-                                             QWidget * parent = 0);
+                           QString destFile = QString(),
+                           QWidget * parent = 0);
+
+    static QSharedPointer<PlanningProblem> readProblemFromFile(QWidget * parent,
+                                                               const QString& filePath);
 };
 
 #endif // COMMONFILEHANDLING_H
