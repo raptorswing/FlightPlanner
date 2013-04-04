@@ -47,7 +47,9 @@ SOURCES += \
     Wayset.cpp \
     gui/CommonWindowHandling.cpp \
     UAVPose.cpp \
-    SimulatedFlier.cpp
+    SimulatedFlier.cpp \
+    Exporters/BinaryExporter.cpp \
+    Importers/BinaryImporter.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -86,7 +88,9 @@ HEADERS +=\
     Wayset.h \
     gui/CommonWindowHandling.h \
     UAVPose.h \
-    SimulatedFlier.h
+    SimulatedFlier.h \
+    Exporters/BinaryExporter.h \
+    Importers/BinaryImporter.h
 
 unix:!symbian {
     maemo5 {

@@ -1,6 +1,11 @@
 #include "Exporter.h"
 
-Exporter::Exporter(const Wayset &solution) : _solution(solution)
+#include <QFileInfo>
+
+#include "GPXExporter.h"
+#include "BinaryExporter.h"
+
+Exporter::Exporter()
 {
 }
 
@@ -8,7 +13,28 @@ Exporter::~Exporter()
 {
 }
 
-const Wayset &Exporter::solution() const
+//static
+QList<QString> Exporter::supportedFileTypes()
 {
-    return _solution;
+    QList<QString> toRet;
+    toRet.append("wst");
+    toRet.append("gpx");
+    return toRet;
+}
+
+//static
+Exporter *Exporter::getExporter(const QString &filePath)
+{
+    Exporter * toRet = 0;
+
+    const QFileInfo info(filePath);
+    const QString suffix = info.completeSuffix().toLower();
+
+    if (suffix == "gpx")
+        toRet = new GPXExporter(filePath);
+    else if (suffix == "wst")
+        toRet = new BinaryExporter(filePath);
+
+
+    return toRet;
 }

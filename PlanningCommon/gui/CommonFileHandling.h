@@ -18,7 +18,7 @@ public:
                          QString destFile = QString(),
                          QWidget * parent = 0);
     static Wayset doImport(bool &ok,
-                           QString destFile = QString(),
+                           QString srcFile = QString(),
                            QWidget * parent = 0);
 
     static QSharedPointer<PlanningProblem> readProblemFromFile(QWidget * parent,

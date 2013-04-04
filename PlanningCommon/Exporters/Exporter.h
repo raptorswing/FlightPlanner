@@ -8,15 +8,13 @@
 class PLANNINGCOMMONSHARED_EXPORT Exporter
 {
 public:
-    Exporter(const Wayset& solution);
+    Exporter();
     virtual ~Exporter();
 
-    const Wayset& solution() const;
+    virtual bool doExport(const Wayset& toExport)=0;
 
-    virtual bool doExport(QByteArray * output)=0;
-
-private:
-    Wayset _solution;
+    static QList<QString> supportedFileTypes();
+    static Exporter * getExporter(const QString& filePath);
 };
 
 #endif // EXPORTER_H

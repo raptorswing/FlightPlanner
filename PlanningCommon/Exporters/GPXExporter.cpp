@@ -2,15 +2,16 @@
 
 #include "GPX.h"
 
-GPXExporter::GPXExporter(const Wayset& solution) : Exporter(solution)
+GPXExporter::GPXExporter(const QString &filePath) : _filePath(filePath)
 {
 }
 
-bool GPXExporter::doExport(QByteArray *output)
+bool GPXExporter::doExport(const Wayset &wayset)
 {
+    QByteArray bytes;
     GPX gpx;
 
-    foreach(const Position& pos, this->solution().positions())
+    foreach(const Position& pos, wayset.positions())
     {
         GPXPoint point;
         point.longitude = pos.longitude();
@@ -20,5 +21,5 @@ bool GPXExporter::doExport(QByteArray *output)
         gpx.appendPoint(point);
     }
 
-    return gpx.toXML(output);
+    return gpx.toXML(&bytes);
 }

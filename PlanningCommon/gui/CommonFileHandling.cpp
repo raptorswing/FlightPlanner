@@ -1,5 +1,7 @@
 #include "CommonFileHandling.h"
 
+#include "CommonWindowHandling.h"
+
 #include "Importers/GPXImporter.h"
 #include "Exporters/GPXExporter.h"
 
@@ -14,11 +16,10 @@ bool CommonFileHandling::doExport(const Wayset &toExport,
 {
     if (destFile.isEmpty())
     {
-        destFile = QFileDialog::getSaveFileName(parent, "Select Export Destination",
-                                                QString(), "GPX (*.gpx);;");
+        destFile = CommonWindowHandling::getExportSolutionFilename(parent);
     }
     if (destFile.isEmpty())
-        return true;
+        return false;
 
     QFile fp(destFile);
     if (!fp.open(QFile::WriteOnly | QFile::Text))
@@ -28,46 +29,44 @@ bool CommonFileHandling::doExport(const Wayset &toExport,
     }
     QByteArray toWrite;
 
-    QSharedPointer<Exporter> exporter(new GPXExporter(toExport));
-    if (!exporter->doExport(&toWrite))
-    {
+    QSharedPointer<Exporter> exporter(Exporter::getExporter(destFile));
+    if (exporter.isNull())
+        QMessageBox::warning(parent, "Error", "Export failed. Received bad exporter.");
+    else if (!exporter->doExport(toExport))
         QMessageBox::warning(parent, "Error", "Export failed. Conversion error.");
-        return false;
-    }
-
-    if (fp.write(toWrite) != toWrite.size())
-    {
+    else if (fp.write(toWrite) != toWrite.size())
         QMessageBox::warning(parent, "Error", "Export failed. Could not write all bytes");
-        return false;
-    }
+    else
+        return true;
 
-    return true;
+    return false;
 }
 
 //static
-Wayset CommonFileHandling::doImport(bool &ok,
-                                    QString destFile,
+Wayset CommonFileHandling::doImport(bool &success,
+                                    QString srcFile,
                                     QWidget *parent)
 {
-    ok = true; //by default
+    success = false; //by default
     Wayset toRet;
 
-    if (destFile.isEmpty())
+    if (srcFile.isEmpty())
     {
-        destFile = QFileDialog::getOpenFileName(parent, "Select Import Source",
-                                                QString(), "GPX (*.gpx);;");
+        srcFile = CommonWindowHandling::getImportSolutionFilename(parent);
     }
-    if (destFile.isEmpty())
+    if (srcFile.isEmpty())
         return toRet;
 
-    QSharedPointer<Importer> importer(new GPXImporter(destFile));
-    if (!importer->doImport())
-    {
-        ok = false;
+    QSharedPointer<Importer> importer(Importer::getImporter(srcFile));
+    if (importer.isNull())
+        QMessageBox::warning(parent, "Error", "Import failed. Received bad importer.");
+    else if (!importer->doImport())
         QMessageBox::warning(parent, "Error", "Import failed.");
-        return toRet;
+    else
+    {
+        success = true;
+        toRet = importer->results();
     }
-    toRet = importer->results();
 
     return toRet;
 }

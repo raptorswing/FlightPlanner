@@ -15,6 +15,9 @@ public:
 
     const Wayset& results() const;
 
+    static QList<QString> supportedFileTypes();
+    static Importer * getImporter(const QString& filePath);
+
 protected:
     void setResults(const Wayset& results);
 
