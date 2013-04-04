@@ -130,9 +130,9 @@ const QList<QWeakPointer<FlightTask> > &FlightTask::dependencyConstraints() cons
 
 void FlightTask::setDependencyConstraints(const QList<QWeakPointer<FlightTask> > &nConstraints)
 {
-    _dependencyConstraints = nConstraints;
+    _dependencyConstraints.clear();
 
-    foreach(const QWeakPointer<FlightTask>& task, _dependencyConstraints)
+    foreach(const QWeakPointer<FlightTask>& task, nConstraints)
     {
         QSharedPointer<FlightTask> strong = task.toStrongRef();
         this->addDependencyContraint(strong);
