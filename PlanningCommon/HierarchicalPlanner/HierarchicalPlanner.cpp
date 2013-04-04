@@ -102,6 +102,8 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
     if (_tasks2areas.values().size() > 0)
         avgLonLat /= (_tasks2areas.values().size() + 1);
 
+    const Position avgPos(avgLonLat);
+
     //Then loop through all of the areas and find good points that could be start or end
     //Make the start point the one that is closest to the average computed above
     const qreal divisions = 100;
@@ -109,7 +111,6 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
     {
         const QRectF boundingRect = area->geoPoly().boundingRect();
         const QPointF centerLonLat = boundingRect.center();
-        avgLonLat += centerLonLat;
 
         qreal mostDistance = std::numeric_limits<qreal>::min();
         QPointF bestPoint1;
@@ -167,7 +168,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         //The point closest to all the other areas will be the start
         start = bestPoint2;
         end = bestPoint1;
-        if ((bestPoint1 - avgLonLat).manhattanLength() < (bestPoint2 - avgLonLat).manhattanLength())
+        if (end.flatDistanceEstimate(avgPos) < start.flatDistanceEstimate(avgPos))
         {
             start = bestPoint1;
             end = bestPoint2;
@@ -175,9 +176,8 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
         _areaStartPositions.insert(area, start);
 
-        qreal angleRads = atan2(end.latitude() - start.latitude(),
-                                end.longitude() - start.longitude());
-        UAVOrientation orientation(angleRads);
+        const qreal angleRads = start.angleTo(end);
+        const UAVOrientation orientation(angleRads);
         _areaStartOrientations.insert(area, orientation);
     }
 }
