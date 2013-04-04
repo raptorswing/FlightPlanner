@@ -84,7 +84,7 @@ void FlightTaskArea::addTask(QSharedPointer<FlightTask> task)
     if (_tasks.contains(task) && !task.isNull())
         return;
 
-    this->taskAboutToAdd();
+    this->taskAboutToAdd(); //For FlightTaskAreaListModel
 
     _tasks.append(task);
 
