@@ -106,34 +106,32 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
     //Then loop through all of the areas and find good points that could be start or end
     //Make the start point the one that is closest to the average computed above
-    const qreal divisions = 100;
+    const qreal stepSize = 30.0; //meters
     foreach(const QSharedPointer<FlightTaskArea>& area, _tasks2areas.values())
     {
         const QRectF boundingRect = area->geoPoly().boundingRect();
-        const QPointF centerLonLat = boundingRect.center();
+        const Position centerPos(boundingRect.center());
 
         qreal mostDistance = std::numeric_limits<qreal>::min();
-        QPointF bestPoint1;
-        QPointF bestPoint2;
+        Position bestPoint1;
+        Position bestPoint2;
         for (int angleDeg = 0; angleDeg < 179; angleDeg++)
         {
             bool gotPos = false;
             bool gotNeg = false;
 
-            const qreal stepSize = qMax<qreal>(boundingRect.width() / divisions,
-                                               boundingRect.height() / divisions);
             const QVector2D dirVec(cos(angleDeg * 180.0 / 3.14159265),
                                    sin(angleDeg * 180.0 / 3.14159265));
 
             int count = 0;
-            QPointF pos;
-            QPointF neg;
+            Position pos;
+            Position neg;
             while (!gotPos || !gotNeg)
             {
-                const QPointF trialPointPos(centerLonLat.x() + dirVec.x() * stepSize * count,
-                                            centerLonLat.y() + dirVec.y() * stepSize * count);
-                const QPointF trialPointNeg(centerLonLat.x() - dirVec.x() * stepSize * count,
-                                            centerLonLat.y() - dirVec.y() * stepSize * count);
+                const QPointF posOffset = count * stepSize * dirVec.toPointF();
+                const QPointF negOffset = count * stepSize * -1 * dirVec.toPointF();
+                const QPointF trialPointPos = centerPos.flatOffsetToPosition(posOffset).lonLat();
+                const QPointF trialPointNeg = centerPos.flatOffsetToPosition(negOffset).lonLat();
 
                 if (!area->geoPoly().containsPoint(trialPointPos, Qt::OddEvenFill)
                         && !gotPos)
@@ -151,9 +149,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
                 count++;
             }
 
-            const QVector3D xyz1 = Conversions::lla2xyz(Position(pos));
-            const QVector3D xyz2 = Conversions::lla2xyz(Position(neg));
-            const qreal distance = (xyz1 - xyz2).lengthSquared();
+            const qreal distance = pos.flatDistanceEstimate(neg);
             if (distance > mostDistance)
             {
                 mostDistance = distance;
