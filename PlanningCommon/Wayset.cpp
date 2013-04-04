@@ -12,6 +12,22 @@ Wayset::Wayset(const QList<UAVPose> &waypoints) :
 {
 }
 
+Wayset::Wayset(QDataStream &stream)
+{
+    int numPoses;
+    stream >> numPoses;
+
+    for (int i = 0; i < numPoses; i++)
+    {
+        Position pos;
+        stream >> pos;
+
+        UAVOrientation angle(stream);
+
+        this->append(pos, angle);
+    }
+}
+
 const UAVPose &Wayset::at(int i) const
 {
     if (i < 0 || i >= this->size())
@@ -266,4 +282,23 @@ QList<UAVOrientation> Wayset::angles() const
         toRet.append(pose.angle());
 
     return toRet;
+}
+
+//pure-virtual from Serializable
+QString Wayset::serializationType() const
+{
+    return "Wayset";
+}
+
+//pure-virtual from Serializable
+void Wayset::serialize(QDataStream &stream) const
+{
+    const int numPoses = this->size();
+    stream << numPoses;
+
+    foreach(const UAVPose& pose, this->poses())
+    {
+        stream << pose.pos();
+        pose.angle().serialize(stream);
+    }
 }

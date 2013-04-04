@@ -6,14 +6,18 @@
 #include "UAVParameters.h"
 #include "UAVPose.h"
 #include "Dubins.h"
+#include "Serializable.h"
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT Wayset
+class PLANNINGCOMMONSHARED_EXPORT Wayset : public Serializable
 {
 public:
     Wayset();
     Wayset(const QList<UAVPose>& poses);
+
+    //For de-serialization
+    Wayset(QDataStream& stream);
 
     const UAVPose& at(int i) const;
 
@@ -45,6 +49,12 @@ public:
     const QList<UAVPose>& poses() const;
     QList<Position> positions() const;
     QList<UAVOrientation> angles() const;
+
+    //pure-virtual from Serializable
+    virtual QString serializationType() const;
+
+    //pure-virtual from Serializable
+    virtual void serialize(QDataStream& stream) const;
 
 private:
     QList<UAVPose> _poses;
