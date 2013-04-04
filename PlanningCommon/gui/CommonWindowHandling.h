@@ -14,6 +14,9 @@ public:
     static void restoreGeometry(QMainWindow * windowIn);
     static void showFlightTestResults(QWidget * parent,
                                       bool success, qreal score);
+
+    static QString getOpenProblemFilename(QWidget * parent);
+    static QString getSaveProblemFilename(QWidget * parent);
 };
 
 #endif // COMMONWINDOWHANDLING_H
