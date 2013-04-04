@@ -42,6 +42,7 @@ private slots:
     void handleWaysetChanged();
     void handleWaysetSelectionChanged();
     void finishCoverageHelper();
+    void openProblem(const QString& filePath);
 
     void doInitialMapCentering();
     void handleMapClick(QPoint pos);
@@ -54,6 +55,7 @@ private slots:
     void on_actionExport_Solution_triggered();
     void on_actionReset_Flight_triggered();
     void on_actionTest_Flight_triggered();
+    void on_actionOpen_Problem_triggered();
 
 private:
     void initProblem();

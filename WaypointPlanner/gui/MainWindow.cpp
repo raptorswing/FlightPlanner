@@ -142,6 +142,21 @@ void WaypointPlannerMainWindow::finishCoverageHelper()
 }
 
 //private slot
+void WaypointPlannerMainWindow::openProblem(const QString &filePath)
+{
+    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
+
+    if (_problem.isNull())
+        _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
+
+    //Reset things
+    this->on_actionReset_Flight_triggered();
+
+
+    _waysetManager->setPlanningProblem(_problem);
+}
+
+//private slot
 void WaypointPlannerMainWindow::doInitialMapCentering()
 {
     _view->setZoomLevel(16);
@@ -239,6 +254,13 @@ void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
                                             &score);
 
     CommonWindowHandling::showFlightTestResults(this, success, score);
+}
+
+//private slot
+void WaypointPlannerMainWindow::on_actionOpen_Problem_triggered()
+{
+    const QString filePath = CommonWindowHandling::getOpenProblemFilename(this);
+    this->openProblem(filePath);
 }
 
 //private

@@ -99,6 +99,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpen_Problem"/>
+   <addaction name="separator"/>
    <addaction name="actionImport_Solution"/>
    <addaction name="actionExport_Solution"/>
    <addaction name="actionExit"/>
@@ -206,6 +208,18 @@
    </property>
    <property name="text">
     <string>Test Flight</string>
+   </property>
+  </action>
+  <action name="actionOpen_Problem">
+   <property name="icon">
+    <iconset resource="../WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/48/48px-Document-open.svg.png</normaloff>:/images/images/48/48px-Document-open.svg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Problem</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
