@@ -45,7 +45,7 @@ FlightTaskArea::FlightTaskArea(QDataStream &stream)
             continue;
         }
         FlightTask::_uuidToWeakTask.insert(task->uuid(), task.toWeakRef()); //For inter-task dependencies
-        _tasks.append(task);
+        this->addTask(task);
     }
 }
 
