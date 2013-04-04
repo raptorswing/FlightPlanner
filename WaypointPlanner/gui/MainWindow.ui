@@ -62,6 +62,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionReset_Flight"/>
+   <addaction name="actionTest_Flight"/>
    <addaction name="separator"/>
    <addaction name="actionSelect_Mode"/>
    <addaction name="actionCreate_Mode"/>
@@ -142,6 +143,9 @@
    </property>
   </action>
   <action name="actionAuto_Fix">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../WaypointPlannerResources.qrc">
      <normaloff>:/images/images/fixIcon.png</normaloff>:/images/images/fixIcon.png</iconset>
@@ -193,6 +197,15 @@
    </property>
    <property name="text">
     <string>Reset Flight</string>
+   </property>
+  </action>
+  <action name="actionTest_Flight">
+   <property name="icon">
+    <iconset resource="../WaypointPlannerResources.qrc">
+     <normaloff>:/images/images/48/48px-Media-playback-start.svg.png</normaloff>:/images/images/48/48px-Media-playback-start.svg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Test Flight</string>
    </property>
   </action>
  </widget>

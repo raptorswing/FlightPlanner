@@ -46,7 +46,8 @@ SOURCES += \
     WaysetDisplayManager.cpp \
     Wayset.cpp \
     gui/CommonWindowHandling.cpp \
-    UAVPose.cpp
+    UAVPose.cpp \
+    SimulatedFlier.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -84,7 +85,8 @@ HEADERS +=\
     WaysetDisplayManager.h \
     Wayset.h \
     gui/CommonWindowHandling.h \
-    UAVPose.h
+    UAVPose.h \
+    SimulatedFlier.h
 
 unix:!symbian {
     maemo5 {

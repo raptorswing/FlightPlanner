@@ -45,11 +45,13 @@ private slots:
     void on_actionReset_Flight_triggered();
     void on_actionPlace_Start_Point_triggered();
     void on_actionPlace_Task_Area_triggered();
+    void on_actionTest_Flight_triggered();
 
 private:
     void initMap();
     void initPlanningProblem();
     void initPaletteConnections();
+    void enableDisableFlightActions();
 
     Ui::MainWindow *ui;
 

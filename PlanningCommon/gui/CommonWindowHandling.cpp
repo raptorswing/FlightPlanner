@@ -5,6 +5,8 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QtDebug>
+#include <QMessageBox>
+#include <QWidget>
 
 const QString SETTINGS_GEOMETRY = "lastGeometry";
 const QString SETTINGS_WINDOWSTATE = "lastWindowState";
@@ -58,4 +60,19 @@ void CommonWindowHandling::restoreGeometry(QMainWindow *windowIn)
     const Qt::WindowStates wState(wStateInt);
     if (ok)
         windowIn->setWindowState(wState);
+}
+
+//static
+void CommonWindowHandling::showFlightTestResults(QWidget *parent,
+                                                 bool success, qreal score)
+{
+    QString message;
+    if (success)
+        message = "Flight satisfies all constraints.";
+    else message = "Flight does NOT satisfy all constraints.";
+
+    message += "\n\nFlight Score: " + QString::number(score);
+
+
+    QMessageBox::information(parent, "Flight Test Results", message);
 }

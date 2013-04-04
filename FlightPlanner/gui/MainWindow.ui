@@ -48,6 +48,7 @@
    </attribute>
    <addaction name="actionPlan_Flight"/>
    <addaction name="actionReset_Flight"/>
+   <addaction name="actionTest_Flight"/>
    <addaction name="separator"/>
    <addaction name="actionPlace_Start_Point"/>
    <addaction name="actionPlace_Task_Area"/>
@@ -223,6 +224,15 @@
    </property>
    <property name="text">
     <string>Place Task Area</string>
+   </property>
+  </action>
+  <action name="actionTest_Flight">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/icons/48/gui/images/48/48px-Media-playback-start.svg.png</normaloff>:/icons/48/gui/images/48/48px-Media-playback-start.svg.png</iconset>
+   </property>
+   <property name="text">
+    <string>Test Flight</string>
    </property>
   </action>
  </widget>

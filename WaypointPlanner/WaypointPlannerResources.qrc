@@ -34,5 +34,6 @@
         <file>images/48/48px-Document-save-as.svg.png</file>
         <file>images/48/48px-System-log-out.svg.png</file>
         <file>images/32x32/reset or undo.png</file>
+        <file>images/48/48px-Media-playback-start.svg.png</file>
     </qresource>
 </RCC>

@@ -12,6 +12,7 @@
 #include "tileSources/OSMTileSource.h"
 
 #include "HierarchicalPlanner/HierarchicalPlanner.h"
+#include "SimulatedFlier.h"
 
 #include "UAVParametersWidget.h"
 
@@ -55,6 +56,8 @@ void MainWindow::updateDisplayedFlight()
         _waysetManager->setPlanningProblem(_problem);
         _waysetManager->setWayset(_planner->bestFlightSoFar());
     }
+
+    this->enableDisableFlightActions();
 }
 
 //private slot
@@ -236,6 +239,17 @@ void MainWindow::on_actionPlace_Task_Area_triggered()
         _problem->addTaskArea(_view->center());
 }
 
+//private slot
+void MainWindow::on_actionTest_Flight_triggered()
+{
+    qreal score;
+    bool success = SimulatedFlier::simulate(_planner->bestFlightSoFar(),
+                                            _problem,
+                                            &score);
+
+    CommonWindowHandling::showFlightTestResults(this, success, score);
+}
+
 
 //private
 void MainWindow::initMap()
@@ -282,4 +296,18 @@ void MainWindow::initPlanningProblem()
 
     _waysetManager = new WaysetDisplayManager(_scene, _problem, Waypoint::DubinLineMode, this);
     _waysetManager->enableMouseInteraction(false);
+
+    this->enableDisableFlightActions();
+}
+
+//private
+void MainWindow::enableDisableFlightActions()
+{
+    bool hasFlight = false;
+    if (!_planner->bestFlightSoFar().isEmpty())
+        hasFlight = true;
+
+    this->ui->actionExport_Solution->setEnabled(hasFlight);
+    this->ui->actionReset_Flight->setEnabled(hasFlight);
+    this->ui->actionTest_Flight->setEnabled(hasFlight);
 }

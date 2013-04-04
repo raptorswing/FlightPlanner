@@ -74,7 +74,7 @@ void SubFlightPlanner::_greedyPlan()
         const qreal latPerMeter = Conversions::degreesLatPerMeter(node->position().latitude());
 
         //Build successors to the current node. Add them to frontier.
-        for (qreal i = 1.2; i <= 6.0 * 1.5; i += 1.5)
+        for (qreal i = 1.1; i <= 6.0 * 1.5; i += 1.5)
         {
             const qreal radius = _uavParams.minTurningRadius() * i;
             const qreal arc = _uavParams.waypointInterval() / radius;
@@ -95,7 +95,7 @@ void SubFlightPlanner::_greedyPlan()
             frontier.insert(sScore, s);
         }
 
-        for (qreal i = 1.2; i <= 6.0 * 1.5; i += 1.5)
+        for (qreal i = 1.1; i <= 6.0 * 1.5; i += 1.5)
         {
             const qreal radius = _uavParams.minTurningRadius() * i;
             const qreal arc = _uavParams.waypointInterval() / radius;

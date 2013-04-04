@@ -15,6 +15,7 @@
 #include "FlightTaskArea.h"
 #include "FlightTasks/CoverageTask.h"
 #include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
+#include "SimulatedFlier.h"
 
 WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,6 +26,7 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 
     this->initProblem();
     this->initMap();
+    this->enableDisableFlightActions();
 
     //A hack to make initial map centering work right.
     QTimer::singleShot(1, this, SLOT(doInitialMapCentering()));
@@ -82,6 +84,7 @@ void WaypointPlannerMainWindow::handleWaysetChanged()
     this->ui->timelineView->setWayset(_waysetManager->wayset());
     this->ui->timelineView->setUAVParameters(_problem->uavParameters());
     this->handleWaysetSelectionChanged();
+    this->enableDisableFlightActions();
 }
 
 //private slot
@@ -225,6 +228,19 @@ void WaypointPlannerMainWindow::on_actionReset_Flight_triggered()
     _waysetManager->setWayset(Wayset(), _waysetManager->lineMode());
 }
 
+//private slot
+void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
+{
+    const Wayset flight = _waysetManager->wayset();
+
+    qreal score;
+    bool success = SimulatedFlier::simulate(flight,
+                                            _problem,
+                                            &score);
+
+    CommonWindowHandling::showFlightTestResults(this, success, score);
+}
+
 //private
 void WaypointPlannerMainWindow::initProblem()
 {
@@ -257,4 +273,13 @@ void WaypointPlannerMainWindow::initMap()
             SLOT(handleWaysetSelectionChanged()));
 
     this->setMouseMode(CreateMode);
+}
+
+//private slot
+void WaypointPlannerMainWindow::enableDisableFlightActions()
+{
+    const bool hasFlight = !_waysetManager->wayset().isEmpty();
+
+    this->ui->actionTest_Flight->setEnabled(hasFlight);
+    this->ui->actionExport_Solution->setEnabled(hasFlight);
 }
