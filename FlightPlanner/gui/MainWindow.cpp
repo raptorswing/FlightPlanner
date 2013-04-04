@@ -105,8 +105,7 @@ void MainWindow::resetAll()
 //private slot
 void MainWindow::on_actionOpen_triggered()
 {
-    const QString filePath = QFileDialog::getOpenFileName(this,
-                                                          "Select file to load");
+    const QString filePath = CommonWindowHandling::getOpenProblemFilename(this);
     if (filePath.isEmpty())
         return;
 
@@ -119,8 +118,7 @@ void MainWindow::on_actionSave_Planning_Problem_triggered()
     if (_problem.isNull())
         return;
 
-    const QString filePath = QFileDialog::getSaveFileName(this,
-                                                          "Select save file");
+    const QString filePath = CommonWindowHandling::getSaveProblemFilename(this);
     if (filePath.isEmpty())
         return;
 
