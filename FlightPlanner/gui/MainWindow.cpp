@@ -63,18 +63,7 @@ void MainWindow::updateDisplayedFlight()
 //private slot
 void MainWindow::openProblem(const QString &filePath)
 {
-    QFile fp(filePath);
-    if (!fp.exists())
-        return;
-    else if (!fp.open(QFile::ReadOnly))
-    {
-        QMessageBox::warning(this, "Error - cannot open file",
-                             "Failed to open file " + filePath + " for reading");
-        return;
-    }
-
-    QDataStream stream(&fp);
-    _problem = QSharedPointer<PlanningProblem>(new PlanningProblem(stream));
+    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
     _planner->setProblem(_problem);
     _viewAdapter->setModel(_problem);
 
