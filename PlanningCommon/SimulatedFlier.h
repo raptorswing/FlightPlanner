@@ -12,7 +12,9 @@ class PLANNINGCOMMONSHARED_EXPORT SimulatedFlier
 public:
     static bool simulate(const Wayset& wayset,
                          const QSharedPointer<PlanningProblem>& problem,
-                         qreal * scoreOut = 0);
+                         qreal * scoreOut = 0,
+                         bool * timingOut = 0,
+                         bool * dependOut = 0);
 };
 
 #endif // SIMULATEDFLIER_H

@@ -72,12 +72,21 @@ void CommonWindowHandling::restoreGeometry(QMainWindow *windowIn)
 
 //static
 void CommonWindowHandling::showFlightTestResults(QWidget *parent,
-                                                 bool success, qreal score)
+                                                 bool success, qreal score,
+                                                 bool timing, bool dependencies)
 {
     QString message;
     if (success)
         message = "Flight satisfies all constraints.";
-    else message = "Flight does NOT satisfy all constraints.";
+    else
+    {
+        message = "Flight does NOT satisfy all constraints.";
+        if (!timing)
+            message += "\nFlight violates timing constraints.";
+        if (!dependencies)
+            message += "\nFlight violates dependency constraints.";
+
+    }
 
     message += "\n\nFlight Score: " + QString::number(score);
 

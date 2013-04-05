@@ -39,8 +39,10 @@ QString SamplingTask::taskType() const
 //virtual from FlightTask
 qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
                                                const QPolygonF &geoPoly,
-                                               const UAVParameters &uavParams)
+                                               const UAVParameters &uavParams,
+                                               bool includeEnticement)
 {
+    Q_UNUSED(includeEnticement)
     qreal toRet = 0.0;
 
     const Wayset resampled = positions.resample(uavParams.waypointInterval(),

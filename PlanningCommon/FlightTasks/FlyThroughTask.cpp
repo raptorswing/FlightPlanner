@@ -33,7 +33,8 @@ QString FlyThroughTask::taskType() const
 
 qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
                                                  const QPolygonF &geoPoly,
-                                                 const UAVParameters &)
+                                                 const UAVParameters &,
+                                                 bool includeEnticement)
 {
     //First, see if one of the points is within the polygon
     foreach(const Position& pos, positions.positions())
@@ -53,5 +54,7 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
     const qreal stdDev = 90.0;
     qreal toRet = 100*FlightTask::normal(dist,stdDev,2000);
 
-    return qMin<qreal>(toRet,this->maxTaskPerformance());
+    if (includeEnticement)
+        return qMin<qreal>(toRet,this->maxTaskPerformance());
+    return 0.0;
 }

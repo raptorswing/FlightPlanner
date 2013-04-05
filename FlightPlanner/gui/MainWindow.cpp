@@ -227,11 +227,13 @@ void MainWindow::on_actionPlace_Task_Area_triggered()
 void MainWindow::on_actionTest_Flight_triggered()
 {
     qreal score;
+    bool timing;
+    bool dependencies;
     bool success = SimulatedFlier::simulate(_planner->bestFlightSoFar(),
                                             _problem,
-                                            &score);
+                                            &score, &timing, &dependencies);
 
-    CommonWindowHandling::showFlightTestResults(this, success, score);
+    CommonWindowHandling::showFlightTestResults(this, success, score, timing, dependencies);
 }
 
 

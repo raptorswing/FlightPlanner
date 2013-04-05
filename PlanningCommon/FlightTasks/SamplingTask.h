@@ -27,7 +27,8 @@ public:
 
     virtual qreal calculateFlightPerformance(const Wayset& positions,
                                              const QPolygonF& geoPoly,
-                                             const UAVParameters& uavParams);
+                                             const UAVParameters& uavParams,
+                                             bool includeEnticement = true);
 
     virtual qreal maxTaskPerformance() const;
 

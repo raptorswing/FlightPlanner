@@ -35,7 +35,8 @@ public:
 
     virtual qreal calculateFlightPerformance(const Wayset& positions,
                                              const QPolygonF& geoPoly,
-                                             const UAVParameters& uavParams)=0;
+                                             const UAVParameters& uavParams,
+                                             bool includeEnticement = true)=0;
 
     virtual qreal priority() const;
 

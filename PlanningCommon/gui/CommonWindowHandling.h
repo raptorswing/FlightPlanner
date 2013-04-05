@@ -15,7 +15,7 @@ public:
     static void storeGeometry(QMainWindow * windowIn);
     static void restoreGeometry(QMainWindow * windowIn);
     static void showFlightTestResults(QWidget * parent,
-                                      bool success, qreal score);
+                                      bool success, qreal score, bool timing, bool dependencies);
 
     static QString getOpenProblemFilename(QWidget * parent);
     static QString getSaveProblemFilename(QWidget * parent);

@@ -38,7 +38,8 @@ QString CoverageTask::taskType() const
 
 qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
                                                const QPolygonF &geoPoly,
-                                               const UAVParameters &)
+                                               const UAVParameters &,
+                                               bool includeEnticement)
 {
     if (wayset.isEmpty())
         return 0.0;
@@ -84,7 +85,9 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
         break;
     }
 
-    return reward + enticement;
+    if (includeEnticement)
+        return reward + enticement;
+    return reward;
 }
 
 qreal CoverageTask::maxTaskPerformance() const

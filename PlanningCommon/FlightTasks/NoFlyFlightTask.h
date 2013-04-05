@@ -29,7 +29,8 @@ public:
     //pure-virtual from FlightTask
     virtual qreal calculateFlightPerformance(const Wayset& wayset,
                                              const QPolygonF& geoPoly,
-                                             const UAVParameters& uavParams);
+                                             const UAVParameters& uavParams,
+                                             bool includeEnticement = true);
 };
 
 #endif // NOFLYFLIGHTTASK_H
