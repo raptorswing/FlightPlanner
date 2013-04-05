@@ -370,17 +370,20 @@ bool HierarchicalPlanner::_buildSchedule()
                 continue;
 
             //If the newstate violates timing constraints then we won't generate it
-            bool timingViolation = false;
+            bool timingSatisfied = false;
             foreach(const TimingConstraint& constraint, task->timingConstraints())
             {
                 if (startTime < constraint.start() || startTime > constraint.end())
-                    timingViolation = true;
+                    continue;
                 else if (endTime < constraint.start() || endTime > constraint.end())
-                    timingViolation = true;
-                if (timingViolation)
+                    continue;
+                else
+                {
+                    timingSatisfied = true;
                     break;
+                }
             }
-            if (timingViolation)
+            if (!timingSatisfied)
                 continue;
 
             //If we have found a better way to reach a state then we'll replace the current information
