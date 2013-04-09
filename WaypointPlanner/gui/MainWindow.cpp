@@ -78,6 +78,21 @@ void WaypointPlannerMainWindow::setPlanningProblem(const QSharedPointer<Planning
     this->planningProblemChanged(problem);
 }
 
+//public slot
+void WaypointPlannerMainWindow::openProblem(const QString &filePath)
+{
+    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
+
+    if (_problem.isNull())
+        _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
+
+    //Reset things
+    this->on_actionReset_Flight_triggered();
+
+
+    _waysetManager->setPlanningProblem(_problem);
+}
+
 //private slot
 void WaypointPlannerMainWindow::handleWaysetChanged()
 {
@@ -139,21 +154,6 @@ void WaypointPlannerMainWindow::finishCoverageHelper()
         _waysetManager->appendWaypoint(pose.pos(), pose.angle());
 
     _coveragePolygon->deleteLater();
-}
-
-//private slot
-void WaypointPlannerMainWindow::openProblem(const QString &filePath)
-{
-    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
-
-    if (_problem.isNull())
-        _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
-
-    //Reset things
-    this->on_actionReset_Flight_triggered();
-
-
-    _waysetManager->setPlanningProblem(_problem);
 }
 
 //private slot

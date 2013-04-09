@@ -6,6 +6,8 @@
 
 QT       += core gui widgets
 
+CONFIG += console
+
 TARGET = FlightPlanner
 TEMPLATE = app
 

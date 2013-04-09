@@ -42,6 +42,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//public slot
+void MainWindow::openHiddenProblem(const QString &filePath)
+{
+    _hiddenProblem = CommonFileHandling::readProblemFromFile(this, filePath);
+
+    if (_hiddenProblem.isNull())
+    {
+        qWarning() << "Failed to open hidden problem" << filePath;
+        return;
+    }
+
+    _problem->setUAVParameters(_hiddenProblem->uavParameters());
+
+    qDebug() << "Hidden problem" << filePath << "opened";
+}
+
 //private slot
 void MainWindow::updateDisplayedFlight()
 {
@@ -71,6 +87,9 @@ void MainWindow::openProblem(const QString &filePath)
             SIGNAL(planningProblemChanged()),
             _planner,
             SLOT(resetPlanning()));
+
+    if (!_hiddenProblem.isNull())
+        _problem->setUAVParameters(_hiddenProblem->uavParameters());
 }
 
 //private slot
@@ -100,6 +119,9 @@ void MainWindow::resetAll()
             SIGNAL(planningProblemChanged()),
             _planner,
             SLOT(resetPlanning()));
+
+    if (!_hiddenProblem.isNull())
+        _problem->setUAVParameters(_hiddenProblem->uavParameters());
 }
 
 //private slot
@@ -229,8 +251,14 @@ void MainWindow::on_actionTest_Flight_triggered()
     qreal score;
     bool timing;
     bool dependencies;
+
+    //We use the "hidden" problem for judging flights, if available
+    QSharedPointer<PlanningProblem> problemToUse = _problem;
+    if (!_hiddenProblem.isNull())
+        problemToUse = _hiddenProblem;
+
     bool success = SimulatedFlier::simulate(_planner->bestFlightSoFar(),
-                                            _problem,
+                                            problemToUse,
                                             &score, &timing, &dependencies);
 
     CommonWindowHandling::showFlightTestResults(this, success, score, timing, dependencies);

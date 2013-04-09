@@ -37,12 +37,12 @@ signals:
 public slots:
     void setMouseMode(MouseMode mode);
     void setPlanningProblem(const QSharedPointer<PlanningProblem>& problem);
+    void openProblem(const QString& filePath);
     
 private slots:
     void handleWaysetChanged();
     void handleWaysetSelectionChanged();
     void finishCoverageHelper();
-    void openProblem(const QString& filePath);
 
     void doInitialMapCentering();
     void handleMapClick(QPoint pos);

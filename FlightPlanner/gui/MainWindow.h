@@ -25,6 +25,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void openHiddenProblem(const QString& filePath);
     
 private slots:
     void updateDisplayedFlight();
@@ -59,6 +62,7 @@ private:
     QPointer<MapGraphicsScene> _scene;
 
     QSharedPointer<PlanningProblem> _problem;
+    QSharedPointer<PlanningProblem> _hiddenProblem;
     QPointer<FlightPlanner> _planner;
     QPointer<ProblemViewAdapter> _viewAdapter;
 
