@@ -248,14 +248,7 @@ void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
 {
     const Wayset flight = _waysetManager->wayset();
 
-    qreal score;
-    bool timing;
-    bool dependencies;
-    bool success = SimulatedFlier::simulate(flight,
-                                            _problem,
-                                            &score, &timing, &dependencies);
-
-    CommonWindowHandling::showFlightTestResults(this, success, score, timing, dependencies);
+    CommonWindowHandling::simulateFlightAndShowResults(this, flight, _problem);
 }
 
 //private slot

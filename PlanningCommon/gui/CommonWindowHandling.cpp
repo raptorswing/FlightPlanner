@@ -72,26 +72,41 @@ void CommonWindowHandling::restoreGeometry(QMainWindow *windowIn)
 
 //static
 void CommonWindowHandling::showFlightTestResults(QWidget *parent,
-                                                 bool success, qreal score,
-                                                 bool timing, bool dependencies)
+                                                 SimulatedFlierResults results)
 {
     QString message;
-    if (success)
+    if (results.dependencyViolations.isEmpty() && results.timingViolations.isEmpty())
         message = "Flight satisfies all constraints.";
     else
     {
         message = "Flight does NOT satisfy all constraints.";
-        if (!timing)
+        if (!results.timingViolations.isEmpty())
             message += "\nFlight violates timing constraints.";
-        if (!dependencies)
+        if (!results.dependencyViolations.isEmpty())
             message += "\nFlight violates dependency constraints.";
 
     }
 
-    message += "\n\nFlight Score: " + QString::number(score);
+    if (results.pointsPossible > 0.0)
+    {
+        message += "\n\nFlight Score: "
+                + QString::number(results.points)
+                + "/"
+                + QString::number(results.pointsPossible)
+                + " (" + QString::number((results.points / results.pointsPossible) * 100) + "%)";
+    }
 
 
     QMessageBox::information(parent, "Flight Test Results", message);
+}
+
+//static
+void CommonWindowHandling::simulateFlightAndShowResults(QWidget *parent,
+                                                        const Wayset &wayset,
+                                                        const QSharedPointer<PlanningProblem> &problem)
+{
+    const SimulatedFlierResults results = SimulatedFlier::simulate(wayset, problem);
+    CommonWindowHandling::showFlightTestResults(parent, results);
 }
 
 //static

@@ -8,6 +8,7 @@ class QWidget;
 #include <QList>
 
 #include "PlanningCommon_global.h"
+#include "SimulatedFlier.h"
 
 class PLANNINGCOMMONSHARED_EXPORT CommonWindowHandling
 {
@@ -15,7 +16,10 @@ public:
     static void storeGeometry(QMainWindow * windowIn);
     static void restoreGeometry(QMainWindow * windowIn);
     static void showFlightTestResults(QWidget * parent,
-                                      bool success, qreal score, bool timing, bool dependencies);
+                                      SimulatedFlierResults results);
+    static void simulateFlightAndShowResults(QWidget * parent,
+                                             const Wayset& wayset,
+                                             const QSharedPointer<PlanningProblem>& problem);
 
     static QString getOpenProblemFilename(QWidget * parent);
     static QString getSaveProblemFilename(QWidget * parent);

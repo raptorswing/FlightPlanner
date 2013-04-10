@@ -248,20 +248,14 @@ void MainWindow::on_actionPlace_Task_Area_triggered()
 //private slot
 void MainWindow::on_actionTest_Flight_triggered()
 {
-    qreal score;
-    bool timing;
-    bool dependencies;
-
     //We use the "hidden" problem for judging flights, if available
     QSharedPointer<PlanningProblem> problemToUse = _problem;
     if (!_hiddenProblem.isNull())
         problemToUse = _hiddenProblem;
 
-    bool success = SimulatedFlier::simulate(_planner->bestFlightSoFar(),
-                                            problemToUse,
-                                            &score, &timing, &dependencies);
-
-    CommonWindowHandling::showFlightTestResults(this, success, score, timing, dependencies);
+    CommonWindowHandling::simulateFlightAndShowResults(this,
+                                                       _planner->bestFlightSoFar(),
+                                                       problemToUse);
 }
 
 

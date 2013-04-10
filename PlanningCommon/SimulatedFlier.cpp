@@ -1,11 +1,8 @@
 #include "SimulatedFlier.h"
 
 //static
-bool SimulatedFlier::simulate(const Wayset &wayset,
-                              const QSharedPointer<PlanningProblem> &problem,
-                              qreal *scoreOut,
-                              bool *timingOut,
-                              bool *dependOut)
+SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
+                                               const QSharedPointer<PlanningProblem> &problem)
 {
     const qreal subSampleDist = 5.0;
     UAVParameters fudgeParams = problem->uavParameters();
@@ -122,13 +119,11 @@ bool SimulatedFlier::simulate(const Wayset &wayset,
 
     qDebug() << "max possible score" << maxScore;
 
-    if (scoreOut)
-        *scoreOut = score;
-    if (timingOut)
-        *timingOut = timingViolators.isEmpty();
-    if (dependOut)
-        *dependOut = dependencyViolators.isEmpty();
+    SimulatedFlierResults toRet;
+    toRet.points = score;
+    toRet.pointsPossible = maxScore;
+    toRet.dependencyViolations = dependencyViolators;
+    toRet.timingViolations = timingViolators;
 
-    bool success = (dependencyViolators.isEmpty() && timingViolators.isEmpty());
-    return success;
+    return toRet;
 }

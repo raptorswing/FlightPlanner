@@ -7,14 +7,19 @@
 #include "PlanningProblem.h"
 #include "Wayset.h"
 
+typedef struct SimulatedFlierResults
+{
+    qreal points;
+    qreal pointsPossible;
+    QSet<QSharedPointer<FlightTask> > timingViolations;
+    QSet<QSharedPointer<FlightTask> > dependencyViolations;
+} SimulatedFlierResults;
+
 class PLANNINGCOMMONSHARED_EXPORT SimulatedFlier
 {
 public:
-    static bool simulate(const Wayset& wayset,
-                         const QSharedPointer<PlanningProblem>& problem,
-                         qreal * scoreOut = 0,
-                         bool * timingOut = 0,
-                         bool * dependOut = 0);
+    static SimulatedFlierResults simulate(const Wayset& wayset,
+                                          const QSharedPointer<PlanningProblem>& problem);
 };
 
 #endif // SIMULATEDFLIER_H
