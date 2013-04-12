@@ -36,7 +36,11 @@ public:
     void setTimeRequired(qreal nTime);
     
 private:
+    void _calculateBins(const QPolygonF& geoPoly);
     qreal _timeRequired;
+
+    QPolygonF _lastGeoPoly;
+    QVector<Position> _bins;
     
 };
 
