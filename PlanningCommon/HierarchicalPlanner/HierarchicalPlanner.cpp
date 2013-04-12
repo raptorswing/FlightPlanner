@@ -9,6 +9,7 @@
 #include "DubinsIntermediate/DubinsIntermediatePlanner.h"
 
 #include <QMap>
+#include <QtCore>
 #include <cmath>
 #include <limits>
 
@@ -106,13 +107,18 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
     //Then loop through all of the areas and find good points that could be start or end
     //Make the start point the one that is closest to the average computed above
-    const qreal stepSize = 30.0; //meters
+    const qreal stepSize = 20.0; //meters
     foreach(const QSharedPointer<FlightTaskArea>& area, _tasks2areas.values())
     {
         const QRectF boundingRect = area->geoPoly().boundingRect();
         const Position centerPos(boundingRect.center());
 
-        qreal mostDistance = std::numeric_limits<qreal>::min();
+        const qreal lonPerMeter = Conversions::degreesLonPerMeter(centerPos.longitude());
+        const qreal latPerMeter = Conversions::degreesLatPerMeter(centerPos.latitude());
+        const qreal bbWidthMeters = boundingRect.width() / lonPerMeter;
+        const qreal bbHeightMeters = boundingRect.height() / latPerMeter;
+
+        qreal mostDistance = -500000;
         Position bestPoint1;
         Position bestPoint2;
         for (int angleDeg = 0; angleDeg < 179; angleDeg++)
@@ -124,30 +130,39 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
                                    sin(angleDeg * 180.0 / 3.14159265));
 
             int count = 0;
+            const int maxCount = qCeil(sqrt(pow(bbWidthMeters / 2.0, 2.0) + pow(bbHeightMeters / 2.0, 2.0)) / stepSize) + 1;
             Position pos;
             Position neg;
-            while (!gotPos || !gotNeg)
+            bool lastPosSense = false;
+            bool lastNegSense = false;
+            while (count <= maxCount)
             {
                 const QPointF posOffset = count * stepSize * dirVec.toPointF();
                 const QPointF negOffset = count * stepSize * -1 * dirVec.toPointF();
                 const QPointF trialPointPos = centerPos.flatOffsetToPosition(posOffset).lonLat();
                 const QPointF trialPointNeg = centerPos.flatOffsetToPosition(negOffset).lonLat();
 
-                if (!area->geoPoly().containsPoint(trialPointPos, Qt::OddEvenFill)
-                        && !gotPos)
+                const bool posSense = area->geoPoly().containsPoint(trialPointPos, Qt::OddEvenFill);
+                const bool negSense = area->geoPoly().containsPoint(trialPointNeg, Qt::OddEvenFill);
+                if (!posSense && lastPosSense)
                 {
                     pos = trialPointPos;
                     gotPos = true;
                 }
 
-                if (!area->geoPoly().containsPoint(trialPointNeg, Qt::OddEvenFill)
-                        && !gotNeg)
+                if (!negSense && lastNegSense)
                 {
                     neg = trialPointNeg;
                     gotNeg = true;
                 }
+
+                lastPosSense = posSense;
+                lastNegSense = negSense;
                 count++;
             }
+
+            if (!gotPos || !gotNeg)
+                continue;
 
             const qreal distance = pos.flatDistanceEstimate(neg);
             if (distance > mostDistance)
