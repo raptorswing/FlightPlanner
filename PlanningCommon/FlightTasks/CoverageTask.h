@@ -39,7 +39,7 @@ public:
     qreal maxDistance() const;
     void setMaxDistance(qreal maxDist);
     
-//private:
+private:
     void _calculateBins(const QPolygonF& geoPoly);
 
     QPolygonF _lastGeoPoly;
