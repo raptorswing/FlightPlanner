@@ -49,7 +49,9 @@ SOURCES += \
     UAVPose.cpp \
     SimulatedFlier.cpp \
     Exporters/BinaryExporter.cpp \
-    Importers/BinaryImporter.cpp
+    Importers/BinaryImporter.cpp \
+    gui/ChatWidget.cpp \
+    UserStudyChatHandler.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -90,7 +92,9 @@ HEADERS +=\
     UAVPose.h \
     SimulatedFlier.h \
     Exporters/BinaryExporter.h \
-    Importers/BinaryImporter.h
+    Importers/BinaryImporter.h \
+    gui/ChatWidget.h \
+    UserStudyChatHandler.h
 
 unix:!symbian {
     maemo5 {
@@ -140,3 +144,6 @@ else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
 
 INCLUDEPATH += $$PWD/../GPX
 DEPENDPATH += $$PWD/../GPX
+
+FORMS += \
+    gui/ChatWidget.ui

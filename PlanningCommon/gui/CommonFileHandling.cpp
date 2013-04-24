@@ -5,6 +5,7 @@
 #include "Importers/GPXImporter.h"
 #include "Exporters/GPXExporter.h"
 
+#include <QCoreApplication>
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
@@ -89,6 +90,29 @@ QSharedPointer<PlanningProblem> CommonFileHandling::readProblemFromFile(QWidget 
 
     QDataStream stream(&fp);
     toRet = QSharedPointer<PlanningProblem>(new PlanningProblem(stream));
+
+    return toRet;
+}
+
+//static
+bool CommonFileHandling::writeChatResponseResults(UserStudyChatHandler *handler)
+{
+    bool toRet;
+
+    const QString filename = QCoreApplication::applicationName() + "-ChatResponse.csv";
+    QFile fp(filename);
+    if (fp.open(QFile::WriteOnly | QFile::Text))
+    {
+        QByteArray toWrite;
+        toWrite.append(handler->toString());
+        fp.write(toWrite);
+        toRet = true;
+    }
+    else
+    {
+        qWarning() << "Failed to write chat response";
+        toRet = false;
+    }
 
     return toRet;
 }

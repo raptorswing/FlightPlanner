@@ -11,6 +11,7 @@
 #include "PlanningProblem.h"
 #include "FlightPlanner.h"
 #include "ProblemViewAdapter.h"
+#include "UserStudyChatHandler.h"
 
 #include "WaysetDisplayManager.h" //From PlanningCommon
 
@@ -67,6 +68,8 @@ private:
     QPointer<ProblemViewAdapter> _viewAdapter;
 
     QPointer<WaysetDisplayManager> _waysetManager;
+
+    UserStudyChatHandler * _chatHandler;
 };
 
 #endif // MAINWINDOW_H

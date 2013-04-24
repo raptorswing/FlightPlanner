@@ -32,11 +32,17 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 
     //A hack to make initial map centering work right.
     QTimer::singleShot(1, this, SLOT(doInitialMapCentering()));
+
+    _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
 }
 
 WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
 {
     CommonWindowHandling::storeGeometry(this);
+
+    //Write user study results
+    CommonFileHandling::writeChatResponseResults(_chatHandler);
+
     delete ui;
 }
 

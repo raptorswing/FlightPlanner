@@ -12,6 +12,8 @@
 
 #include "PlanningProblem.h"
 
+#include "UserStudyChatHandler.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -71,6 +73,8 @@ private:
     WaysetDisplayManager * _waysetManager;
 
     QPointer<PolygonObject> _coveragePolygon;
+
+    UserStudyChatHandler * _chatHandler;
 };
 
 #endif // WAYPOINTPLANNERMAINWINDOW_H

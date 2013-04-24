@@ -32,12 +32,18 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initPlanningProblem();
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
+
+    //Do chat messages for the user study...
+    _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
 }
 
 MainWindow::~MainWindow()
 {
     //Store window geometry
     CommonWindowHandling::storeGeometry(this);
+
+    //Write user study results
+    CommonFileHandling::writeChatResponseResults(_chatHandler);
 
     delete ui;
 }

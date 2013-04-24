@@ -8,6 +8,7 @@
 #include "Exporters/Exporter.h"
 
 #include "PlanningProblem.h"
+#include "UserStudyChatHandler.h"
 
 #include "PlanningCommon_global.h"
 
@@ -23,6 +24,8 @@ public:
 
     static QSharedPointer<PlanningProblem> readProblemFromFile(QWidget * parent,
                                                                const QString& filePath);
+
+    static bool writeChatResponseResults(UserStudyChatHandler * handler);
 };
 
 #endif // COMMONFILEHANDLING_H
