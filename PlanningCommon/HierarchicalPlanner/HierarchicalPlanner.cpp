@@ -265,6 +265,7 @@ bool HierarchicalPlanner::_buildSchedule()
     //This hash stores node:(transition flight to reach node) relationships
     QHash<QVectorND, Wayset > transitionFlights;
 
+    //This hash stores the actual A* "cost so far" to reach a node.
     QHash<QVectorND, qreal> actualCosts;
 
     QMultiMap<qreal, QVectorND> worklist;
@@ -320,12 +321,15 @@ bool HierarchicalPlanner::_buildSchedule()
             Wayset transitionFlight;
 
             /*
-             * The heuristic is the amount of time to fly all remaining tasks assuming no-cost
+             * The heuristic is the estimated amount of time to fly all remaining tasks assuming no-cost
              * transitions and no obstacles.
              */
-            qreal heuristic = (endState - newState).manhattanDistance();
+            const qreal heuristic = (endState - newState).manhattanDistance();
+
+            //If this is the first step from start then we use one of our start transition flights
             if (!lastTasks.contains(state))
                 transitionFlight = _startTransitionSubFlights.value(area);
+            //If we're going to keep working on the same task as before there is not transition
             else if (lastTasks.value(state) == i)
             {
                 //Nothing to do here?
@@ -361,8 +365,22 @@ bool HierarchicalPlanner::_buildSchedule()
 
             //The time (if any) needed to fly the transition flight to this task
             const qreal transitionTime = transitionFlight.timeToFly(params);
+
+            /*
+             *The time (in total mission time) at which the next chunk of the next task would be started.
+             *(Note that "next task" could be the same as previous task and transitionTime could be zero)
+             */
             startTime = actualCosts.value(state) + transitionTime;
+
+            /*
+             *The time (in total mission time) at which the next chunk of the next task would be finished
+             *("Next task" could be same as previous task.)
+             *Generally this will just be startTime + TIMESLICE, unless there is less than TIMESLICE of
+             *the task remaining to be done.
+             */
             endTime = startTime + newState[i] - state[i];
+
+            //The total cost of everything up to and including the move we'll make
             const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
 
             //Check dependency constraints
