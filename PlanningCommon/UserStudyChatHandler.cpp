@@ -6,17 +6,33 @@
 #include <QtDebug>
 #include <QMapIterator>
 
+#include <random>
+
+const qreal FOREGROUND_MEAN = 15000;
+const qreal FOREGROUND_STDEV = 13000;
+
+const qreal BACKGROUND_MEAN = 7500;
+const qreal BACKGROUND_STDEV = 5500;
+
 UserStudyChatHandler::UserStudyChatHandler(ChatWidget *widget,
                                            QObject *parent) :
     QObject(parent), _chatWidget(widget), _lastForegroundCode(-50)
 {
-    QTimer * timer = new QTimer(this);
-    connect(timer,
+
+    _foregroundTimer = new QTimer(this);
+    _backgroundTimer = new QTimer(this);
+
+    connect(_foregroundTimer,
             SIGNAL(timeout()),
             this,
-            SLOT(possiblyGenerateChatEvent()));
-    timer->start(1000);
+            SLOT(generateForegroundEvent()));
+    connect(_backgroundTimer,
+            SIGNAL(timeout()),
+            this,
+            SLOT(generateBackgroundEvent()));
 
+    this->changeTimerInterval(_foregroundTimer, FOREGROUND_MEAN, FOREGROUND_STDEV);
+    this->changeTimerInterval(_backgroundTimer, BACKGROUND_MEAN, BACKGROUND_STDEV);
 
     connect(this,
             SIGNAL(messageGenerated(QString,QString)),
@@ -112,19 +128,6 @@ void UserStudyChatHandler::handleUserMessage(const QString &msg)
 }
 
 //private slot
-void UserStudyChatHandler::possiblyGenerateChatEvent()
-{
-    if (qrand() % 10 <= 0)
-    {
-        if (qrand() % 2 <= 0)
-            this->generateForegroundEvent();
-        else
-            this->generateBackgroundEvent();
-    }
-
-}
-
-//private slot
 void UserStudyChatHandler::generateBackgroundEvent()
 {
     const int teammateNumber = (qrand() % 300) + 1;
@@ -148,6 +151,8 @@ void UserStudyChatHandler::generateBackgroundEvent()
     }
 
     this->messageGenerated(sender, message);
+
+    this->changeTimerInterval(_backgroundTimer, BACKGROUND_MEAN, BACKGROUND_STDEV);
 }
 
 //private slot
@@ -161,4 +166,25 @@ void UserStudyChatHandler::generateForegroundEvent()
 
     _lastForegroundTime = QDateTime::currentDateTimeUtc();
     _lastForegroundCode = codeNumber;
+
+    this->changeTimerInterval(_foregroundTimer, FOREGROUND_MEAN, FOREGROUND_STDEV);
+}
+
+//private
+void UserStudyChatHandler::changeTimerInterval(QTimer *timer,
+                                               qreal meanMS,
+                                               qreal stdDev)
+{
+    std::default_random_engine generator;
+    generator.seed(qrand());
+    std::normal_distribution<qreal> normal(meanMS, stdDev);
+
+    qreal nextMS = -50;
+    while (nextMS < 0)
+        nextMS = normal(generator);
+
+    if (timer->isActive())
+        timer->setInterval(nextMS);
+    else
+        timer->start(nextMS);
 }

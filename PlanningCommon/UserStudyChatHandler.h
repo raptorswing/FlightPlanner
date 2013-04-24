@@ -8,6 +8,7 @@
 #include <QPointer>
 #include <QMap>
 #include <QDateTime>
+#include <QTimer>
 
 class PLANNINGCOMMONSHARED_EXPORT UserStudyChatHandler : public QObject
 {
@@ -25,12 +26,15 @@ public slots:
 
 private slots:
     void handleUserMessage(const QString& msg);
-    void possiblyGenerateChatEvent();
     void generateBackgroundEvent();
     void generateForegroundEvent();
 
 private:
+    void changeTimerInterval(QTimer * timer, qreal meanMS, qreal stdDev);
     QPointer<ChatWidget> _chatWidget;
+
+    QTimer * _foregroundTimer;
+    QTimer * _backgroundTimer;
 
     QStringList _backgroundMessages;
     QStringList _naturalFeatures;
