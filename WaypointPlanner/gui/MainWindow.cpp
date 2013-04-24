@@ -22,6 +22,8 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     this->ui->setupUi(this);
+
+    qsrand(QDateTime::currentMSecsSinceEpoch());
     CommonWindowHandling::restoreGeometry(this);
 
     this->initProblem();
