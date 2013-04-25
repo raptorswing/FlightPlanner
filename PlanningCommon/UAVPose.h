@@ -29,6 +29,9 @@ public:
     virtual QString serializationType() const;
     virtual void serialize(QDataStream& stream) const;
 
+    bool operator ==(const UAVPose& other) const;
+    bool operator !=(const UAVPose& other) const;
+
 private:
     Position _pos;
     UAVOrientation _angle;

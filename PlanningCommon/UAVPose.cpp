@@ -53,6 +53,17 @@ void UAVPose::serialize(QDataStream &stream) const
     this->angle().serialize(stream);
 }
 
+bool UAVPose::operator ==(const UAVPose &other) const
+{
+    return (_pos == other._pos
+            && _angle == other._angle);
+}
+
+bool UAVPose::operator !=(const UAVPose &other) const
+{
+    return !(*this == other);
+}
+
 //non-member
 QDebug operator<<(QDebug dbg, const UAVPose& pose)
 {
