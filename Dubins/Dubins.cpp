@@ -47,7 +47,7 @@ qreal Dubins::length() const
     return dubins_path_length(_guts.data());
 }
 
-bool Dubins::sample(qreal t, QPointF &outPos, qreal &outAngle)
+bool Dubins::sample(qreal t, QPointF &outPos, qreal &outAngle) const
 {
     qreal output[3];
     const int zeroIfGood = dubins_path_sample(_guts.data(), t, output);

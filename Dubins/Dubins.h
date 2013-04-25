@@ -28,7 +28,7 @@ public:
     bool isValid() const;
 
     qreal length() const;
-    bool sample(qreal t, QPointF& outPos, qreal& outAngle);
+    bool sample(qreal t, QPointF& outPos, qreal& outAngle) const;
 
     const QPointF& firstPosition() const;
     const QPointF& secondPosition() const;
