@@ -35,6 +35,12 @@ public:
     QList<Dubins> dubins(const UAVParameters& uavParams) const;
     void optimizeAngles(const UAVParameters& uavParams);
 
+    UAVPose sampleAtTime(qreal desiredTime, const UAVParameters& uavParams) const;
+    UAVPose sampleAtDistance(qreal distance, const UAVParameters& uavParams) const;
+
+    qreal distToPose(const UAVPose& pose, const UAVParameters& uavParams) const;
+    qreal distToPoseIndex(int index, const UAVParameters& uavParams) const;
+
     void clear();
 
     void append(const UAVPose& pos);

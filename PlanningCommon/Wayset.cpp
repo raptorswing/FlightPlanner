@@ -225,7 +225,95 @@ void Wayset::optimizeAngles(const UAVParameters &uavParams)
 //            }
 //        }
 //        _poses[i].setAngle(bestAngleSoFar);
-//    }
+    //    }
+}
+
+UAVPose Wayset::sampleAtTime(qreal desiredTime, const UAVParameters &uavParams) const
+{
+    const qreal desiredDist = desiredTime * uavParams.airspeed();
+    return this->sampleAtDistance(desiredDist, uavParams);
+}
+
+UAVPose Wayset::sampleAtDistance(qreal desiredDistance, const UAVParameters& uavParams) const
+{
+    qreal maxDist = 0.0;
+    const QList<Dubins> dubins = this->dubins(uavParams);
+
+    foreach(const Dubins& dubin, dubins)
+        maxDist += dubin.length();
+
+    if (desiredDistance < 0.0 || desiredDistance >= maxDist)
+    {
+        qWarning() << "sampleAtDistance beyond valid distance window." << desiredDistance;
+        return UAVPose();
+    }
+
+    //The total distance of all segments traversed so far
+    qreal distSoFar = 0.0;
+
+    UAVPose toRet;
+
+    for (int i = 0; i < _poses.size() - 1; i++)
+    {
+        //The next segment of the path
+        const Dubins& dubin = dubins.at(i);
+
+        //How long is this segment of the path?
+        const qreal distAddition = dubin.length();
+
+        if (distSoFar + distAddition > desiredDistance)
+        {
+            const qreal subDistToSample = desiredDistance - distSoFar;
+
+            QPointF offsetMeters;
+            qreal angle;
+            dubin.sample(subDistToSample, offsetMeters, angle);
+
+            const UAVPose& offsetBasePose = _poses.at(i);
+            const Position& offsetBase = offsetBasePose.pos();
+            const Position newPosition = offsetBase.flatOffsetToPosition(offsetMeters);
+
+            toRet = UAVPose(newPosition, angle);
+            break;
+        }
+
+        distSoFar += distAddition;
+    }
+
+    return toRet;
+}
+
+qreal Wayset::distToPose(const UAVPose &pose, const UAVParameters &uavParams) const
+{
+    int indexOf = _poses.indexOf(pose);
+
+    if (indexOf < 0)
+    {
+        qWarning() << "Unknown pose in distToPose";
+        return 0.0;
+    }
+
+    return this->distToPoseIndex(indexOf, uavParams);
+}
+
+qreal Wayset::distToPoseIndex(int index, const UAVParameters &uavParams) const
+{
+    if (index <= 0 || index >= _poses.size())
+    {
+        qWarning() << "Bad index in distToPoseIndex";
+        return 0.0;
+    }
+
+    const QList<Dubins> dubins = this->dubins(uavParams);
+
+    qreal distSoFar = 0.0;
+    for (int i = 0; i <= index; i++)
+    {
+        const Dubins& dubin = dubins.at(i);
+        distSoFar += dubin.length();
+    }
+
+    return distSoFar;
 }
 
 void Wayset::clear()
