@@ -76,7 +76,7 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
 
         toRet += enticement;
     }
-    return toRet;
+    return qMin<qreal>(toRet, this->maxTaskPerformance());
 }
 
 //virtual from FlightTask
