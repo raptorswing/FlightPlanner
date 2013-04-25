@@ -225,7 +225,7 @@ void HierarchicalPlanner::_buildSubFlights()
         const Position& start = _areaStartPositions.value(area);
         const UAVOrientation& startPose = _areaStartOrientations.value(area);
 
-        qDebug() << "Build sub-flight for" << task.data() << area.data() << start << startPose;
+        qDebug() << "Build sub-flight for" << task->taskName() << area->areaName() << start << startPose;
 
         SubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
         planner.plan();
