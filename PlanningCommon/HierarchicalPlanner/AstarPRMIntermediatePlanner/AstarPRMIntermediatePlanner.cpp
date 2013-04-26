@@ -26,9 +26,6 @@ bool AstarPRMIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(this->startPos().latitude());
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(this->startPos().latitude());
-
     QMultiMap<qreal, Position> workList;
     QHash<Position, Position> parents;
     QSet<Position> closedSet;
@@ -72,8 +69,8 @@ bool AstarPRMIntermediatePlanner::plan()
             {
                 if (xd == 0 && xy == 0)
                     continue;
-                const Position neighbor(current.longitude() + xd * GRANULARITY * lonPerMeter,
-                                        current.latitude() + xy * GRANULARITY * latPerMeter);
+                const Position neighbor = current.flatOffsetToPosition(QPointF(xd * GRANULARITY,
+                                                                               xy * GRANULARITY));
 
                 //Check closed set
                 if (closedSet.contains(neighbor))
@@ -140,4 +137,5 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
     }
 
     _results = temp.resample(this->uavParams().waypointInterval(), this->uavParams());
+
 }
