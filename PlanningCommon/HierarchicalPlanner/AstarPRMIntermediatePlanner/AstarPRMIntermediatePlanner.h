@@ -14,7 +14,10 @@ public:
                                 const UAVOrientation& endAngle,
                                 const QList<QPolygonF>& obstacles);
 
+    //pure-virtual from IntermediatePlanner
     virtual bool plan();
+
+    //pure-virtual from IntermediatePlanner
     virtual Wayset results() const;
 
 private:

@@ -21,6 +21,7 @@ AstarPRMIntermediatePlanner::AstarPRMIntermediatePlanner(const UAVParameters& ua
 {
 }
 
+//pure-virtual from IntermediatePlanner
 bool AstarPRMIntermediatePlanner::plan()
 {
     _results.clear();
@@ -106,6 +107,7 @@ bool AstarPRMIntermediatePlanner::plan()
     return false;
 }
 
+//pure-virtual from IntermediatePlanner
 Wayset AstarPRMIntermediatePlanner::results() const
 {
     return _results;
