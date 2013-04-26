@@ -5,8 +5,7 @@
 #include "QVectorND.h"
 #include "SubFlightPlanner/SubFlightPlanner.h"
 #include "SubFlightPlanner/SubFlightNode.h"
-#include "AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h"
-#include "DubinsIntermediate/DubinsIntermediatePlanner.h"
+#include "SmartIntermediatePlanner.h"
 
 #include <QMap>
 #include <QtCore>
@@ -547,17 +546,14 @@ Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
                                                                const Position &endPos,
                                                                const UAVOrientation &endPose)
 {
-    //qDebug() << "Intermediate from" << startPos << startPose.radians() << "to" << endPos << endPose.radians();
-    //Adjust the positions backwards a little bit along their angles?
-
-    //    DubinsIntermediatePlanner * intermed = new DubinsIntermediatePlanner(this->problem()->uavParameters(),
-    //                                                                         startPos, startPose,
-    //                                                                         endPos, endPose,
-    //                                                                         _obstacles);
-    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
-                                                                             startPos, startPose,
-                                                                             endPos, endPose,
-                                                                             _obstacles);
+//    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
+//                                                                             startPos, startPose,
+//                                                                             endPos, endPose,
+//                                                                             _obstacles);
+    SmartIntermediatePlanner * intermed = new SmartIntermediatePlanner(this->problem()->uavParameters(),
+                                                                       startPos, startPose,
+                                                                       endPos, endPose,
+                                                                       _obstacles);
     intermed->plan();
     Wayset toRet = intermed->results();
     delete intermed;
