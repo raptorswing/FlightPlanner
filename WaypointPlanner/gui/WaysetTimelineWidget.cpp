@@ -5,6 +5,7 @@
 WaysetTimelineWidget::WaysetTimelineWidget(QWidget *parent) :
     QWidget(parent)
 {
+    this->setMinimumHeight(50);
 }
 
 const Wayset &WaysetTimelineWidget::currentWayset() const
