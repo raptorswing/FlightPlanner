@@ -13,6 +13,7 @@ typedef struct SimulatedFlierResults
     qreal pointsPossible;
     QSet<QSharedPointer<FlightTask> > timingViolations;
     QSet<QSharedPointer<FlightTask> > dependencyViolations;
+    QSet<QSharedPointer<FlightTaskArea> > noFlyViolations;
 } SimulatedFlierResults;
 
 class PLANNINGCOMMONSHARED_EXPORT SimulatedFlier

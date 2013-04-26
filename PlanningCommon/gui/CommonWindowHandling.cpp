@@ -75,7 +75,9 @@ void CommonWindowHandling::showFlightTestResults(QWidget *parent,
                                                  SimulatedFlierResults results)
 {
     QString message;
-    if (results.dependencyViolations.isEmpty() && results.timingViolations.isEmpty())
+    if (results.dependencyViolations.isEmpty()
+            && results.timingViolations.isEmpty()
+            && results.noFlyViolations.isEmpty())
         message = "Flight satisfies all constraints.";
     else
     {
@@ -84,6 +86,8 @@ void CommonWindowHandling::showFlightTestResults(QWidget *parent,
             message += "\nFlight violates timing constraints.";
         if (!results.dependencyViolations.isEmpty())
             message += "\nFlight violates dependency constraints.";
+        if (!results.noFlyViolations.isEmpty())
+            message += "\nFlight violates no-fly zones.";
 
     }
 

@@ -13,13 +13,18 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
     QHash<QSharedPointer<FlightTask>, qreal> taskStartTimes;
     QHash<QSharedPointer<FlightTask>, qreal> taskEndTimes;
 
+    QList<QSharedPointer<FlightTaskArea> > obstacles;
+
     //Sum-up performance on tasks
     foreach(const QSharedPointer<FlightTaskArea> area, problem->areas())
     {
         foreach(const QSharedPointer<FlightTask> task, area->tasks())
         {
             if (task->taskType() == "No-Fly Zone")
+            {
+                obstacles.append(area);
                 continue;
+            }
 
             qreal taskStart = -1;
             qreal taskEnd = -1;
@@ -41,6 +46,7 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
     }
 
 
+    //Figure out timing and dependency constraint violations
     QSet<QSharedPointer<FlightTask> > timingViolators;
     QSet<QSharedPointer<FlightTask> > dependencyViolators;
     foreach(const QSharedPointer<FlightTaskArea> area, problem->areas())
@@ -89,6 +95,22 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
         }
     }
 
+    //Find no-fly/obstacle violations
+    QSet<QSharedPointer<FlightTaskArea> > noFlyViolations;
+    Wayset resampled = wayset.resample(problem->uavParameters().waypointInterval(),
+                                       problem->uavParameters());
+    foreach(const Position& pos, resampled.positions())
+    {
+        const QPointF lonLat = pos.lonLat();
+        foreach(const QSharedPointer<FlightTaskArea>& area, obstacles)
+        {
+            const QPolygonF& obsPoly = area->geoPoly();
+            if (obsPoly.containsPoint(lonLat, Qt::OddEvenFill))
+                noFlyViolations.insert(area);
+        }
+    }
+
+
     qDebug() << "max possible score" << maxScore;
 
     SimulatedFlierResults toRet;
@@ -96,6 +118,7 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
     toRet.pointsPossible = maxScore;
     toRet.dependencyViolations = dependencyViolators;
     toRet.timingViolations = timingViolators;
+    toRet.noFlyViolations = noFlyViolations;
 
     return toRet;
 }
