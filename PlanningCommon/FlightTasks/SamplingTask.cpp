@@ -68,7 +68,9 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
 
         if (firstProgressIndex == -1)
             firstProgressIndex = i;
-        lastProgressIndex = i;
+
+        if (toRet < _timeRequired)
+            lastProgressIndex = i;
 
         //Estimate the amount of time flown within the area, presumably sampling while doing so
         toRet += uavParams.waypointInterval() / uavParams.airspeed();
