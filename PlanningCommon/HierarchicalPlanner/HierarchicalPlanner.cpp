@@ -106,7 +106,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
     //Then loop through all of the areas and find good points that could be start or end
     //Make the start point the one that is closest to the average computed above
-    const qreal stepSize = 20.0; //meters
+    const qreal stepSize = 5.0; //meters
     foreach(const QSharedPointer<FlightTaskArea>& area, _tasks2areas.values())
     {
         const QRectF boundingRect = area->geoPoly().boundingRect();
@@ -118,22 +118,19 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         const qreal bbHeightMeters = boundingRect.height() / latPerMeter;
 
         qreal mostDistance = -500000;
-        Position bestPoint1;
-        Position bestPoint2;
+        Position bestPoint1(area->geoPoly().first());
+        Position bestPoint2(area->geoPoly().first());
         for (int angleDeg = 0; angleDeg < 179; angleDeg++)
         {
-            bool gotPos = false;
-            bool gotNeg = false;
-
             const QVector2D dirVec(cos(angleDeg * 180.0 / 3.14159265),
                                    sin(angleDeg * 180.0 / 3.14159265));
 
             int count = 0;
             const int maxCount = qCeil(sqrt(pow(bbWidthMeters / 2.0, 2.0) + pow(bbHeightMeters / 2.0, 2.0)) / stepSize) + 1;
-            Position pos;
-            Position neg;
             bool lastPosSense = false;
             bool lastNegSense = false;
+            QList<Position> posChanges;
+            QList<Position> negChanges;
             while (count <= maxCount)
             {
                 const QPointF posOffset = count * stepSize * dirVec.toPointF();
@@ -143,41 +140,49 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
 
                 const bool posSense = area->geoPoly().containsPoint(trialPointPos, Qt::OddEvenFill);
                 const bool negSense = area->geoPoly().containsPoint(trialPointNeg, Qt::OddEvenFill);
-                if (!posSense && lastPosSense)
-                {
-                    pos = trialPointPos;
-                    gotPos = true;
-                }
+                if (posSense != lastPosSense)
+                    posChanges.append(trialPointPos);
 
-                if (!negSense && lastNegSense)
-                {
-                    neg = trialPointNeg;
-                    gotNeg = true;
-                }
+                if (negSense != lastNegSense)
+                    negChanges.append(trialPointNeg);
 
                 lastPosSense = posSense;
                 lastNegSense = negSense;
                 count++;
             }
 
-            if (!gotPos || !gotNeg)
+            Position candidateA, candidateB;
+            if (posChanges.size() + negChanges.size() <= 1)
                 continue;
+            else if (posChanges.isEmpty())
+            {
+                candidateA = negChanges.first();
+                candidateB = negChanges.last();
+            }
+            else if (negChanges.isEmpty())
+            {
+                candidateA = posChanges.first();
+                candidateB = posChanges.last();
+            }
+            else
+            {
+                candidateA = posChanges.last();
+                candidateB = negChanges.last();
+            }
 
-            const qreal distance = pos.flatDistanceEstimate(neg);
+
+            const qreal distance = candidateA.flatDistanceEstimate(candidateB);
             if (distance > mostDistance)
             {
                 mostDistance = distance;
-                bestPoint1 = pos;
-                bestPoint2 = neg;
+                bestPoint1 = candidateA;
+                bestPoint2 = candidateB;
             }
         }
 
-        Position start;
-        Position end;
-
         //The point closest to all the other areas will be the start
-        start = bestPoint2;
-        end = bestPoint1;
+        Position start = bestPoint2;
+        Position end = bestPoint1;
         if (end.flatDistanceEstimate(avgPos) < start.flatDistanceEstimate(avgPos))
         {
             start = bestPoint1;
@@ -185,6 +190,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         }
 
         _areaStartPositions.insert(area, start);
+        qDebug() << "Start for" << area << "at" << start;
 
         const qreal angleRads = start.angleTo(end);
         const UAVOrientation orientation(angleRads);
@@ -218,6 +224,7 @@ void HierarchicalPlanner::_buildStartTransitions()
 //private
 void HierarchicalPlanner::_buildSubFlights()
 {
+    qDebug() << "Building sub flights";
     foreach(const QSharedPointer<FlightTask>& task, _tasks)
     {
         const QSharedPointer<FlightTaskArea>& area = _tasks2areas.value(task);
