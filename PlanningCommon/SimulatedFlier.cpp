@@ -4,13 +4,14 @@
 SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
                                                const QSharedPointer<PlanningProblem> &problem)
 {
-    const qreal subSampleDist = 5.0;
-    UAVParameters fudgeParams = problem->uavParameters();
-    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 0.99);
-    const Wayset subSample = wayset.resample(subSampleDist, fudgeParams);
-
     qreal maxScore = 0.0;
     qreal score = 0.0;
+
+    UAVParameters fudgeParams = problem->uavParameters();
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 0.98);
+
+    QHash<QSharedPointer<FlightTask>, qreal> taskStartTimes;
+    QHash<QSharedPointer<FlightTask>, qreal> taskEndTimes;
 
     //Sum-up performance on tasks
     foreach(const QSharedPointer<FlightTaskArea> area, problem->areas())
@@ -19,101 +20,72 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
         {
             if (task->taskType() == "No-Fly Zone")
                 continue;
-            const qreal subScore = task->calculateFlightPerformance(subSample,
+
+            qreal taskStart = -1;
+            qreal taskEnd = -1;
+            const qreal subScore = task->calculateFlightPerformance(wayset,
                                                                     area->geoPoly(),
                                                                     fudgeParams,
-                                                                    false);
+                                                                    false,
+                                                                    &taskStart, &taskEnd);
             score += subScore;
             maxScore += task->maxTaskPerformance();
-        }
-    }
 
-    /*
-     *Find all the points in the Wayset where progress is made on the tasks.
-     *Summarize it as a start and end time.
-     *Also, we check our timing constraints in these loops
-    */
-    Wayset subSubSample;
-    QHash<QSharedPointer<FlightTask>, qreal> lastProgress;
-    QHash<QSharedPointer<FlightTask>, qreal> progressStart;
-    QHash<QSharedPointer<FlightTask>, qreal> progressEnd;
-    QSet<QSharedPointer<FlightTask> > timingViolators;
-    for (int i = 0; i < subSample.size(); i++)
-    {
-        subSubSample.append(subSample.at(i));
-        const qreal dist = subSampleDist * i;
-        const qreal time = dist / problem->uavParameters().airspeed();
-
-        foreach(const QSharedPointer<FlightTaskArea> area, problem->areas())
-        {
-            foreach(const QSharedPointer<FlightTask> task, area->tasks())
+            qDebug() << "Task progress for" << task->taskName() << " occurred during" << taskStart << taskEnd;
+            if (taskStart != -1 && taskEnd != -1)
             {
-                if (task->taskType() == "No-Fly Zone")
-                    continue;
-
-                const qreal subScore = task->calculateFlightPerformance(subSubSample,
-                                                                        area->geoPoly(),
-                                                                        fudgeParams,
-                                                                        false);
-
-                /*
-                 *If our subscore is zero at this point or if it didn't change then we
-                 *didn't make any progress at this step
-                */
-                if (subScore == 0.0)
-                    continue;
-                else if (lastProgress.contains(task) && lastProgress.value(task) >= subScore)
-                    continue;
-                lastProgress.insert(task, subScore);
-
-                if (!progressStart.contains(task))
-                    progressStart.insert(task, time);
-
-                progressEnd.insert(task, time);
-
-                //If we made progress at this time then we need to check timing constraints
-                bool timingSatisfied = false;
-                foreach(const TimingConstraint& tc, task->timingConstraints())
-                {
-                    if (time < tc.start() || time > tc.end())
-                        continue;
-                    timingSatisfied = true;
-                    break;
-                }
-                if (!timingSatisfied)
-                    timingViolators.insert(task);
+                taskStartTimes.insert(task, taskStart);
+                taskEndTimes.insert(task, taskEnd);
             }
         }
     }
 
 
-    //Evaluate dependency constraints
+    QSet<QSharedPointer<FlightTask> > timingViolators;
     QSet<QSharedPointer<FlightTask> > dependencyViolators;
     foreach(const QSharedPointer<FlightTaskArea> area, problem->areas())
     {
         foreach(const QSharedPointer<FlightTask> task, area->tasks())
         {
-            //If this task didn't make any progress then it can't have violated dependencies
-            if (!progressStart.contains(task))
+            if (!taskStartTimes.contains(task))
                 continue;
 
-            const qreal ourStartTime = progressStart.value(task);
+            qreal startTime = taskStartTimes.value(task);
+            qreal endTime = taskEndTimes.value(task);
 
-            foreach(const QWeakPointer<FlightTask>& weakDep, task->dependencyConstraints())
+            const QList<TimingConstraint>& constraints = task->timingConstraints();
+
+            bool timingSatisfied = false;
+            foreach(const TimingConstraint& tc, constraints)
             {
-                QSharedPointer<FlightTask> dep = weakDep.toStrongRef();
-                if (dep.isNull())
+                if (startTime < tc.start() || startTime > tc.end())
                     continue;
-
-                //If our dependency didn't make any progress then we've trivially violated it
-                //Also violated if we made progress before the dependency ended.
-                if (!progressEnd.contains(dep)
-                        || progressEnd.value(dep) > ourStartTime)
+                else if (endTime < tc.start() || endTime > tc.end())
+                    continue;
+                else
                 {
-                    dependencyViolators.insert(task);
+                    timingSatisfied = true;
                     break;
                 }
             }
+
+            if (!timingSatisfied)
+                timingViolators.insert(task);
+
+
+            const QList<QWeakPointer<FlightTask> >& dependencies = task->dependencyConstraints();
+            foreach(const QWeakPointer<FlightTask>& dep, dependencies)
+            {
+                QSharedPointer<FlightTask> strong = dep.toStrongRef();
+                if (strong.isNull())
+                    continue;
+
+                if (!taskStartTimes.contains(strong))
+                    dependencyViolators.insert(task);
+                else if (startTime <= taskEndTimes.value(strong))
+                    dependencyViolators.insert(task);
+            }
+
         }
     }
 

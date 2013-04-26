@@ -105,7 +105,9 @@ void CommonWindowHandling::simulateFlightAndShowResults(QWidget *parent,
                                                         const Wayset &wayset,
                                                         const QSharedPointer<PlanningProblem> &problem)
 {
-    const SimulatedFlierResults results = SimulatedFlier::simulate(wayset, problem);
+    const Wayset subsample = wayset.resample(problem->uavParameters().waypointInterval(),
+                                             problem->uavParameters());
+    const SimulatedFlierResults results = SimulatedFlier::simulate(subsample, problem);
     CommonWindowHandling::showFlightTestResults(parent, results);
 }
 

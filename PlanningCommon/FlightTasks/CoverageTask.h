@@ -28,8 +28,10 @@ public:
 
     virtual qreal calculateFlightPerformance(const Wayset& wayset,
                                              const QPolygonF& geoPoly,
-                                             const UAVParameters& uavParams,
-                                             bool includeEnticement = true);
+                                             const UAVParameters& params,
+                                             bool includeEnticement = true,
+                                             qreal * progressStartOut = 0,
+                                             qreal * progressEndOut = 0);
 
     virtual qreal maxTaskPerformance() const;
 
@@ -44,7 +46,6 @@ private:
 
     QPolygonF _lastGeoPoly;
     QVector<Position> _bins;
-    QVector<QVector3D> _xyzBins;
 
     qreal _granularity;
     qreal _maxDistance;

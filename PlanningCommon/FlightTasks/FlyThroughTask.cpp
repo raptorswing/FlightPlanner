@@ -33,14 +33,27 @@ QString FlyThroughTask::taskType() const
 
 qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
                                                  const QPolygonF &geoPoly,
-                                                 const UAVParameters &,
-                                                 bool includeEnticement)
+                                                 const UAVParameters & params,
+                                                 bool includeEnticement,
+                                                 qreal *progressStartOut,
+                                                 qreal *progressEndOut)
 {
+
     //First, see if one of the points is within the polygon
-    foreach(const Position& pos, positions.positions())
+    //foreach(const Position& pos, positions.positions())
+    for (int i = 0; i < positions.size(); i++)
     {
+        const Position& pos = positions.positions().at(i);
+
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
+        {
+            if (progressStartOut != 0)
+                *progressStartOut = positions.distToPoseIndex(i, params) / params.airspeed();
+            if (progressEndOut != 0)
+                *progressEndOut = positions.distToPoseIndex(i, params) / params.airspeed();
+
             return this->maxTaskPerformance();
+        }
     }
 
     //if that fails, take the distance to the last point

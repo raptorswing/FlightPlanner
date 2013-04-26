@@ -38,8 +38,10 @@ QString CoverageTask::taskType() const
 
 qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
                                                const QPolygonF &geoPoly,
-                                               const UAVParameters &,
-                                               bool includeEnticement)
+                                               const UAVParameters & params,
+                                               bool includeEnticement,
+                                               qreal *progressStartOut,
+                                               qreal *progressEndOut)
 {
     if (wayset.isEmpty())
         return 0.0;
@@ -47,33 +49,44 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
     if (geoPoly != _lastGeoPoly || _bins.isEmpty())
         _calculateBins(geoPoly);
 
-    const qreal maxDistance = _maxDistance;
+    int firstProgressIndex = -1;
+    int lastProgressIndex = -1;
+
 
     QSet<int> satisfiedBins;
-
-    foreach(const Position& pos, wayset.positions())
+    for (int i = 0; i < wayset.size(); i++)
     {
-        const QVector3D xyz = Conversions::lla2xyz(pos);
-        for (int i = 0; i < _bins.size(); i++)
+        const UAVPose& pose = wayset.at(i);
+        const Position& pos = pose.pos();
+
+        for (int j = 0; j < _bins.size(); j++)
         {
-            if (satisfiedBins.contains(i))
+            if (satisfiedBins.contains(j))
                 continue;
-            const qreal distance = (xyz - _xyzBins.value(i)).length();
-            if (distance < maxDistance)
-                satisfiedBins.insert(i);
+
+            const qreal distance = pos.flatDistanceEstimate(_bins.at(j));
+
+            if (distance < _maxDistance)
+            {
+                satisfiedBins.insert(j);
+
+                //Record progress timing info...
+                if (firstProgressIndex == -1)
+                    firstProgressIndex = i;
+                lastProgressIndex = i;
+            }
         }
     }
 
     const qreal reward = satisfiedBins.size();
 
     qreal enticement = 0.0;
-    const QVector3D lastPosXYZ = Conversions::lla2xyz(wayset.last().pos());
     for (int i = 0; i < _bins.size(); i++)
     {
         if (satisfiedBins.contains(i))
             continue;
 
-        const qreal distance = (lastPosXYZ - _xyzBins.value(i)).length();
+        const qreal distance = wayset.last().pos().flatDistanceEstimate(_bins.at(i));
         const qreal currentEnticement = FlightTask::normal(distance, 200.0, 10.0);
         if (currentEnticement > enticement)
             enticement = currentEnticement;
@@ -83,6 +96,20 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
          *the one that is next in the list.
         */
         break;
+    }
+
+    if (progressStartOut != 0)
+    {
+        *progressStartOut = -1.0;
+        if (firstProgressIndex != -1)
+            *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, params) / params.airspeed();
+    }
+
+    if (progressEndOut != 0)
+    {
+        *progressEndOut = -1.0;
+        if (lastProgressIndex != -1)
+            *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, params) / params.airspeed();
     }
 
     if (includeEnticement)
@@ -129,7 +156,6 @@ void CoverageTask::setMaxDistance(qreal maxDist)
 void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 {
     _bins.clear();
-    _xyzBins.clear();
     _lastGeoPoly = geoPoly;
 
     const QRectF boundingRect = geoPoly.boundingRect().normalized();
@@ -157,10 +183,7 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 
             Position lla(lon, lat);
             if (geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
-            {
                 _bins.append(lla);
-                _xyzBins.append(Conversions::lla2xyz(lla));
-            }
         }
     }
 }

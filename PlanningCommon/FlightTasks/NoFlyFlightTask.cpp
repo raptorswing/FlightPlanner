@@ -38,7 +38,9 @@ QString NoFlyFlightTask::taskType() const
 qreal NoFlyFlightTask::calculateFlightPerformance(const Wayset &wayset,
                                                   const QPolygonF &geoPoly,
                                                   const UAVParameters &,
-                                                  bool includeEnticement)
+                                                  bool includeEnticement,
+                                                  qreal *progressStartOut,
+                                                  qreal *progressEndOut)
 {
     Q_UNUSED(includeEnticement)
     qreal fitness = this->maxTaskPerformance();
@@ -51,6 +53,13 @@ qreal NoFlyFlightTask::calculateFlightPerformance(const Wayset &wayset,
             break;
         }
     }
+
+    //This stuff is not defined for NoFly
+    if (progressStartOut != 0)
+        *progressStartOut = -1.0;
+
+    if (progressEndOut != 0)
+        *progressEndOut = -1.0;
 
     return fitness;
 }
