@@ -1,6 +1,7 @@
 #include "GPXExporter.h"
 
 #include "GPX.h"
+#include <QFile>
 
 GPXExporter::GPXExporter(const QString &filePath) : _filePath(filePath)
 {
@@ -8,6 +9,13 @@ GPXExporter::GPXExporter(const QString &filePath) : _filePath(filePath)
 
 bool GPXExporter::doExport(const Wayset &wayset)
 {
+    QFile fp(_filePath);
+    if (!fp.open(QFile::WriteOnly | QFile::Text))
+    {
+        qWarning() << "Failed to open" << _filePath << "for writing";
+        return false;
+    }
+
     QByteArray bytes;
     GPX gpx;
 
@@ -21,5 +29,13 @@ bool GPXExporter::doExport(const Wayset &wayset)
         gpx.appendPoint(point);
     }
 
-    return gpx.toXML(&bytes);
+    QString error;
+    if (!gpx.toXML(&bytes, &error))
+    {
+        qWarning() << "GPX export failed. Message:" << error;
+        return false;
+    }
+
+    fp.write(bytes);
+    return true;
 }
