@@ -76,7 +76,7 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
         toRet += uavParams.waypointInterval() / uavParams.airspeed();
     }
 
-    if (includeEnticement)
+    if (includeEnticement && !_bins.isEmpty())
     {
         qreal enticement = 0.0;
 
@@ -149,4 +149,7 @@ void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
                 _bins.append(lla);
         }
     }
+
+    if (_bins.isEmpty())
+        qWarning() << "Warning:" << this << "has empty bins";
 }

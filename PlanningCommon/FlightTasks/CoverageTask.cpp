@@ -186,4 +186,7 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
                 _bins.append(lla);
         }
     }
+
+    if (_bins.isEmpty())
+        qWarning() << "Warning:" << this << "has empty bins";
 }
