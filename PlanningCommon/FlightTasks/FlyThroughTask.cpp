@@ -48,7 +48,7 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
 
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {
-            if (count++ < 5)
+            if (includeEnticement && count++ < 5)
                 continue;
 
             if (progressStartOut != 0)
