@@ -69,7 +69,6 @@
    <addaction name="separator"/>
    <addaction name="actionCoverage_Helper"/>
    <addaction name="separator"/>
-   <addaction name="actionAuto_Fix"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
