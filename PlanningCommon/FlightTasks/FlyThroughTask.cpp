@@ -41,12 +41,16 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
 
     //First, see if one of the points is within the polygon
     //foreach(const Position& pos, positions.positions())
+    int count = 0;
     for (int i = 0; i < positions.size(); i++)
     {
         const Position& pos = positions.positions().at(i);
 
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {
+            if (count++ < 5)
+                continue;
+
             if (progressStartOut != 0)
                 *progressStartOut = positions.distToPoseIndex(i, params) / params.airspeed();
             if (progressEndOut != 0)
@@ -57,15 +61,13 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
     }
 
     //if that fails, take the distance to the last point
-    Position goalPos(geoPoly.boundingRect().center(),
-                     positions.first().pos().altitude());
+    const Position goalPos(geoPoly.boundingRect().center());
 
     const Position& last = positions.last().pos();
-    QVector3D enuPos = Conversions::lla2enu(last, goalPos);
-    qreal dist = enuPos.length();
+    const qreal dist = goalPos.flatDistanceEstimate(last);
 
     const qreal stdDev = 90.0;
-    qreal toRet = 100*FlightTask::normal(dist,stdDev,2000);
+    qreal toRet = 10*FlightTask::normal(dist,stdDev,2000);
 
     if (includeEnticement)
         return qMin<qreal>(toRet,this->maxTaskPerformance());
