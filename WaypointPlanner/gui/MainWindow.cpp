@@ -30,9 +30,6 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     this->initMap();
     this->enableDisableFlightActions();
 
-    //A hack to make initial map centering work right.
-    QTimer::singleShot(1, this, SLOT(doInitialMapCentering()));
-
     _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
 }
 
@@ -89,16 +86,29 @@ void WaypointPlannerMainWindow::setPlanningProblem(const QSharedPointer<Planning
 //public slot
 void WaypointPlannerMainWindow::openProblem(const QString &filePath)
 {
-    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
+    if (filePath.isEmpty() || filePath.isNull())
+        return;
 
+    _problem = CommonFileHandling::readProblemFromFile(this, filePath);
     if (_problem.isNull())
+    {
+        qWarning() << "Failed to open problem" << filePath;
         _problem = QSharedPointer<PlanningProblem>(new PlanningProblem());
+    }
+    else
+        qDebug() << "Opened" << filePath;
 
     //Reset things
     this->on_actionReset_Flight_triggered();
 
-
     _waysetManager->setPlanningProblem(_problem);
+
+    if (_problem->startingPositionDefined())
+    {
+        _view->setZoomLevel(15);
+        _view->centerOn(_problem->startingPosition().lonLat());
+        _waysetManager->appendWaypoint(_problem->startingPosition());
+    }
 }
 
 //private slot
@@ -162,13 +172,6 @@ void WaypointPlannerMainWindow::finishCoverageHelper()
         _waysetManager->appendWaypoint(pose.pos(), pose.angle());
 
     _coveragePolygon->deleteLater();
-}
-
-//private slot
-void WaypointPlannerMainWindow::doInitialMapCentering()
-{
-    _view->setZoomLevel(16);
-    _view->centerOn(-111.649225, 40.249684);
 }
 
 //private slot
@@ -299,6 +302,11 @@ void WaypointPlannerMainWindow::initMap()
             SLOT(handleWaysetSelectionChanged()));
 
     this->setMouseMode(CreateMode);
+
+    //Zoom into BYU campus by default
+    QPointF place(-111.649253,40.249707);
+    _view->setZoomLevel(15);
+    _view->centerOn(place);
 }
 
 //private slot

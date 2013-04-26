@@ -59,7 +59,11 @@ void MainWindow::openHiddenProblem(const QString &filePath)
         return;
     }
 
-    _problem->setUAVParameters(_hiddenProblem->uavParameters());
+    this->loadHiddenProblemAttributes();
+
+    //Center on the starting position of the hidden problem
+    if (_hiddenProblem->startingPositionDefined())
+        _view->centerOn(_hiddenProblem->startingPosition().lonLat());
 
     qDebug() << "Hidden problem" << filePath << "opened";
 }
@@ -86,6 +90,12 @@ void MainWindow::updateDisplayedFlight()
 void MainWindow::openProblem(const QString &filePath)
 {
     _problem = CommonFileHandling::readProblemFromFile(this, filePath);
+    if (_problem.isNull())
+    {
+        qWarning() << "Failed to open problem" << filePath;
+        return;
+    }
+
     _planner->setProblem(_problem);
     _viewAdapter->setModel(_problem);
 
@@ -94,8 +104,10 @@ void MainWindow::openProblem(const QString &filePath)
             _planner,
             SLOT(resetPlanning()));
 
-    if (!_hiddenProblem.isNull())
-        _problem->setUAVParameters(_hiddenProblem->uavParameters());
+    this->loadHiddenProblemAttributes();
+
+    if (_problem->startingPositionDefined())
+        _view->centerOn(_problem->startingPosition().lonLat());
 }
 
 //private slot
@@ -126,8 +138,7 @@ void MainWindow::resetAll()
             _planner,
             SLOT(resetPlanning()));
 
-    if (!_hiddenProblem.isNull())
-        _problem->setUAVParameters(_hiddenProblem->uavParameters());
+    this->loadHiddenProblemAttributes();
 }
 
 //private slot
@@ -325,4 +336,22 @@ void MainWindow::enableDisableFlightActions()
     this->ui->actionExport_Solution->setEnabled(hasFlight);
     this->ui->actionReset_Flight->setEnabled(hasFlight);
     this->ui->actionTest_Flight->setEnabled(hasFlight);
+}
+
+//private
+void MainWindow::loadHiddenProblemAttributes()
+{
+    if (_hiddenProblem.isNull())
+        return;
+    else if (_problem.isNull())
+        return;
+
+    _problem->setUAVParameters(_hiddenProblem->uavParameters());
+
+    if (_hiddenProblem->startingPositionDefined())
+        _problem->setStartingPosition(_hiddenProblem->startingPosition());
+
+    if (_hiddenProblem->startingOrientationDefined())
+        _problem->setStartingOrientation(_hiddenProblem->startingOrientation());
+
 }

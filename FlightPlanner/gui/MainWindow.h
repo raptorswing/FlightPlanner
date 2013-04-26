@@ -56,6 +56,7 @@ private:
     void initPlanningProblem();
     void initPaletteConnections();
     void enableDisableFlightActions();
+    void loadHiddenProblemAttributes();
 
     Ui::MainWindow *ui;
 

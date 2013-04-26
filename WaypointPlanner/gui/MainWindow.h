@@ -46,7 +46,6 @@ private slots:
     void handleWaysetSelectionChanged();
     void finishCoverageHelper();
 
-    void doInitialMapCentering();
     void handleMapClick(QPoint pos);
     void on_actionExit_triggered();
     void on_actionSelect_Mode_triggered();
