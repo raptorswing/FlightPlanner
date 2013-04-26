@@ -307,7 +307,7 @@ qreal Wayset::distToPoseIndex(int index, const UAVParameters &uavParams) const
     const QList<Dubins> dubins = this->dubins(uavParams);
 
     qreal distSoFar = 0.0;
-    for (int i = 0; i <= index; i++)
+    for (int i = 0; i < index; i++)
     {
         const Dubins& dubin = dubins.at(i);
         distSoFar += dubin.length();
