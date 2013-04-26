@@ -214,7 +214,7 @@ void Waypoint::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
 
-    const QColor fillColor = QColor(255,0,0,50);
+    const QColor fillColor = QColor(255,0,0,100);
     QPolygonF triangle;
     triangle << QPointF(-0.5 * _displaySize, -0.5 * _displaySize);
     triangle << QPointF(0.5 * _displaySize, -0.5 * _displaySize);
