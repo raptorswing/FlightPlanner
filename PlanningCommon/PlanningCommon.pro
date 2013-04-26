@@ -51,7 +51,8 @@ SOURCES += \
     Exporters/BinaryExporter.cpp \
     Importers/BinaryImporter.cpp \
     gui/ChatWidget.cpp \
-    UserStudyChatHandler.cpp
+    UserStudyChatHandler.cpp \
+    HierarchicalPlanner/SmartIntermediatePlanner.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -94,7 +95,8 @@ HEADERS +=\
     Exporters/BinaryExporter.h \
     Importers/BinaryImporter.h \
     gui/ChatWidget.h \
-    UserStudyChatHandler.h
+    UserStudyChatHandler.h \
+    HierarchicalPlanner/SmartIntermediatePlanner.h
 
 unix:!symbian {
     maemo5 {
