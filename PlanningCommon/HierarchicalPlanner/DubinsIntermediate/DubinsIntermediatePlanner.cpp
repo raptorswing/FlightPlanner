@@ -19,14 +19,9 @@ bool DubinsIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const qreal avgLat = (this->startPos().latitude() + this->endPos().latitude()) / 2.0;
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(avgLat);
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(avgLat);
-
     const QPointF startPos(0.0001, 0.0001);
     const qreal startAngle = this->startAngle().radians();
-    const QPointF endPos((this->endPos().longitude() - this->startPos().longitude()) / lonPerMeter,
-                         (this->endPos().latitude() - this->startPos().latitude()) / latPerMeter);
+    const QPointF endPos = this->startPos().flatOffsetMeters(this->endPos()).toPointF();
     const qreal endAngle = this->endAngle().radians();
     const qreal minTurnRadius = this->uavParams().minTurningRadius();
 
@@ -48,9 +43,9 @@ bool DubinsIntermediatePlanner::plan()
         if (!dubins.sample(t, samplePos, sampleAngle))
             return false;
 
-        Position pos(this->startPos().longitude() + samplePos.x() * lonPerMeter,
-                this->startPos().latitude() + samplePos.y() * latPerMeter);
-        _results.append(pos);
+        const Position pos = this->startPos().flatOffsetToPosition(samplePos);
+        const UAVPose pose(pos, sampleAngle);
+        _results.append(pose);
     }
 
     return true;
