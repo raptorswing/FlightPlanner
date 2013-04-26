@@ -10,11 +10,12 @@ int main(int argc, char *argv[])
 
     const QStringList args = a.arguments();
 
-    WaypointPlannerMainWindow w;
-    w.show();
+    WaypointPlannerMainWindow * w = new WaypointPlannerMainWindow();
+    w->show();
+    w->setAttribute(Qt::WA_DeleteOnClose);
 
     if (args.size() > 1)
-        w.openProblem(args.at(1));
+        w->openProblem(args.at(1));
     
     return a.exec();
 }
