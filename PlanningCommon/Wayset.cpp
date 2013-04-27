@@ -1,6 +1,7 @@
 #include "Wayset.h"
 
 #include <QtDebug>
+#include <QtCore>
 #include <QVector2D>
 
 const qreal EPSILON = 0.000001;
@@ -105,7 +106,7 @@ Wayset Wayset::resample(qreal granularityMeters,
     Wayset toRet;
 
     const qreal totalLengthMeters = this->lengthMeters(uavParams);
-    const int numSamples = qRound(totalLengthMeters / granularityMeters);
+    const int numSamples = qFloor(totalLengthMeters / granularityMeters);
 
     for (int i = 0; i < numSamples; i++)
     {
@@ -113,6 +114,8 @@ Wayset Wayset::resample(qreal granularityMeters,
         const UAVPose pose = this->sampleAtDistance(desiredDist, uavParams);
         toRet.append(pose);
     }
+    if (toRet.last() != this->last())
+        toRet.append(this->last());
 
     return toRet;
 }
