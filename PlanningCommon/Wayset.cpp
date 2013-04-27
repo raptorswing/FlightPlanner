@@ -3,6 +3,8 @@
 #include <QtDebug>
 #include <QVector2D>
 
+const qreal EPSILON = 0.000001;
+
 Wayset::Wayset()
 {
 }
@@ -198,11 +200,14 @@ UAVPose Wayset::sampleAtDistance(qreal desiredDistance, const UAVParameters& uav
     foreach(const Dubins& dubin, dubins)
         maxDist += dubin.length();
 
-    if (desiredDistance < 0.0 || desiredDistance >= maxDist)
+    if (desiredDistance < 0.0 || desiredDistance - maxDist > EPSILON)
     {
-        qWarning() << "sampleAtDistance beyond valid distance window." << desiredDistance;
+        qWarning() << "sampleAtDistance beyond valid distance window." << desiredDistance << "(max" << maxDist << ")";
+        qDebug() << QString::number(desiredDistance, 'g', 20) << QString::number(maxDist, 'g', 20);
         return UAVPose();
     }
+    else if (qFuzzyCompare(desiredDistance + 1.0, maxDist + 1.0))
+        return this->last();
 
     //The total distance of all segments traversed so far
     qreal distSoFar = 0.0;
