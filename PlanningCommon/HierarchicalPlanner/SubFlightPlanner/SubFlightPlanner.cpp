@@ -45,7 +45,7 @@ void SubFlightPlanner::_greedyPlan()
     while (!frontier.isEmpty())
     {
         //Find the node in the frontier with the best fitness. Grab it and remove it
-        const QList<qreal> scores = frontier.uniqueKeys();
+        const QList<qreal> scores = frontier.keys();
         const qreal score = scores.last();
         QList<QSharedPointer<SubFlightNode> > nodes = frontier.values(score);
 
@@ -70,9 +70,6 @@ void SubFlightPlanner::_greedyPlan()
             break;
         }
 
-        const qreal lonPerMeter = Conversions::degreesLonPerMeter(node->position().latitude());
-        const qreal latPerMeter = Conversions::degreesLatPerMeter(node->position().latitude());
-
         //Build successors to the current node. Add them to frontier.
         for (qreal i = 1.2; i <= 6.0 * 1.5; i += 1.5)
         {
@@ -86,8 +83,7 @@ void SubFlightPlanner::_greedyPlan()
                                 leftCenterPos.y() + radius * sin(newAngle));
             const qreal forwardAngle = newAngle + PI / 2.0;
 
-            const Position posLatLon(node->position().longitude() + pos.x() * lonPerMeter,
-                                     node->position().latitude() + pos.y() * latPerMeter);
+            const Position posLatLon = node->position().flatOffsetToPosition(pos.toPointF());
             QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
@@ -107,8 +103,7 @@ void SubFlightPlanner::_greedyPlan()
                                 rightCenterPos.y() + radius * sin(newAngle));
             const qreal forwardAngle = newAngle - PI / 2.0;
 
-            const Position posLatLon(node->position().longitude() + pos.x() * lonPerMeter,
-                                     node->position().latitude() + pos.y() * latPerMeter);
+            const Position posLatLon = node->position().flatOffsetToPosition(pos.toPointF());
             QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
