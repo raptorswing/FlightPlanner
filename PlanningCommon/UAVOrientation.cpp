@@ -51,7 +51,7 @@ QDebug operator<<(QDebug dbg, const UAVOrientation& pos)
 
 bool UAVOrientation::operator ==(const UAVOrientation &other) const
 {
-    return qAbs<qreal>(other.radians() - this->radians()) < 0.001;
+    return qAbs<qreal>(other.degrees() - this->degrees()) < 1.0;
 }
 
 bool UAVOrientation::operator !=(const UAVOrientation &other) const
