@@ -41,14 +41,14 @@ QString SamplingTask::taskType() const
 }
 
 //virtual from FlightTask
-qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
+qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
                                                const QPolygonF &geoPoly,
                                                const UAVParameters &uavParams,
                                                bool includeEnticement,
                                                qreal *progressStartOut,
                                                qreal *progressEndOut)
 {
-    if (positions.isEmpty())
+    if (wayset.isEmpty())
         return 0.0;
 
     if (geoPoly != _lastGeoPoly || _bins.isEmpty())
@@ -58,10 +58,10 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
     int lastProgressIndex = -1;
 
     qreal toRet = 0.0;
-
-    for (int i = 0; i < positions.size(); i++)
+    const QList<Position> positions = wayset.positions();
+    for (int i = 0; i < wayset.size(); i++)
     {
-        const Position& pos = positions.positions().at(i);
+        const Position& pos = positions.at(i);
 
         if (!geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
             continue;
@@ -80,8 +80,8 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
     {
         qreal enticement = 0.0;
 
-        const Position& toEntice = _bins.at(positions.size() % _bins.size());
-        const qreal distance = toEntice.flatDistanceEstimate(positions.positions().last());
+        const Position& toEntice = _bins.at(wayset.size() % _bins.size());
+        const qreal distance = toEntice.flatDistanceEstimate(wayset.positions().last());
         enticement += FlightTask::normal(distance, 200.0, 10.0);
 
         toRet += enticement;
@@ -89,10 +89,10 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &positions,
 
 
     if (progressStartOut != 0 && firstProgressIndex != -1)
-        *progressStartOut = positions.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
+        *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
 
     if (progressEndOut != 0 && lastProgressIndex != -1)
-        *progressEndOut = positions.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
+        *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
 
     return qMin<qreal>(toRet, this->maxTaskPerformance());
 }
