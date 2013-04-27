@@ -480,10 +480,6 @@ Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
                                                       const Position &endPos,
                                                       const UAVOrientation &endPose)
 {
-    //    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
-    //                                                                             startPos, startPose,
-    //                                                                             endPos, endPose,
-    //                                                                             _obstacles);
     SmartIntermediatePlanner * intermed = new SmartIntermediatePlanner(this->problem()->uavParameters(),
                                                                        startPos, startPose,
                                                                        endPos, endPose,
