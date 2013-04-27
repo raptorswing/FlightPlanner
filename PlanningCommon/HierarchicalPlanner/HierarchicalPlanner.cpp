@@ -213,9 +213,9 @@ void HierarchicalPlanner::_buildStartTransitions()
         const UAVOrientation& taskStartPose = _areaStartOrientations.value(area);
 
         Wayset subFlight = _generateTransitionFlight(globalStartPos,
-                                                              globalStartPose,
-                                                              taskStartPos,
-                                                              taskStartPose);
+                                                     globalStartPose,
+                                                     taskStartPos,
+                                                     taskStartPose);
 
         _startTransitionSubFlights.insert(area, subFlight);
     }
@@ -344,29 +344,22 @@ bool HierarchicalPlanner::_buildSchedule()
             {
                 //The task we're coming from and the task we're going to
                 const QSharedPointer<FlightTask>& prevTask = _tasks.value(lastTasks.value(state));
-                const QSharedPointer<FlightTaskArea>& prevArea = _tasks2areas.value(prevTask);
+                //const QSharedPointer<FlightTaskArea>& prevArea = _tasks2areas.value(prevTask);
 
                 //Get current position and pose
-                Position startPos;
-                UAVOrientation startPose;
-                _interpolatePath(_taskSubFlights.value(prevTask),
-                                 _areaStartOrientations.value(prevArea),
-                                 state[_tasks.indexOf(prevTask)],
-                        &startPos,
-                        &startPose);
+                const UAVPose startPose = _taskSubFlights.value(prevTask).sampleAtTime(state[_tasks.indexOf(prevTask)],
+                        params);
+                const Position startPos = startPose.pos();
+                const UAVOrientation startAngle = startPose.angle();
 
                 //Get position/pose of context switch destination
-                Position endPos;
-                UAVOrientation endPose;
-                _interpolatePath(_taskSubFlights.value(task),
-                                 _areaStartOrientations.value(area),
-                                 state[i],
-                                 &endPos,
-                                 &endPose);
+                const UAVPose endPose = _taskSubFlights.value(task).sampleAtTime(state[i], params);
+                const Position endPos = endPose.pos();
+                const UAVOrientation endAngle = endPose.angle();
 
                 //Plan intermediate flight
-                transitionFlight = _generateTransitionFlight(startPos, startPose,
-                                                             endPos, endPose);
+                transitionFlight = _generateTransitionFlight(startPos, startAngle,
+                                                             endPos, endAngle);
             }
 
             //The time (if any) needed to fly the transition flight to this task
@@ -475,88 +468,15 @@ bool HierarchicalPlanner::_buildSchedule()
 }
 
 //private
-bool HierarchicalPlanner::_interpolatePath(const Wayset &path,
-                                           const UAVOrientation &startingOrientation,
-                                           qreal goalTime,
-                                           Position *outPosition,
-                                           UAVOrientation *outOrientation) const
-{
-    if (outPosition == 0 || outOrientation == 0)
-    {
-        qDebug() << "Can't interpolate: bad output position/orientation pointer(s).";
-        return false;
-    }
-    else if (goalTime < 0.0)
-    {
-        qDebug() << "Can't interpolate: bad time.";
-        return false;
-    }
-    else if (path.isEmpty())
-    {
-        qDebug() << "Can't interpolate: empty path.";
-        return false;
-    }
-    else if (path.size() == 1)
-    {
-        *outPosition = path.at(0).pos();
-        *outOrientation = startingOrientation;
-        return true;
-    }
-
-    const UAVParameters& params = this->problem()->uavParameters();
-
-    //qDebug() << "Interpolate path of size" << path.size() << "to time" << goalTime;
-
-    qreal distanceSoFar = 0.0;
-    qreal timeSoFar = 0.0;
-
-    for (int i = 1; i < path.size(); i++)
-    {
-        const Position& pos = path.at(i).pos();
-        const Position& lastPos = path.at(i-1).pos();
-        //const qreal distance = (Conversions::lla2xyz(pos) - Conversions::lla2xyz(lastPos)).length();
-        const qreal intervalDistance = params.waypointInterval();
-        distanceSoFar += intervalDistance;
-        timeSoFar = distanceSoFar / params.airspeed();
-
-
-        if (timeSoFar >= goalTime || i == path.size() - 1)
-        {
-            const qreal lonPerMeter = Conversions::degreesLonPerMeter(pos.latitude());
-            const qreal latPerMeter = Conversions::degreesLatPerMeter(pos.latitude());
-            const qreal lastTime = timeSoFar - intervalDistance / params.airspeed();
-            const qreal ratio = (goalTime - lastTime) / (timeSoFar - lastTime);
-            QVector2D dirVecMeters((pos.longitude() - lastPos.longitude()) / lonPerMeter,
-                                   (pos.latitude() - lastPos.latitude()) / latPerMeter);
-            const qreal distToGo = params.waypointInterval() * ratio;
-            dirVecMeters.normalize();
-            const qreal longitude = lastPos.longitude() + distToGo * dirVecMeters.x() * lonPerMeter;
-            const qreal latitude = lastPos.latitude() + distToGo * dirVecMeters.y() * latPerMeter;
-            *outPosition = Position(longitude, latitude);
-            *outOrientation = UAVOrientation(atan2(dirVecMeters.y(),
-                                                   dirVecMeters.x()));
-            break;
-        }
-    }
-
-    if (timeSoFar < goalTime)
-    {
-        //qDebug() << "Can't interpolate into future. Goal time" << goalTime << "but only reached" << timeSoFar;
-        //return false;
-    }
-    return true;
-}
-
-//private
 Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
-                                                               const UAVOrientation &startPose,
-                                                               const Position &endPos,
-                                                               const UAVOrientation &endPose)
+                                                      const UAVOrientation &startPose,
+                                                      const Position &endPos,
+                                                      const UAVOrientation &endPose)
 {
-//    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
-//                                                                             startPos, startPose,
-//                                                                             endPos, endPose,
-//                                                                             _obstacles);
+    //    AstarPRMIntermediatePlanner * intermed = new AstarPRMIntermediatePlanner(this->problem()->uavParameters(),
+    //                                                                             startPos, startPose,
+    //                                                                             endPos, endPose,
+    //                                                                             _obstacles);
     SmartIntermediatePlanner * intermed = new SmartIntermediatePlanner(this->problem()->uavParameters(),
                                                                        startPos, startPose,
                                                                        endPos, endPose,
@@ -570,8 +490,8 @@ Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
 
 //private
 Wayset HierarchicalPlanner::_getPathPortion(const Wayset &path,
-                                                     qreal portionStartTime,
-                                                     qreal portionEndTime) const
+                                            qreal portionStartTime,
+                                            qreal portionEndTime) const
 {
     Wayset toRet;
 

@@ -30,12 +30,6 @@ private:
     void _buildSubFlights();
     bool _buildSchedule();
 
-    bool _interpolatePath(const Wayset& path,
-                              const UAVOrientation& startingOrientation,
-                              qreal time,
-                              Position * outPosition,
-                              UAVOrientation * outOrientation) const;
-
     Wayset _generateTransitionFlight(const Position& startPos,
                                               const UAVOrientation& startPose,
                                               const Position& endPos,
