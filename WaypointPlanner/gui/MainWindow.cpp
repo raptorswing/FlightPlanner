@@ -257,7 +257,8 @@ void WaypointPlannerMainWindow::on_actionReset_Flight_triggered()
 //private slot
 void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
 {
-    const Wayset flight = _waysetManager->wayset();
+    const Wayset flight = _waysetManager->wayset().resample(_problem->uavParameters().waypointInterval(),
+                                                            _problem->uavParameters());
 
     CommonWindowHandling::simulateFlightAndShowResults(this, flight, _problem);
 }

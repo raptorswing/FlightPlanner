@@ -30,7 +30,7 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
             qreal taskEnd = -1;
             const qreal subScore = task->calculateFlightPerformance(wayset,
                                                                     area->geoPoly(),
-                                                                    fudgeParams,
+                                                                    problem->uavParameters(),
                                                                     false,
                                                                     &taskStart, &taskEnd);
             score += subScore;
@@ -97,9 +97,7 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
 
     //Find no-fly/obstacle violations
     QSet<QSharedPointer<FlightTaskArea> > noFlyViolations;
-    Wayset resampled = wayset.resample(problem->uavParameters().waypointInterval(),
-                                       problem->uavParameters());
-    const QList<Position> positions = resampled.positions();
+    const QList<Position> positions = wayset.positions();
     foreach(const Position& pos, positions)
     {
         const QPointF lonLat = pos.lonLat();
