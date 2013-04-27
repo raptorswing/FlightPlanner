@@ -41,14 +41,17 @@ public:
     qreal distToPose(const UAVPose& pose, const UAVParameters& uavParams) const;
     qreal distToPoseIndex(int index, const UAVParameters& uavParams) const;
 
+    Wayset portionByDist(qreal startDist, qreal endDist, const UAVParameters& uavParams) const;
+    Wayset portionByTime(qreal startTime, qreal endTime, const UAVParameters& uavParams) const;
+
     void clear();
 
-    void append(const UAVPose& pos);
+    void append(const UAVPose& pose);
     void append(const Wayset& wayset);
     void append(const Position& pos,
                 const UAVOrientation& angle = UAVOrientation());
 
-    void prepend(const UAVPose& pos);
+    void prepend(const UAVPose& pose);
     void prepend(const Position& pos,
                  const UAVOrientation& angle = UAVOrientation());
 

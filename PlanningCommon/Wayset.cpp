@@ -280,19 +280,48 @@ qreal Wayset::distToPoseIndex(int index, const UAVParameters &uavParams) const
     return distSoFar;
 }
 
+Wayset Wayset::portionByDist(qreal startDist, qreal endDist, const UAVParameters &uavParams) const
+{
+    Wayset toRet;
+    const qreal maxDist = this->lengthMeters(uavParams);
+
+    if (startDist < 0 || endDist < 0 || startDist >= endDist || endDist > maxDist)
+    {
+        qWarning() << "Invalid arguments to Wayset::portion" << startDist << endDist;
+        return toRet;
+    }
+
+    for (qreal current = startDist; current < endDist; current += uavParams.waypointInterval())
+        toRet.append(this->sampleAtDistance(current,uavParams));
+
+    toRet.append(this->sampleAtDistance(endDist, uavParams));
+
+    return toRet;
+}
+
+Wayset Wayset::portionByTime(qreal startTime, qreal endTime, const UAVParameters &uavParams) const
+{
+    const qreal startDist = startTime * uavParams.airspeed();
+    const qreal endDist = endTime * uavParams.airspeed();
+
+    return this->portionByDist(startDist, endDist, uavParams);
+}
+
 void Wayset::clear()
 {
     _poses.clear();
 }
 
-void Wayset::append(const UAVPose &pos)
+void Wayset::append(const UAVPose &pose)
 {
-    _poses.append(pos);
+    if (this->isEmpty() || this->last() != pose)
+        _poses.append(pose);
 }
 
 void Wayset::append(const Wayset &wayset)
 {
-    _poses.append(wayset.poses());
+    foreach(const UAVPose& pose, wayset.poses())
+        this->append(pose);
 }
 
 void Wayset::append(const Position &pos,const UAVOrientation &angle)
@@ -300,9 +329,10 @@ void Wayset::append(const Position &pos,const UAVOrientation &angle)
     _poses.append(UAVPose(pos, angle));
 }
 
-void Wayset::prepend(const UAVPose &pos)
+void Wayset::prepend(const UAVPose &pose)
 {
-    _poses.prepend(pos);
+    if (this->isEmpty() || this->first() != pose)
+        _poses.prepend(pose);
 }
 
 void Wayset::prepend(const Position &pos, const UAVOrientation &angle)
