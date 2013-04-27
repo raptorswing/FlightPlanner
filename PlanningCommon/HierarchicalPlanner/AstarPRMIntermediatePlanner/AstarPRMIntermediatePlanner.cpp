@@ -41,13 +41,12 @@ bool AstarPRMIntermediatePlanner::plan()
         workList.remove(bestScore, current);
         closedSet.insert(current);
 
-        qDebug() << "A* intermed:" << current << bestScore;
+        //qDebug() << "A* intermed:" << current << bestScore;
 
         //When we get close enough trace back
         if (current.flatDistanceEstimate(this->endPos()) < GRANULARITY)
         {
             Wayset metaPlan;
-            metaPlan.append(this->endPos());
 
             //Trace back
             Position trace = current;
@@ -135,7 +134,7 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
         temp.append(metaPlan.at(i).pos(),
                     orientations.at(i));
     }
+    temp.append(this->endPos(), this->endAngle());
 
     _results = temp.resample(this->uavParams().waypointInterval(), this->uavParams());
-
 }
