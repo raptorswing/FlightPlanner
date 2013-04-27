@@ -19,7 +19,8 @@ bool GPXExporter::doExport(const Wayset &wayset)
     QByteArray bytes;
     GPX gpx;
 
-    foreach(const Position& pos, wayset.positions())
+    const QList<Position> positions = wayset.positions();
+    foreach(const Position& pos, positions)
     {
         GPXPoint point;
         point.longitude = pos.longitude();

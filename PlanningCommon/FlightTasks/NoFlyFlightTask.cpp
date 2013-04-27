@@ -45,7 +45,8 @@ qreal NoFlyFlightTask::calculateFlightPerformance(const Wayset &wayset,
     Q_UNUSED(includeEnticement)
     qreal fitness = this->maxTaskPerformance();
 
-    foreach(const Position& pos, wayset.positions())
+    const QList<Position> positions = wayset.positions();
+    foreach(const Position& pos, positions)
     {
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {

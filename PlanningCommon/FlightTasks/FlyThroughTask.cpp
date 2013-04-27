@@ -31,7 +31,7 @@ QString FlyThroughTask::taskType() const
     return "Fly Through";
 }
 
-qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
+qreal FlyThroughTask::calculateFlightPerformance(const Wayset &wayset,
                                                  const QPolygonF &geoPoly,
                                                  const UAVParameters & params,
                                                  bool includeEnticement,
@@ -40,11 +40,11 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
 {
 
     //First, see if one of the points is within the polygon
-    //foreach(const Position& pos, positions.positions())
     int count = 0;
-    for (int i = 0; i < positions.size(); i++)
+    const QList<Position> positions = wayset.positions();
+    for (int i = 0; i < wayset.size(); i++)
     {
-        const Position& pos = positions.positions().at(i);
+        const Position& pos = positions.at(i);
 
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {
@@ -52,9 +52,9 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
                 continue;
 
             if (progressStartOut != 0)
-                *progressStartOut = positions.distToPoseIndex(i, params) / params.airspeed();
+                *progressStartOut = wayset.distToPoseIndex(i, params) / params.airspeed();
             if (progressEndOut != 0)
-                *progressEndOut = positions.distToPoseIndex(i, params) / params.airspeed();
+                *progressEndOut = wayset.distToPoseIndex(i, params) / params.airspeed();
 
             return this->maxTaskPerformance();
         }
@@ -63,7 +63,7 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &positions,
     //if that fails, take the distance to the last point
     const Position goalPos(geoPoly.boundingRect().center());
 
-    const Position& last = positions.last().pos();
+    const Position& last = wayset.last().pos();
     const qreal dist = goalPos.flatDistanceEstimate(last);
 
     const qreal stdDev = 90.0;

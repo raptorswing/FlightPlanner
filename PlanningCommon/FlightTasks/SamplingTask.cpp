@@ -81,7 +81,7 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
         qreal enticement = 0.0;
 
         const Position& toEntice = _bins.at(wayset.size() % _bins.size());
-        const qreal distance = toEntice.flatDistanceEstimate(wayset.positions().last());
+        const qreal distance = toEntice.flatDistanceEstimate(positions.last());
         enticement += FlightTask::normal(distance, 200.0, 10.0);
 
         toRet += enticement;

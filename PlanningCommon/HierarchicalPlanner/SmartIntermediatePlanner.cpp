@@ -39,7 +39,8 @@ bool SmartIntermediatePlanner::plan()
                                                                     this->uavParams());
 
     bool obstacleViolated = false;
-    foreach(const Position& pos, dubinResultsResampled.positions())
+    const QList<Position> positions = dubinResultsResampled.positions();
+    foreach(const Position& pos, positions)
     {
         const QPointF lonLat = pos.lonLat();
         foreach(const QPolygonF& obsPoly, this->obstacles())

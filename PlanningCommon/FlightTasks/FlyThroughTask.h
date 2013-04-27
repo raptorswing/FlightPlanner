@@ -22,7 +22,7 @@ public:
 
     virtual QString taskType() const;
 
-    virtual qreal calculateFlightPerformance(const Wayset& positions,
+    virtual qreal calculateFlightPerformance(const Wayset& wayset,
                                              const QPolygonF& geoPoly,
                                              const UAVParameters& params,
                                              bool includeEnticement = true,

@@ -99,7 +99,8 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
     QSet<QSharedPointer<FlightTaskArea> > noFlyViolations;
     Wayset resampled = wayset.resample(problem->uavParameters().waypointInterval(),
                                        problem->uavParameters());
-    foreach(const Position& pos, resampled.positions())
+    const QList<Position> positions = resampled.positions();
+    foreach(const Position& pos, positions)
     {
         const QPointF lonLat = pos.lonLat();
         foreach(const QSharedPointer<FlightTaskArea>& area, obstacles)
