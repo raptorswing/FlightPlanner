@@ -35,10 +35,6 @@ private:
                                               const Position& endPos,
                                               const UAVOrientation& endPose);
 
-    Wayset _getPathPortion(const Wayset& path,
-                                    qreal portionStartTime,
-                                    qreal portionEndTime) const;
-
     QList<QSharedPointer<FlightTask> > _tasks;
     QHash<QSharedPointer<FlightTask>, QSharedPointer<FlightTaskArea> > _tasks2areas;
     QHash<QSharedPointer<FlightTaskArea>, Position> _areaStartPositions;

@@ -461,11 +461,14 @@ bool HierarchicalPlanner::_buildSchedule()
         const Wayset& subFlight = _taskSubFlights.value(task);
         const qreal startTime = prevInterval.val(taskIndex);
         const qreal endTime = interval.val(taskIndex);
-        path.append(_getPathPortion(subFlight, startTime, endTime));
+        Wayset portion = subFlight.portionByTime(startTime, endTime, params);
+        path.append(portion);
 
 
         prevInterval = interval;
     }
+
+    qDebug() << "Path should take" << (path.lengthMeters(params) / params.airspeed()) << "seconds";
 
     this->setBestFlightSoFar(path);
     return true;
@@ -488,26 +491,6 @@ Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
     intermed->plan();
     Wayset toRet = intermed->results();
     delete intermed;
-
-    return toRet;
-}
-
-//private
-Wayset HierarchicalPlanner::_getPathPortion(const Wayset &path,
-                                            qreal portionStartTime,
-                                            qreal portionEndTime) const
-{
-    Wayset toRet;
-
-    const UAVParameters& params = this->problem()->uavParameters();
-    const int startingIndex = portionStartTime * params.airspeed() / params.waypointInterval();
-    const int endingIndex = qMin<int>(portionEndTime * params.airspeed() / params.waypointInterval(),
-                                      path.size() - 1);
-    //const int count = endingIndex - startingIndex;
-
-    for (int i = startingIndex; i < endingIndex; i++)
-        toRet.append(path.at(i));
-
 
     return toRet;
 }
