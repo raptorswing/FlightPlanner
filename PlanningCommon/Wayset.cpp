@@ -37,7 +37,7 @@ const UAVPose &Wayset::at(int i) const
 
 const UAVPose &Wayset::first() const
 {
-    return _poses.last();
+    return _poses.first();
 }
 
 const UAVPose &Wayset::last() const
@@ -102,39 +102,14 @@ Wayset Wayset::resample(qreal granularityMeters,
 {
     Wayset toRet;
 
-    const QList<Dubins> dubins = this->dubins(uavParams);
     const qreal totalLengthMeters = this->lengthMeters(uavParams);
     const int numSamples = qRound(totalLengthMeters / granularityMeters);
 
     for (int i = 0; i < numSamples; i++)
     {
-        const qreal totalSamplePos = granularityMeters * i;
-
-        qreal groundCovered = 0.0;
-        Dubins current;
-        Position dubinRoot;
-        for (int j = 0; j < dubins.size(); j++)
-        {
-            const Dubins & d = dubins.at(j);
-            const qreal extent = groundCovered + d.length();
-            if (extent > totalSamplePos)
-            {
-                current = d;
-                dubinRoot = this->at(j).pos();
-                break;
-            }
-            groundCovered += d.length();
-        }
-        if (!current.isValid())
-            qWarning() << "Wayset has invalid dubins!";
-
-        QPointF sampleOffset;
-        qreal angleResult;
-        current.sample(totalSamplePos - groundCovered, sampleOffset, angleResult);
-
-        const Position sampleResult = dubinRoot.flatOffsetToPosition(sampleOffset);
-        const UAVOrientation sampleResultAngle(angleResult);
-        toRet.append(UAVPose(sampleResult, sampleResultAngle));
+        const qreal desiredDist = granularityMeters * i;
+        const UAVPose pose = this->sampleAtDistance(desiredDist, uavParams);
+        toRet.append(pose);
     }
 
     return toRet;
@@ -207,25 +182,6 @@ void Wayset::optimizeAngles(const UAVParameters &uavParams)
         count++;
     }
     qDebug() << "Optimized in" << count << "iterations";
-
-//    for (int i = 0; i < this->size(); i++)
-//    {
-//        UAVOrientation bestAngleSoFar = this->poses().at(i).angle();
-//        qreal bestLengthSoFar = this->lengthMeters(uavParams);
-//        for (int j = 0; j < 360; j++)
-//        {
-//            const UAVOrientation angle(j, false);
-//            _poses[i].setAngle(angle);
-//            const qreal length = this->lengthMeters(uavParams);
-
-//            if (length < bestLengthSoFar)
-//            {
-//                bestLengthSoFar = length;
-//                bestAngleSoFar = angle;
-//            }
-//        }
-//        _poses[i].setAngle(bestAngleSoFar);
-    //    }
 }
 
 UAVPose Wayset::sampleAtTime(qreal desiredTime, const UAVParameters &uavParams) const
