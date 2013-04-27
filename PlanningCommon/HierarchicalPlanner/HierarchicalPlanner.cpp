@@ -118,6 +118,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
         const qreal bbHeightMeters = boundingRect.height() / latPerMeter;
 
         qreal mostDistance = -500000;
+        bool gotBetter = false;
         Position bestPoint1(area->geoPoly().first());
         Position bestPoint2(area->geoPoly().first());
         for (int angleDeg = 0; angleDeg < 179; angleDeg++)
@@ -177,6 +178,7 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
                 mostDistance = distance;
                 bestPoint1 = candidateA;
                 bestPoint2 = candidateB;
+                gotBetter = true;
             }
         }
 
@@ -188,6 +190,8 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
             start = bestPoint1;
             end = bestPoint2;
         }
+        if (!gotBetter)
+            qWarning() << "Start pos/pose heuristic failed for area" << area->areaName() << "!";
 
         _areaStartPositions.insert(area, start);
         qDebug() << "Start for" << area << "at" << start;
