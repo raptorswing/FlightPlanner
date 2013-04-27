@@ -63,12 +63,6 @@ void DubinsLineObject::setThickness(qreal nThick)
 void DubinsLineObject::setDubins(Position rootPos,
                                  Dubins dubins)
 {
-    /*
-     *We ease the turning radius a little bit for display to combat "false loops"
-     *created by floating point error
-    */
-    dubins.setMinTurnRadius(dubins.minTurnRadius() * 0.99);
-
     _rootPos = rootPos;
     _dubins = dubins;
     _drawOffsets.clear();

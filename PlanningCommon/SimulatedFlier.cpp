@@ -7,9 +7,6 @@ SimulatedFlierResults SimulatedFlier::simulate(const Wayset &wayset,
     qreal maxScore = 0.0;
     qreal score = 0.0;
 
-    UAVParameters fudgeParams = problem->uavParameters();
-    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 0.98);
-
     QHash<QSharedPointer<FlightTask>, qreal> taskStartTimes;
     QHash<QSharedPointer<FlightTask>, qreal> taskEndTimes;
 
