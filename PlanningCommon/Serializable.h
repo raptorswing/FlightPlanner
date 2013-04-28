@@ -4,7 +4,9 @@
 #include <QString>
 #include <QDataStream>
 
-class Serializable
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT Serializable
 {
 public:
     Serializable();
