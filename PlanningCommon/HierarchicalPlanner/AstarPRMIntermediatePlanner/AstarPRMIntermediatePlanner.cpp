@@ -57,6 +57,7 @@ bool AstarPRMIntermediatePlanner::plan()
                     break;
                 trace = parents.value(trace);
             }
+            qDebug() << "A* intermed length" << metaPlan.size();
             _toRealPath(metaPlan);
             return true;
         }
@@ -86,9 +87,15 @@ bool AstarPRMIntermediatePlanner::plan()
                     }
                 }
                 if (obstacleViolation)
-                    break;
+                    continue;
 
-                const qreal tentativeCost = costSoFar.value(current) + GRANULARITY;
+                qreal costToMove;
+                if (xd != 0 && xy != 0)
+                    costToMove = sqrt(2.0 * GRANULARITY * GRANULARITY);
+                else
+                    costToMove = GRANULARITY;
+
+                const qreal tentativeCost = costSoFar.value(current) + costToMove;
                 if (!costSoFar.contains(neighbor) || tentativeCost < costSoFar.value(neighbor))
                 {
                     parents.insert(neighbor, current);
@@ -136,5 +143,7 @@ void AstarPRMIntermediatePlanner::_toRealPath(const Wayset& metaPlan)
     }
     temp.append(this->endPos(), this->endAngle());
 
-    _results = temp.resample(this->uavParams().waypointInterval(), this->uavParams());
+    UAVParameters fudgeParams = this->uavParams();
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+    _results = temp.resample(fudgeParams.waypointInterval(), fudgeParams);
 }
