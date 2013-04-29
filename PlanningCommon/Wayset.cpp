@@ -116,7 +116,7 @@ Wayset Wayset::resample(qreal granularityMeters,
         const UAVPose pose = this->sampleAtDistance(desiredDist, uavParams);
         toRet.append(pose);
     }
-    if (toRet.last() != this->last())
+    if (toRet.isEmpty() || toRet.last() != this->last())
         toRet.append(this->last());
 
     return toRet;
