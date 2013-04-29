@@ -19,13 +19,13 @@ bool DubinsIntermediatePlanner::plan()
 {
     _results.clear();
 
-    const QPointF startPos(0.0001, 0.0001);
+    const QPointF startPos(0.0000, 0.0000);
     const qreal startAngle = this->startAngle().radians();
     const QPointF endPos = this->startPos().flatOffsetMeters(this->endPos()).toPointF();
     const qreal endAngle = this->endAngle().radians();
     const qreal minTurnRadius = this->uavParams().minTurningRadius();
 
-    Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius);
+    Dubins dubins(startPos, startAngle, endPos, endAngle, minTurnRadius * 1.02);
 
     //Build the path
     if (!dubins.isValid())
