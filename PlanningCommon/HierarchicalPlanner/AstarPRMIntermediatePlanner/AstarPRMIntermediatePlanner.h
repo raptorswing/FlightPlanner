@@ -24,6 +24,7 @@ public:
     virtual Wayset results() const;
 
 private:
+    bool _collidesWithObstacle(const Position& candidate, const Position& parent);
     void _toRealPath(const Wayset &metaPlan);
 
     Wayset _results;

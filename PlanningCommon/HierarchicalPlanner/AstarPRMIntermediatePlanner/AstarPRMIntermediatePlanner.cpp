@@ -4,6 +4,7 @@ const qreal DEFAULT_GRANULARITY = 75.0;
 
 #include <QMultiMap>
 #include <QSet>
+#include <QtCore>
 #include <cmath>
 
 #include "QVectorND.h"
@@ -39,11 +40,13 @@ bool AstarPRMIntermediatePlanner::plan()
 
     QMultiMap<qreal, Position> workList;
     QHash<Position, Position> parents;
+    QHash<Position, UAVOrientation> angles;
     QSet<Position> closedSet;
     QHash<Position, qreal> costSoFar;
 
     workList.insert(0, this->startPos());
     costSoFar.insert(this->startPos(), 0);
+    angles.insert(this->startPos(), this->startAngle());
 
     while (!workList.empty())
     {
@@ -88,16 +91,7 @@ bool AstarPRMIntermediatePlanner::plan()
                     continue;
 
                 //Check obstacles
-                bool obstacleViolation = false;
-                foreach(const QPolygonF& obstacle, this->obstacles())
-                {
-                    if (obstacle.containsPoint(neighbor.lonLat(), Qt::OddEvenFill))
-                    {
-                        obstacleViolation = true;
-                        break;
-                    }
-                }
-                if (obstacleViolation)
+                if (_collidesWithObstacle(neighbor, current))
                     continue;
 
                 qreal costToMove = this->granularity();
@@ -123,6 +117,36 @@ bool AstarPRMIntermediatePlanner::plan()
 Wayset AstarPRMIntermediatePlanner::results() const
 {
     return _results;
+}
+
+bool AstarPRMIntermediatePlanner::_collidesWithObstacle(const Position &candidate, const Position &parent)
+{
+    const qreal checkGranularity = 10.0;
+
+    foreach(const QPolygonF& obsPoly, this->obstacles())
+    {
+        if (obsPoly.containsPoint(candidate.lonLat(), Qt::OddEvenFill))
+            return true;
+        else if (obsPoly.containsPoint(parent.lonLat(), Qt::OddEvenFill))
+            return true;
+        else if (candidate == parent)
+            return false;
+
+        const UAVOrientation& angle = parent.angleTo(candidate);
+        const qreal totalDist = parent.flatDistanceEstimate(candidate);
+        const int numSteps = qCeil(totalDist / checkGranularity);
+
+        for (int i = 0; i < numSteps; i++)
+        {
+            const QPointF offset(cos(angle.radians()) * i * checkGranularity,
+                                 sin(angle.radians()) * i * checkGranularity);
+            const Position& checkPos = parent.flatOffsetToPosition(offset);
+
+            if (obsPoly.containsPoint(checkPos.lonLat(), Qt::OddEvenFill))
+                return true;
+        }
+    }
+    return false;
 }
 
 //private
