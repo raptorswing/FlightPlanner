@@ -13,6 +13,8 @@ public:
                              const UAVOrientation& endAngle,
                              const QList<QPolygonF>& obstacles);
 
+    void setAstarGranularity(qreal granularity);
+
     //pure-virtual from IntermediatePlanner
     virtual bool plan();
 
@@ -21,6 +23,9 @@ public:
 
 private:
     Wayset _results;
+
+    bool _customGranularity;
+    qreal _granularity;
 };
 
 #endif // SMARTINTERMEDIATEPLANNER_H

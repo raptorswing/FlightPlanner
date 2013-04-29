@@ -11,8 +11,15 @@ SmartIntermediatePlanner::SmartIntermediatePlanner(const UAVParameters &uavParam
                                                    const Position &endPos,
                                                    const UAVOrientation &endAngle,
                                                    const QList<QPolygonF> &obstacles) :
-    IntermediatePlanner(uavParams, startPos, startAngle, endPos, endAngle, obstacles)
+    IntermediatePlanner(uavParams, startPos, startAngle, endPos, endAngle, obstacles),
+    _customGranularity(false)
 {
+}
+
+void SmartIntermediatePlanner::setAstarGranularity(qreal granularity)
+{
+    _customGranularity = true;
+    _granularity = qMax<qreal>(25.0, granularity);
 }
 
 //pure-virtual from IntermediatePlanner
@@ -69,6 +76,9 @@ bool SmartIntermediatePlanner::plan()
                                                                                       this->endPos(),
                                                                                       this->endAngle(),
                                                                                       this->obstacles()));
+    if (_customGranularity)
+        aStar->setAstarGranularity(_granularity);
+
     if (!aStar->plan())
         return false;
     _results = aStar->results();
