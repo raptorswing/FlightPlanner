@@ -358,14 +358,22 @@ void Wayset::cleanup()
     bool gotPrev = false;
     UAVPose prev;
 
+    int count = 0;
     while (iter.hasNext())
     {
         const UAVPose& current = iter.next();
-        if (gotPrev && prev.pos().flatDistanceEstimate(current.pos()) < 1.5)
+        if (gotPrev && prev.pos().flatDistanceEstimate(current.pos()) < 5.0)
+        {
             iter.remove();
+            count++;
+        }
         else
+        {
             gotPrev = true;
+            prev = current;
+        }
     }
+    qDebug() << "Wayset::cleanup removed" << count;
 }
 
 void Wayset::clear()
