@@ -43,6 +43,8 @@ public:
 
     Wayset portionByDist(qreal startDist, qreal endDist, const UAVParameters& uavParams) const;
     Wayset portionByTime(qreal startTime, qreal endTime, const UAVParameters& uavParams) const;
+    Wayset discretePortionByDist(qreal startDist, qreal endDist, const UAVParameters& uavParams) const;
+    Wayset discretePortionByTime(qreal startTime, qreal endTime, const UAVParameters& uavParams) const;
 
     void cleanup();
     void clear();

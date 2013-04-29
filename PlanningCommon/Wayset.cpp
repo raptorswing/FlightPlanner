@@ -5,7 +5,7 @@
 #include <QVector2D>
 #include <QMutableListIterator>
 
-const qreal EPSILON = 0.000001;
+const qreal EPSILON_METERS = 0.001;
 
 Wayset::Wayset()
 {
@@ -205,7 +205,7 @@ UAVPose Wayset::sampleAtDistance(qreal desiredDistance, const UAVParameters& uav
     foreach(const Dubins& dubin, dubins)
         maxDist += dubin.length();
 
-    if (desiredDistance < 0.0 || desiredDistance - maxDist > EPSILON)
+    if (desiredDistance < 0.0 || desiredDistance - maxDist > EPSILON_METERS)
     {
         qWarning() << "sampleAtDistance beyond valid distance window." << desiredDistance << "(max" << maxDist << ")";
         qDebug() << QString::number(desiredDistance, 'g', 20) << QString::number(maxDist, 'g', 20);
@@ -309,6 +309,48 @@ Wayset Wayset::portionByTime(qreal startTime, qreal endTime, const UAVParameters
     return this->portionByDist(startDist, endDist, uavParams);
 }
 
+Wayset Wayset::discretePortionByDist(qreal startDist, qreal endDist, const UAVParameters &uavParams) const
+{
+    Wayset toRet;
+    const qreal maxDist = this->lengthMeters(uavParams);
+
+    if (startDist < 0 || endDist < 0 || startDist >= endDist || endDist - maxDist > EPSILON_METERS)
+    {
+        qWarning() << "Invalid arguments to Wayset::portionByDist" << startDist << endDist << maxDist;
+        return toRet;
+    }
+
+    const QList<Dubins> dubins = this->dubins(uavParams);
+    qreal distSoFar = 0.0;
+    for (int i = 0; i < dubins.size(); i++)
+    {
+        const Dubins& dubin = dubins.at(i);
+        const qreal currentLength = dubin.length();
+
+        const UAVPose& pose = _poses.at(i);
+
+        if (distSoFar + currentLength > startDist
+                && distSoFar + currentLength <= endDist)
+            toRet.append(pose);
+        else if (distSoFar >= startDist
+                 && distSoFar <= endDist)
+            toRet.append(pose);
+
+        distSoFar += currentLength;
+    }
+
+
+    return toRet;
+}
+
+Wayset Wayset::discretePortionByTime(qreal startTime, qreal endTime, const UAVParameters &uavParams) const
+{
+    const qreal startDist = startTime * uavParams.airspeed();
+    const qreal endDist = endTime * uavParams.airspeed();
+
+    return this->discretePortionByDist(startDist, endDist, uavParams);
+}
+
 void Wayset::cleanup()
 {
     QMutableListIterator<UAVPose> iter(_poses);
@@ -345,7 +387,7 @@ void Wayset::append(const Wayset &wayset)
 
 void Wayset::append(const Position &pos,const UAVOrientation &angle)
 {
-    _poses.append(UAVPose(pos, angle));
+    this->append(UAVPose(pos, angle));
 }
 
 void Wayset::prepend(const UAVPose &pose)
@@ -356,7 +398,7 @@ void Wayset::prepend(const UAVPose &pose)
 
 void Wayset::prepend(const Position &pos, const UAVOrientation &angle)
 {
-    _poses.prepend(UAVPose(pos, angle));
+    this->prepend(UAVPose(pos, angle));
 }
 
 const QList<UAVPose> &Wayset::poses() const
