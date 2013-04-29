@@ -3,6 +3,7 @@
 #include <QtDebug>
 #include <QtCore>
 #include <QVector2D>
+#include <QMutableListIterator>
 
 const qreal EPSILON = 0.000001;
 
@@ -10,9 +11,10 @@ Wayset::Wayset()
 {
 }
 
-Wayset::Wayset(const QList<UAVPose> &waypoints) :
-    _poses(waypoints)
+Wayset::Wayset(const QList<UAVPose> &waypoints)
 {
+    foreach(const UAVPose& pose, waypoints)
+        this->append(pose);
 }
 
 Wayset::Wayset(QDataStream &stream)
@@ -285,9 +287,9 @@ Wayset Wayset::portionByDist(qreal startDist, qreal endDist, const UAVParameters
     Wayset toRet;
     const qreal maxDist = this->lengthMeters(uavParams);
 
-    if (startDist < 0 || endDist < 0 || startDist >= endDist || endDist > maxDist)
+    if (startDist < 0 || endDist < 0 || startDist >= endDist || endDist - maxDist > 0.001)
     {
-        qWarning() << "Invalid arguments to Wayset::portion" << startDist << endDist;
+        qWarning() << "Invalid arguments to Wayset::portionByDist" << startDist << endDist << maxDist;
         return toRet;
     }
 
@@ -305,6 +307,23 @@ Wayset Wayset::portionByTime(qreal startTime, qreal endTime, const UAVParameters
     const qreal endDist = endTime * uavParams.airspeed();
 
     return this->portionByDist(startDist, endDist, uavParams);
+}
+
+void Wayset::cleanup()
+{
+    QMutableListIterator<UAVPose> iter(_poses);
+
+    bool gotPrev = false;
+    UAVPose prev;
+
+    while (iter.hasNext())
+    {
+        const UAVPose& current = iter.next();
+        if (gotPrev && prev.pos().flatDistanceEstimate(current.pos()) < 1.5)
+            iter.remove();
+        else
+            gotPrev = true;
+    }
 }
 
 void Wayset::clear()
