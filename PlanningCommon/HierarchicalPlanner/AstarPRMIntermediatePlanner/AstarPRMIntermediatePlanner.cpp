@@ -1,6 +1,6 @@
 #include "AstarPRMIntermediatePlanner.h"
 
-const qreal GRANULARITY = 75.0;
+const qreal DEFAULT_GRANULARITY = 75.0;
 
 #include <QMultiMap>
 #include <QSet>
@@ -8,7 +8,7 @@ const qreal GRANULARITY = 75.0;
 
 #include "QVectorND.h"
 #include "guts/Conversions.h"
-#include "HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h"
+#include "HierarchicalPlanner/SmartIntermediatePlanner.h"
 #include "Dubins.h"
 
 AstarPRMIntermediatePlanner::AstarPRMIntermediatePlanner(const UAVParameters& uavParams,
@@ -19,6 +19,17 @@ AstarPRMIntermediatePlanner::AstarPRMIntermediatePlanner(const UAVParameters& ua
                                                          const QList<QPolygonF> &obstacles) :
     IntermediatePlanner(uavParams, startPos, startPose, endPos, endPose, obstacles)
 {
+    this->setAstarGranularity(DEFAULT_GRANULARITY);
+}
+
+void AstarPRMIntermediatePlanner::setAstarGranularity(qreal granularity)
+{
+    _granularity = qMax<qreal>(25.0, granularity);
+}
+
+qreal AstarPRMIntermediatePlanner::granularity() const
+{
+    return _granularity;
 }
 
 //pure-virtual from IntermediatePlanner
@@ -44,7 +55,7 @@ bool AstarPRMIntermediatePlanner::plan()
         //qDebug() << "A* intermed:" << current << bestScore;
 
         //When we get close enough trace back
-        if (current.flatDistanceEstimate(this->endPos()) < GRANULARITY)
+        if (current.flatDistanceEstimate(this->endPos()) < this->granularity())
         {
             Wayset metaPlan;
 
@@ -69,8 +80,8 @@ bool AstarPRMIntermediatePlanner::plan()
             {
                 if (xd == 0 && xy == 0)
                     continue;
-                const Position neighbor = current.flatOffsetToPosition(QPointF(xd * GRANULARITY,
-                                                                               xy * GRANULARITY));
+                const Position neighbor = current.flatOffsetToPosition(QPointF(xd * this->granularity(),
+                                                                               xy * this->granularity()));
 
                 //Check closed set
                 if (closedSet.contains(neighbor))
@@ -89,11 +100,9 @@ bool AstarPRMIntermediatePlanner::plan()
                 if (obstacleViolation)
                     continue;
 
-                qreal costToMove;
+                qreal costToMove = this->granularity();
                 if (xd != 0 && xy != 0)
-                    costToMove = sqrt(2.0 * GRANULARITY * GRANULARITY);
-                else
-                    costToMove = GRANULARITY;
+                    costToMove = sqrt(2.0 * this->granularity() * this->granularity());
 
                 const qreal tentativeCost = costSoFar.value(current) + costToMove;
                 if (!costSoFar.contains(neighbor) || tentativeCost < costSoFar.value(neighbor))
