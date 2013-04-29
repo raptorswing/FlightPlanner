@@ -468,7 +468,7 @@ bool HierarchicalPlanner::_buildSchedule()
         prevInterval = interval;
     }
 
-    qDebug() << "Path should take" << (path.lengthMeters(params) / params.airspeed()) << "seconds";
+    qDebug() << "Path should take" << path.timeToFly(params) << "seconds";
 
     this->setBestFlightSoFar(path);
     return true;
@@ -486,6 +486,14 @@ Wayset HierarchicalPlanner::_generateTransitionFlight(const Position &startPos,
                                                                        _obstacles);
     intermed->plan();
     Wayset toRet = intermed->results();
+
+    /*
+     *This will probably cause duplicate points in the wayset, but the Wayset class should take
+     *care of removing duplicates later when sub-flights and transitions are combined. For now, we
+     *need this here to make the path length measurements in the scheduler match up with
+     *the results from the simulated flier!
+    */
+    toRet.append(endPos, endPose);
     delete intermed;
 
     return toRet;
