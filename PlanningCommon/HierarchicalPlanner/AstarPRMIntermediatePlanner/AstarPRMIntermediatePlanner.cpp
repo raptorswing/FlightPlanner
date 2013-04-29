@@ -1,6 +1,6 @@
 #include "AstarPRMIntermediatePlanner.h"
 
-const qreal DEFAULT_GRANULARITY = 75.0;
+const qreal DEFAULT_GRANULARITY = 150.0;
 
 #include <QMultiMap>
 #include <QSet>
