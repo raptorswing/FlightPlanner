@@ -461,7 +461,7 @@ bool HierarchicalPlanner::_buildSchedule()
         const Wayset& subFlight = _taskSubFlights.value(task);
         const qreal startTime = prevInterval.val(taskIndex);
         const qreal endTime = interval.val(taskIndex);
-        Wayset portion = subFlight.portionByTime(startTime, endTime, params);
+        const Wayset portion = subFlight.discretePortionByTime(startTime, endTime, params);
         path.append(portion);
 
 
