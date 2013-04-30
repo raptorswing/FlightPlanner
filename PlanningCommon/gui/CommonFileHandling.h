@@ -26,6 +26,14 @@ public:
                                                                const QString& filePath);
 
     static bool writeChatResponseResults(UserStudyChatHandler * handler);
+
+    static bool setWorkingDirectory(const QString& dirString);
+
+    static void setResultPrefix(const QString& nPrefix);
+    static QString resultsPrefix();
+
+private:
+    static QString _resultPrefix;
 };
 
 #endif // COMMONFILEHANDLING_H

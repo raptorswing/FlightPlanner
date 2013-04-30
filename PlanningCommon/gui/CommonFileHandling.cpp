@@ -9,6 +9,11 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
+#include <QDir>
+#include <QFileInfo>
+
+//private
+QString CommonFileHandling::_resultPrefix = QString("");
 
 //static
 bool CommonFileHandling::doExport(const Wayset &toExport,
@@ -115,4 +120,38 @@ bool CommonFileHandling::writeChatResponseResults(UserStudyChatHandler *handler)
     }
 
     return toRet;
+}
+
+//static
+bool CommonFileHandling::setWorkingDirectory(const QString &dirString)
+{
+    QFileInfo info(dirString);
+    QString fullString = info.absoluteFilePath();
+
+    if (info.exists() && !info.isDir())
+    {
+        qWarning() << fullString << "is not a directory";
+        return false;
+    }
+    else if (!info.exists() && !QDir::current().mkpath(fullString))
+    {
+        qWarning() << "Failed to create directory" << fullString;
+        return false;
+    }
+
+    qDebug() << "Working directory" << fullString;
+    QDir::setCurrent(fullString);
+    return true;
+}
+
+//static
+void CommonFileHandling::setResultPrefix(const QString &nPrefix)
+{
+    CommonFileHandling::_resultPrefix = nPrefix;
+}
+
+//static
+QString CommonFileHandling::resultsPrefix()
+{
+    return CommonFileHandling::_resultPrefix;
 }
