@@ -244,8 +244,19 @@ void WaypointPlannerMainWindow::on_actionImport_Solution_triggered()
 //private slot
 void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
 {
+    const QString destFile = CommonWindowHandling::getExportSolutionFilename(this);
+    if (destFile.isEmpty())
+        return;
+
     Wayset toExport = _waysetManager->wayset();
-    CommonFileHandling::doExport(toExport, QString(), this);
+    if (destFile.toLower().endsWith(".gpx"))
+    {
+        UAVParameters fudgeParams = _problem->uavParameters();
+        fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+        toExport = toExport.resample(fudgeParams.waypointInterval(), fudgeParams);
+    }
+
+    CommonFileHandling::doExport(toExport, destFile, this);
 }
 
 //private slot

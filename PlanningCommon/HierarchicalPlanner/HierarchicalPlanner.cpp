@@ -194,7 +194,6 @@ void HierarchicalPlanner::_buildStartAndEndPositions()
             qWarning() << "Start pos/pose heuristic failed for area" << area->areaName() << "!";
 
         _areaStartPositions.insert(area, start);
-        qDebug() << "Start for" << area << "at" << start;
 
         const qreal angleRads = start.angleTo(end);
         const UAVOrientation orientation(angleRads);
@@ -241,6 +240,7 @@ void HierarchicalPlanner::_buildSubFlights()
         planner.plan();
 
         _taskSubFlights.insert(task, planner.results());
+        qDebug() << "Sub-flight should take" << planner.results().timeToFly(this->problem()->uavParameters()) << " seconds";
     }
 }
 
@@ -293,7 +293,7 @@ bool HierarchicalPlanner::_buildSchedule()
         worklist.remove(costKey, state);
         closedSet.insert(state);
 
-        //qDebug() << "At:" << state << "with cost" << costKey;
+        qDebug() << "At:" << state << "with cost" << costKey;
 
         if (state == endState)
         {
