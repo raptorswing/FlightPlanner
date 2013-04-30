@@ -324,17 +324,30 @@ bool HierarchicalPlanner::_buildSchedule()
             const QSharedPointer<FlightTask>& task = _tasks.value(i);
             const QSharedPointer<FlightTaskArea>& area = _tasks2areas.value(task);
 
+            //Check dependency constraints
+            bool dependencyViolation = false;
+            foreach(const QWeakPointer<FlightTask> wConstraint, task->dependencyConstraints())
+            {
+                QSharedPointer<FlightTask> constraint = wConstraint.toStrongRef();
+                if (constraint.isNull())
+                    continue;
+                int index = _tasks.indexOf(constraint);
+                if (index == -1)
+                    continue;
+                if (state.val(index) < taskTimes.at(index))
+                {
+                    dependencyViolation = true;
+                    break;
+                }
+            }
+            if (dependencyViolation)
+                continue;
+
             //The time at which the subflight flying begins and ends.
             qreal startTime;
             qreal endTime;
 
             Wayset transitionFlight;
-
-            /*
-             * The heuristic is the estimated amount of time to fly all remaining tasks assuming no-cost
-             * transitions and no obstacles.
-             */
-            const qreal heuristic = (endState - newState).manhattanDistance();
 
             //If this is the first step from start then we use one of our start transition flights
             if (!lastTasks.contains(state))
@@ -383,28 +396,6 @@ bool HierarchicalPlanner::_buildSchedule()
              */
             endTime = startTime + newState[i] - state[i];
 
-            //The total cost of everything up to and including the move we'll make
-            const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
-
-            //Check dependency constraints
-            bool dependencyViolation = false;
-            foreach(const QWeakPointer<FlightTask> wConstraint, task->dependencyConstraints())
-            {
-                QSharedPointer<FlightTask> constraint = wConstraint.toStrongRef();
-                if (constraint.isNull())
-                    continue;
-                int index = _tasks.indexOf(constraint);
-                if (index == -1)
-                    continue;
-                if (state.val(index) < taskTimes.at(index))
-                {
-                    dependencyViolation = true;
-                    break;
-                }
-            }
-            if (dependencyViolation)
-                continue;
-
             //If the newstate violates timing constraints then we won't generate it
             bool timingSatisfied = false;
             foreach(const TimingConstraint& constraint, task->timingConstraints())
@@ -422,9 +413,18 @@ bool HierarchicalPlanner::_buildSchedule()
             if (!timingSatisfied)
                 continue;
 
+            //The total cost of everything up to and including the move we'll make
+            const qreal tentativeCostToMove = actualCosts.value(state) + endTime - actualCosts.value(state);
+
             //If we have found a better way to reach a state then we'll replace the current information
             if (!actualCosts.contains(newState) || actualCosts.value(newState) > tentativeCostToMove)
             {
+                /*
+                 * The heuristic is the estimated amount of time to fly all remaining tasks assuming no-cost
+                 * transitions and no obstacles.
+                 */
+                const qreal heuristic = (endState - newState).manhattanDistance();
+
                 //newState's parent is state
                 parents.insert(newState, state);
 
