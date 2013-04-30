@@ -102,13 +102,6 @@ void WaypointPlannerMainWindow::openProblem(const QString &filePath)
     this->on_actionReset_Flight_triggered();
 
     _waysetManager->setPlanningProblem(_problem);
-
-    if (_problem->startingPositionDefined())
-    {
-        _view->setZoomLevel(15);
-        _view->centerOn(_problem->startingPosition().lonLat());
-        _waysetManager->appendWaypoint(_problem->startingPosition());
-    }
 }
 
 //private slot
@@ -263,13 +256,24 @@ void WaypointPlannerMainWindow::on_actionExport_Solution_triggered()
 void WaypointPlannerMainWindow::on_actionReset_Flight_triggered()
 {
     _waysetManager->setWayset(Wayset(), _waysetManager->lineMode());
+
+    if (_problem->startingPositionDefined())
+    {
+        _view->setZoomLevel(15);
+        _view->centerOn(_problem->startingPosition().lonLat());
+        _waysetManager->appendWaypoint(_problem->startingPosition());
+    }
 }
 
 //private slot
 void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
 {
-    const Wayset flight = _waysetManager->wayset().resample(_problem->uavParameters().waypointInterval(),
-                                                            _problem->uavParameters());
+    UAVParameters fudgeParams = _problem->uavParameters();
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+
+    const Wayset flight = _waysetManager->wayset().resample(fudgeParams.waypointInterval(),
+                                                            fudgeParams);
+    qDebug() << "Flight should take" << flight.timeToFly(_problem->uavParameters()) << "seconds";
 
     CommonWindowHandling::simulateFlightAndShowResults(this, flight, _problem);
 }
