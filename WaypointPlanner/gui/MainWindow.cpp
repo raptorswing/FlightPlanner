@@ -99,9 +99,16 @@ void WaypointPlannerMainWindow::openProblem(const QString &filePath)
         qDebug() << "Opened" << filePath;
 
     //Reset things
-    this->on_actionReset_Flight_triggered();
-
+    _waysetManager->setWayset(Wayset(), _waysetManager->lineMode());
     _waysetManager->setPlanningProblem(_problem);
+
+    //Set initial position if we have a problem loaded
+    if (_problem->startingPositionDefined())
+    {
+        _view->setZoomLevel(15);
+        _view->centerOn(_problem->startingPosition().lonLat());
+        _waysetManager->appendWaypoint(_problem->startingPosition());
+    }
 }
 
 //private slot
