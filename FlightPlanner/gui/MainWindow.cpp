@@ -77,11 +77,17 @@ void MainWindow::updateDisplayedFlight()
         qWarning() << "Can't update displayed flight - planner is null";
     else if (_waysetManager.isNull())
         qWarning() << "Can't update dispalyed flight - wayset manager is null";
-    else
+    else if (_planner->status() == FlightPlanner::Paused && _planner->bestFlightSoFar().isEmpty())
     {
-        _waysetManager->setPlanningProblem(_problem);
-        _waysetManager->setWayset(_planner->bestFlightSoFar());
+        QMessageBox::warning(this,
+                             "Planning Failed",
+                             "The planner was unable to find a flight that does everything you've specified. Please check your tasks and constraints.");
     }
+
+    const Wayset& bestSoFar = _planner->bestFlightSoFar();
+
+    _waysetManager->setPlanningProblem(_problem);
+    _waysetManager->setWayset(bestSoFar);
 
     this->enableDisableFlightActions();
 }
@@ -315,6 +321,10 @@ void MainWindow::initPlanningProblem()
             SIGNAL(plannerStatusChanged(FlightPlanner::PlanningStatus)),
             this,
             SLOT(updateDisplayedFlight()));
+//    connect(_planner.data(),
+//            SIGNAL(plannerPaused()),
+//            this,
+//            SLOT(updateDisplayedFlight()));
 
     _viewAdapter = new ProblemViewAdapter(_problem,
                                           _scene,

@@ -33,10 +33,15 @@ public:
     void setBestFlightSoFar(const Wayset& nFlight);
 
     quint32 iterations() const;
+
+    FlightPlanner::PlanningStatus status() const;
     
 signals:
     void plannerProgressChanged(qreal fitness, quint32 iterations);
     void plannerStatusChanged(FlightPlanner::PlanningStatus status);
+    void plannerStopped();
+    void plannerPaused();
+    void plannerStarted();
     
 public slots:
     void startPlanning();
@@ -48,16 +53,20 @@ protected:
     virtual void doIteration()=0;
     virtual void doReset()=0;
 
+    void setStatus(FlightPlanner::PlanningStatus status);
+
     void setBestFitnessSoFar(const Fitness& nBest);
 
 private:
     QSharedPointer<PlanningProblem> _prob;
+    PlanningStatus _currentStatus;
     QTimer * _planningTimer;
 
     quint32 _iterations;
 
     Fitness _bestFitnessSoFar;
     Wayset _bestFlightSoFar;
+
 
 private slots:
     //The timer calls this one, which will call the polymorphic instance

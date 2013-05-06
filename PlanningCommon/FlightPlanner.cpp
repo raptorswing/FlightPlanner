@@ -2,7 +2,7 @@
 
 FlightPlanner::FlightPlanner(QSharedPointer<PlanningProblem> prob,
                              QObject *parent) :
-    QObject(parent), _prob(prob), _iterations(0)
+    QObject(parent), _prob(prob), _iterations(0), _currentStatus(FlightPlanner::Stopped)
 {
     _planningTimer = new QTimer(this);
     connect(_planningTimer,
@@ -48,6 +48,11 @@ quint32 FlightPlanner::iterations() const
     return _iterations;
 }
 
+FlightPlanner::PlanningStatus FlightPlanner::status() const
+{
+    return _currentStatus;
+}
+
 //public slot
 void FlightPlanner::startPlanning()
 {
@@ -67,14 +72,18 @@ void FlightPlanner::startPlanning()
     this->doStart();
 
     _planningTimer->start(0);
-    this->plannerStatusChanged(Running);
+
+
+    this->setStatus(Running);
 }
 
 //public slot
 void FlightPlanner::pausePlanning()
 {
     _planningTimer->stop();
-    this->plannerStatusChanged(Paused);
+
+
+    this->setStatus(Paused);
 }
 
 //public slot
@@ -89,7 +98,35 @@ void FlightPlanner::resetPlanning()
 
 
     this->plannerProgressChanged(0.0,0);
-    this->plannerStatusChanged(Stopped);
+
+    this->setStatus(Stopped);
+}
+
+void FlightPlanner::setStatus(FlightPlanner::PlanningStatus status)
+{
+    if (_currentStatus == status)
+        return;
+    else if (_currentStatus == Stopped && status == Paused)
+        return;
+
+    _currentStatus = status;
+
+    switch(status)
+    {
+    case Running:
+        this->plannerStarted();
+        break;
+
+    case Paused:
+        this->plannerPaused();
+        break;
+
+    case Stopped:
+        this->plannerStopped();
+        break;
+    }
+
+    this->plannerStatusChanged(status);
 }
 
 //protected

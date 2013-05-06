@@ -104,7 +104,7 @@ bool CommonFileHandling::writeChatResponseResults(UserStudyChatHandler *handler)
 {
     bool toRet;
 
-    const QString filename = QCoreApplication::applicationName() + "-ChatResponse.csv";
+    const QString filename = CommonFileHandling::resultsPrefix() + " ChatResponse.csv";
     QFile fp(filename);
     if (fp.open(QFile::WriteOnly | QFile::Text))
     {
