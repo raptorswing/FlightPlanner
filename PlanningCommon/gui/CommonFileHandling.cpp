@@ -102,6 +102,10 @@ QSharedPointer<PlanningProblem> CommonFileHandling::readProblemFromFile(QWidget 
 //static
 bool CommonFileHandling::writeChatResponseResults(UserStudyChatHandler *handler)
 {
+    //We only write results in "User study mode"
+    if (CommonFileHandling::resultsPrefix().isEmpty())
+        return true;
+
     bool toRet;
 
     const QString filename = CommonFileHandling::resultsPrefix() + " ChatResponse.csv";
