@@ -27,12 +27,9 @@ Exporter *Exporter::getExporter(const QString &filePath)
 {
     Exporter * toRet = 0;
 
-    const QFileInfo info(filePath);
-    const QString suffix = info.completeSuffix().toLower();
-
-    if (suffix == "gpx")
+    if (filePath.toLower().endsWith(".gpx"))
         toRet = new GPXExporter(filePath);
-    else if (suffix == "wst")
+    else if (filePath.toLower().endsWith(".wst"))
         toRet = new BinaryExporter(filePath);
 
 
