@@ -84,6 +84,20 @@ void FlightTaskArea::addTask(QSharedPointer<FlightTask> task)
     if (_tasks.contains(task) && !task.isNull())
         return;
 
+
+    //If the user adds a no-fly task, remove all other tasks first
+    QList<QSharedPointer<FlightTask> > tasks = this->tasks();
+    if (task->taskType() == "No-Fly Zone")
+    {
+        foreach(const QSharedPointer<FlightTask>& task, tasks)
+            this->removeTask(task);
+    }
+    //Don't allow adding any other tasks if the area contains a no-fly
+    else if (tasks.size() == 1 && tasks.at(0)->taskType() == "No-Fly Zone")
+    {
+        return;
+    }
+
     this->taskAboutToAdd(); //For FlightTaskAreaListModel
 
     _tasks.append(task);
