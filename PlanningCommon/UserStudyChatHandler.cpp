@@ -90,13 +90,12 @@ QString UserStudyChatHandler::toString() const
 {
     QString toRet;
 
-    QMapIterator<QDateTime, QDateTime> iter(_response2Stimulus);
+    QListIterator<QPair<QDateTime, QDateTime >> iter(_response2Stimulus);
     while (iter.hasNext())
     {
-        iter.next();
-
-        const QDateTime& responseTime = iter.key();
-        const QDateTime& stimulusTime = iter.value();
+        const QPair<QDateTime, QDateTime>& pair = iter.next();
+        const QDateTime& responseTime = pair.first;
+        const QDateTime& stimulusTime = pair.second;
 
         toRet += QString::number(responseTime.toMSecsSinceEpoch()) % ", " % QString::number(stimulusTime.toMSecsSinceEpoch()) % "\n";
     }
@@ -115,14 +114,14 @@ void UserStudyChatHandler::handleUserMessage(const QString &msg)
         const QDateTime mostRecent = _lastForegroundTime;
         const int offset = mostRecent.msecsTo(current);
 
-        _response2Stimulus.insert(current, mostRecent);
+        _response2Stimulus.append(QPair<QDateTime, QDateTime>(current, mostRecent));
 
         qDebug() << "User responded" << offset << "ms later";
         _lastForegroundCode = -50;
     }
     else
     {
-        _response2Stimulus.insert(current, QDateTime());
+        _response2Stimulus.append(QPair<QDateTime, QDateTime>(current, QDateTime()));
         qDebug() << "Unmatched user response";
     }
 }
@@ -163,6 +162,13 @@ void UserStudyChatHandler::generateForegroundEvent()
     const QString message = "Attention all units: please acknowledge with code " % QString::number(codeNumber);
 
     this->messageGenerated(sender, message);
+
+    /*
+     *if the user didn't reply to a foreground event before a new one is generated we make a note of it
+     *as being missed.
+    */
+    if (_lastForegroundCode >= 0)
+        _response2Stimulus.append(QPair<QDateTime,QDateTime>(QDateTime(), _lastForegroundTime));
 
     _lastForegroundTime = QDateTime::currentDateTimeUtc();
     _lastForegroundCode = codeNumber;

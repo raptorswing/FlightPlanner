@@ -9,6 +9,7 @@
 #include <QMap>
 #include <QDateTime>
 #include <QTimer>
+#include <QPair>
 
 class PLANNINGCOMMONSHARED_EXPORT UserStudyChatHandler : public QObject
 {
@@ -42,7 +43,7 @@ private:
 
     QDateTime _lastForegroundTime;
     int _lastForegroundCode;
-    QMap<QDateTime, QDateTime> _response2Stimulus;
+    QList<QPair<QDateTime, QDateTime> > _response2Stimulus;
     
 };
 
