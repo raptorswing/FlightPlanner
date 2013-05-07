@@ -8,6 +8,7 @@
 #include <QtDebug>
 #include <QTimer>
 #include <QFileDialog>
+#include <QStringBuilder>
 
 #include "gui/CommonFileHandling.h"
 #include "gui/CommonWindowHandling.h"
@@ -282,7 +283,19 @@ void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
                                                             fudgeParams);
     qDebug() << "Flight should take" << flight.timeToFly(_problem->uavParameters()) << "seconds";
 
-    CommonWindowHandling::simulateFlightAndShowResults(this, flight, _problem);
+    const SimulatedFlierResults results = SimulatedFlier::simulate(flight, _problem);
+    CommonWindowHandling::showFlightTestResults(this, results);
+
+    //If we are in user study mode, write stuff out when we test
+    if (!CommonFileHandling::resultsPrefix().isEmpty())
+    {
+        QString filename = CommonFileHandling::resultsPrefix() % " " % QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()) % "-" % QString::number(results.points / results.pointsPossible);
+        CommonFileHandling::doExport(_waysetManager->wayset(),
+                                     filename % ".wst",
+                                     this);
+    }
+
+
 }
 
 //private slot

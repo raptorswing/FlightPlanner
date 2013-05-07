@@ -276,9 +276,19 @@ void MainWindow::on_actionTest_Flight_triggered()
     if (!_hiddenProblem.isNull())
         problemToUse = _hiddenProblem;
 
-    CommonWindowHandling::simulateFlightAndShowResults(this,
-                                                       _planner->bestFlightSoFar(),
-                                                       problemToUse);
+    const SimulatedFlierResults results = SimulatedFlier::simulate(_planner->bestFlightSoFar(),
+                                                                   problemToUse);
+    CommonWindowHandling::showFlightTestResults(this, results);
+
+    //If we are in user study mode, write stuff out when we test
+    if (!CommonFileHandling::resultsPrefix().isEmpty())
+    {
+        QString filename = CommonFileHandling::resultsPrefix() % " " % QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()) % "-" % QString::number(results.points / results.pointsPossible);
+        this->saveProblem(filename % ".prb");
+        CommonFileHandling::doExport(_planner->bestFlightSoFar(),
+                                     filename % ".wst",
+                                     this);
+    }
 }
 
 
