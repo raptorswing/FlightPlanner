@@ -97,7 +97,26 @@ QString UserStudyChatHandler::toString() const
         const QDateTime& responseTime = pair.first;
         const QDateTime& stimulusTime = pair.second;
 
-        toRet += QString::number(responseTime.toMSecsSinceEpoch()) % ", " % QString::number(stimulusTime.toMSecsSinceEpoch()) % "\n";
+        QString responseString;
+        if (_responses.contains(responseTime))
+        {
+            responseString = _responses.value(responseTime);
+            responseString.replace(",","");
+        }
+
+        QString stimulusString;
+        if (_stimulii.contains(stimulusTime))
+        {
+            stimulusString = _stimulii.value(stimulusTime);
+            stimulusString.replace(",","");
+        }
+
+
+        toRet += QString::number(responseTime.toMSecsSinceEpoch())
+                % ", " % responseString
+                % ", " % QString::number(stimulusTime.toMSecsSinceEpoch())
+                % ", " % stimulusString
+                % "\n";
     }
 
     return toRet;
@@ -124,6 +143,8 @@ void UserStudyChatHandler::handleUserMessage(const QString &msg)
         _response2Stimulus.append(QPair<QDateTime, QDateTime>(current, QDateTime()));
         qDebug() << "Unmatched user response";
     }
+
+    _responses.insert(current, msg);
 }
 
 //private slot
@@ -172,6 +193,7 @@ void UserStudyChatHandler::generateForegroundEvent()
 
     _lastForegroundTime = QDateTime::currentDateTimeUtc();
     _lastForegroundCode = codeNumber;
+    _stimulii.insert(_lastForegroundTime, QString::number(_lastForegroundCode));
 
     this->changeTimerInterval(_foregroundTimer, FOREGROUND_MEAN, FOREGROUND_STDEV);
 }

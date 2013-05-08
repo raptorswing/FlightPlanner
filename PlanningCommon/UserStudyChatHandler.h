@@ -44,6 +44,8 @@ private:
     QDateTime _lastForegroundTime;
     int _lastForegroundCode;
     QList<QPair<QDateTime, QDateTime> > _response2Stimulus;
+    QMap<QDateTime, QString> _responses;
+    QMap<QDateTime, QString> _stimulii;
     
 };
 
