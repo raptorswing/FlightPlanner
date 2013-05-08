@@ -29,12 +29,14 @@ void UserStudyEventLogger::setPrefix(const QString &nPrefix)
 
 void UserStudyEventLogger::logFlightPerformance(UserStudyEventLogger *logger,
                                                 const QString &log,
-                                                const SimulatedFlierResults &results)
+                                                const SimulatedFlierResults &results,
+                                                qreal flightLengthMeters)
 {
     if (logger == 0)
         return;
 
     QStringList parts;
+    parts.append(QString::number(flightLengthMeters));
     parts.append(QString::number(results.points));
     parts.append(QString::number(results.pointsPossible));
     parts.append(QString::number(results.timingViolations.size()));

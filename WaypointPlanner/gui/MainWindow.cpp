@@ -18,6 +18,9 @@
 #include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
 #include "SimulatedFlier.h"
 
+const QString PERF_LOG = "Performance.csv";
+const QString GENERAL_LOG = "General.txt";
+
 WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -32,6 +35,7 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     this->enableDisableFlightActions();
 
     _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
+    _eventLogger = new UserStudyEventLogger(CommonFileHandling::resultsPrefix(), this);
 }
 
 WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
@@ -110,6 +114,11 @@ void WaypointPlannerMainWindow::openProblem(const QString &filePath)
         _view->centerOn(_problem->startingPosition().lonLat());
         _waysetManager->appendWaypoint(_problem->startingPosition());
     }
+
+    _eventLogger->addTimestampedLine(GENERAL_LOG, "Opened " + filePath);
+
+    QStringList parts;
+    _eventLogger->addTimestampedCSVLine(PERF_LOG, parts);
 }
 
 //private slot
@@ -295,7 +304,11 @@ void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
                                      this);
     }
 
-
+    const qreal lengthMeters = flight.lengthMeters(fudgeParams);
+    UserStudyEventLogger::logFlightPerformance(_eventLogger,
+                                               PERF_LOG,
+                                               results,
+                                               lengthMeters);
 }
 
 //private slot

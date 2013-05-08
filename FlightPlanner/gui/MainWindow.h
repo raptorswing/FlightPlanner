@@ -6,14 +6,16 @@
 #include <QList>
 #include <QPointer>
 
-#include "MapGraphicsView.h"
-#include "MapGraphicsScene.h"
-#include "PlanningProblem.h"
-#include "FlightPlanner.h"
 #include "ProblemViewAdapter.h"
-#include "UserStudyChatHandler.h"
 
-#include "WaysetDisplayManager.h" //From PlanningCommon
+#include "PlanningProblem.h"        //From PlanningCommon
+#include "FlightPlanner.h"          //From PlanningCommon
+#include "UserStudyChatHandler.h"   //From PlanningCommon
+#include "WaysetDisplayManager.h"   //From PlanningCommon
+#include "UserStudyEventLogger.h"   //From PlanningCommon
+
+#include "MapGraphicsView.h"        //From MapGraphics
+#include "MapGraphicsScene.h"       //From MapGraphics
 
 namespace Ui {
 class MainWindow;
@@ -71,6 +73,7 @@ private:
     QPointer<WaysetDisplayManager> _waysetManager;
 
     UserStudyChatHandler * _chatHandler;
+    UserStudyEventLogger * _eventLogger;
 };
 
 #endif // MAINWINDOW_H

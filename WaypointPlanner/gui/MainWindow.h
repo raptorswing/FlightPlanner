@@ -13,6 +13,7 @@
 #include "PlanningProblem.h"
 
 #include "UserStudyChatHandler.h"
+#include "UserStudyEventLogger.h"
 
 namespace Ui {
 class MainWindow;
@@ -74,6 +75,7 @@ private:
     QPointer<PolygonObject> _coveragePolygon;
 
     UserStudyChatHandler * _chatHandler;
+    UserStudyEventLogger * _eventLogger;
 };
 
 #endif // WAYPOINTPLANNERMAINWINDOW_H

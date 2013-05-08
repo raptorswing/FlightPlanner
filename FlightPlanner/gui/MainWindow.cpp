@@ -19,6 +19,9 @@
 #include "gui/CommonFileHandling.h"
 #include "gui/CommonWindowHandling.h"
 
+const QString PERF_LOG = "Performance.csv";
+const QString GENERAL_LOG = "General.txt";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -35,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Do chat messages for the user study...
     _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
+    _eventLogger = new UserStudyEventLogger(CommonFileHandling::resultsPrefix(), this);
 }
 
 MainWindow::~MainWindow()
@@ -66,6 +70,12 @@ void MainWindow::openHiddenProblem(const QString &filePath)
         _view->centerOn(_hiddenProblem->startingPosition().lonLat());
 
     qDebug() << "Hidden problem" << filePath << "opened";
+
+    _eventLogger->addTimestampedLine(GENERAL_LOG, "Opened " + filePath);
+
+    QStringList parts;
+    _eventLogger->addTimestampedCSVLine(PERF_LOG, parts);
+
 }
 
 //private slot
@@ -289,6 +299,12 @@ void MainWindow::on_actionTest_Flight_triggered()
                                      filename % ".wst",
                                      this);
     }
+
+    const qreal lengthMeters = _planner->bestFlightSoFar().lengthMeters(_problem->uavParameters());
+    UserStudyEventLogger::logFlightPerformance(_eventLogger,
+                                               PERF_LOG,
+                                               results,
+                                               lengthMeters);
 }
 
 

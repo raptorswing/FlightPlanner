@@ -12,10 +12,7 @@ int main(int argc, char *argv[])
 
     const QStringList args = a.arguments();
 
-    WaypointPlannerMainWindow * w = new WaypointPlannerMainWindow();
-    w->show();
-    w->setAttribute(Qt::WA_DeleteOnClose);
-
+    QString problemToOpen;
     if (args.size() >= 4)
     {
         const QString workingDirectory = args.at(1);
@@ -25,8 +22,14 @@ int main(int argc, char *argv[])
 
         CommonFileHandling::setWorkingDirectory(workingDirectory);
         CommonFileHandling::setResultPrefix(resultsPrefix);
-        w->openProblem(problem);
+        problemToOpen = problem;
     }
+
+    WaypointPlannerMainWindow * w = new WaypointPlannerMainWindow();
+    w->show();
+    w->setAttribute(Qt::WA_DeleteOnClose);
+    if (!problemToOpen.isEmpty())
+        w->openProblem(problemToOpen);
     
     return a.exec();
 }

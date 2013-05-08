@@ -25,7 +25,8 @@ public:
 
     static void logFlightPerformance(UserStudyEventLogger * logger,
                                      const QString& log,
-                                     const SimulatedFlierResults& results);
+                                     const SimulatedFlierResults& results,
+                                     qreal flightLengthMeters);
     
 public slots:
     void addLine(const QString& log, const QString& line);

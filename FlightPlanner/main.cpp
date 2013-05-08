@@ -13,11 +13,9 @@ int main(int argc, char *argv[])
 
     const QStringList args = a.arguments();
 
-    MainWindow * w = new MainWindow();
-    w->show();
-    w->setAttribute(Qt::WA_DeleteOnClose);
 
     //Open "hidden" problem if applicable
+    QString hiddenProblem;
     if (args.size() >= 4)
     {
         const QString workingDirectory = args.at(1);
@@ -27,8 +25,15 @@ int main(int argc, char *argv[])
 
         CommonFileHandling::setWorkingDirectory(workingDirectory);
         CommonFileHandling::setResultPrefix(resultsPrefix);
-        w->openHiddenProblem(problem);
+        hiddenProblem = problem;
     }
+
+    MainWindow * w = new MainWindow();
+    w->show();
+    w->setAttribute(Qt::WA_DeleteOnClose);
+
+    if (!hiddenProblem.isEmpty())
+        w->openHiddenProblem(hiddenProblem);
     
     return a.exec();
 }
