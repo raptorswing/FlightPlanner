@@ -33,15 +33,12 @@ Importer *Importer::getImporter(const QString &filePath)
 {
     Importer * toRet = 0;
 
-    const QFileInfo info(filePath);
-    const QString suffix = info.completeSuffix().toLower();
-
-    if (suffix == "gpx")
+    if (filePath.endsWith("gpx"))
         toRet = new GPXImporter(filePath);
-    else if (suffix == "wst")
+    else if (filePath.endsWith("wst"))
         toRet = new BinaryImporter(filePath);
     else
-        qWarning() << "Can't find importer for unknown filetype" << suffix;
+        qWarning() << "Can't find importer for unknown filetype" << filePath;
 
     return toRet;
 }
