@@ -16,7 +16,7 @@ class PLANNINGCOMMONSHARED_EXPORT DubinsLineObject : public MapGraphicsObject
 public:
     DubinsLineObject(const Position& rootPos,
                      const Dubins& dubins,
-                     qreal thickness = 0.0,
+                     qreal thickness = 2.0,
                      MapGraphicsObject *parent = 0);
     virtual ~DubinsLineObject();
 

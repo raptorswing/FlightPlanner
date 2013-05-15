@@ -37,6 +37,7 @@ void DubinsLineObject::paint(QPainter *painter,
     painter->setRenderHint(QPainter::Antialiasing, true);
     QPen pen = painter->pen();
     pen.setWidthF(_thickness);
+    pen.setCosmetic(true);
     painter->setPen(pen);
 
     for (int i = 1; i < _drawOffsets.size() - 1; i++)
