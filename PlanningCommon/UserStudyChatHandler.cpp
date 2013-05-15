@@ -178,7 +178,7 @@ void UserStudyChatHandler::generateBackgroundEvent()
 //private slot
 void UserStudyChatHandler::generateForegroundEvent()
 {
-    const int codeNumber = (qrand() % 300) + 1;
+    const int codeNumber = (qrand() % 99) + 1;
     const QString sender = "Incident Commander";
     const QString message = "Attention all units: please acknowledge with code " % QString::number(codeNumber);
 
