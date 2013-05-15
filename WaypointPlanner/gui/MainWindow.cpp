@@ -12,11 +12,13 @@
 
 #include "gui/CommonFileHandling.h"
 #include "gui/CommonWindowHandling.h"
+#include "MouseMetrics.h"
 
 #include "FlightTaskArea.h"
 #include "FlightTasks/CoverageTask.h"
 #include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
 #include "SimulatedFlier.h"
+
 
 const QString PERF_LOG = "Performance.csv";
 const QString GENERAL_LOG = "General.txt";
@@ -25,6 +27,10 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    //Mouse analytics
+    MouseMetrics::buildInstance();
+    this->installEventFilter(MouseMetrics::instance());
+
     this->ui->setupUi(this);
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -46,6 +52,9 @@ WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
     CommonFileHandling::writeChatResponseResults(_chatHandler);
 
     delete ui;
+
+    UserStudyEventLogger::logMouseMetrics(_eventLogger, "clicks.csv", MouseMetrics::instance());
+    MouseMetrics::destroyInstance();
 }
 
 //public slot

@@ -8,6 +8,8 @@
 #include "FlightTasks/SamplingTask.h"
 #include "FlightTaskDelegate.h"
 
+#include "MouseMetrics.h"
+
 FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QWeakPointer<PlanningProblem> problem,
                                                                QPointer<FlightTaskAreaMapObject> flightTaskAreaObj,
                                                                QWidget *parent) :
@@ -16,6 +18,9 @@ FlightTaskAreaObjectEditWidget::FlightTaskAreaObjectEditWidget(QWeakPointer<Plan
     _problem(problem),
     _flightTaskAreaMapObj(flightTaskAreaObj)
 {
+    //Mouse analytics
+    this->installEventFilter(MouseMetrics::instance());
+
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
 

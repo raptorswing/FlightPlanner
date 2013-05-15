@@ -18,6 +18,7 @@
 
 #include "gui/CommonFileHandling.h"
 #include "gui/CommonWindowHandling.h"
+#include "MouseMetrics.h"
 
 const QString PERF_LOG = "Performance.csv";
 const QString GENERAL_LOG = "General.txt";
@@ -26,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    //GRAB ALL THE MOUSE CLICKS
+    MouseMetrics::buildInstance();
+    this->installEventFilter(MouseMetrics::instance());
+
     ui->setupUi(this);
 
     //Restore window geometry
@@ -48,6 +53,9 @@ MainWindow::~MainWindow()
 
     //Write user study results
     CommonFileHandling::writeChatResponseResults(_chatHandler);
+
+    UserStudyEventLogger::logMouseMetrics(_eventLogger, "clicks.csv", MouseMetrics::instance());
+    MouseMetrics::destroyInstance();
 
     delete ui;
 }
