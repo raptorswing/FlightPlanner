@@ -31,6 +31,8 @@ private:
     quint64 _release;
     quint64 _doubleClick;
 
+    QEvent * _lastEvent;
+
     static MouseMetrics * _instance;
 };
 

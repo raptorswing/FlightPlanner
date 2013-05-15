@@ -74,6 +74,10 @@ bool MouseMetrics::eventFilter(QObject *obj, QEvent *event)
 {
     Q_UNUSED(obj);
 
+    if (event == _lastEvent)
+        return false;
+    _lastEvent = event;
+
     if (event->type() == QEvent::MouseButtonDblClick)
     {
         MouseMetrics::addDoubleClick();
