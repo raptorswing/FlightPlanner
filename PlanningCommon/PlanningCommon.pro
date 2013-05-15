@@ -56,7 +56,8 @@ SOURCES += \
     gui/ChatWidget.cpp \
     UserStudyChatHandler.cpp \
     HierarchicalPlanner/SmartIntermediatePlanner.cpp \
-    UserStudyEventLogger.cpp
+    UserStudyEventLogger.cpp \
+    MouseMetrics.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -101,7 +102,8 @@ HEADERS +=\
     gui/ChatWidget.h \
     UserStudyChatHandler.h \
     HierarchicalPlanner/SmartIntermediatePlanner.h \
-    UserStudyEventLogger.h
+    UserStudyEventLogger.h \
+    MouseMetrics.h
 
 unix:!symbian {
     maemo5 {
