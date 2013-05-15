@@ -111,11 +111,16 @@ QString UserStudyChatHandler::toString() const
             stimulusString.replace(",","");
         }
 
+        QString diff = "0";
+        if (!responseTime.isNull() && !stimulusTime.isNull())
+            diff = QString::number(stimulusTime.msecsTo(responseTime) / 1000.0);
+
 
         toRet += QString::number(responseTime.toMSecsSinceEpoch())
                 % ", " % responseString
                 % ", " % QString::number(stimulusTime.toMSecsSinceEpoch())
                 % ", " % stimulusString
+                % ", " % diff
                 % "\n";
     }
 
