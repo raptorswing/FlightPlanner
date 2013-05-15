@@ -156,3 +156,6 @@ DEPENDPATH += $$PWD/../GPX
 
 FORMS += \
     gui/ChatWidget.ui
+
+RESOURCES += \
+    PlanningCommonResources.qrc

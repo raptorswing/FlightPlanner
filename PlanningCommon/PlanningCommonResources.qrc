@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/smiles">
+        <file alias="plain.png">gui/images/Face-plain.png</file>
+        <file alias="sad.png">gui/images/Face-sad.png</file>
+        <file alias="smile.png">gui/images/Face-smile.png</file>
+    </qresource>
+</RCC>

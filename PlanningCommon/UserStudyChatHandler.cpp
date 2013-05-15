@@ -141,6 +141,7 @@ void UserStudyChatHandler::handleUserMessage(const QString &msg)
         _response2Stimulus.append(QPair<QDateTime, QDateTime>(current, mostRecent));
 
         qDebug() << "User responded" << offset << "ms later";
+        _chatWidget->addGoodResponse(offset);
         _lastForegroundCode = -50;
     }
     else
@@ -194,7 +195,10 @@ void UserStudyChatHandler::generateForegroundEvent()
      *as being missed.
     */
     if (_lastForegroundCode >= 0)
+    {
         _response2Stimulus.append(QPair<QDateTime,QDateTime>(QDateTime(), _lastForegroundTime));
+        _chatWidget->addMissedResponse();
+    }
 
     _lastForegroundTime = QDateTime::currentDateTimeUtc();
     _lastForegroundCode = codeNumber;
