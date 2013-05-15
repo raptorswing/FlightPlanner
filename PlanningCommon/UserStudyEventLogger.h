@@ -6,6 +6,7 @@
 #include <QList>
 
 #include "SimulatedFlier.h"
+#include "MouseMetrics.h"
 
 #include "PlanningCommon_global.h"
 
@@ -27,6 +28,10 @@ public:
                                      const QString& log,
                                      const SimulatedFlierResults& results,
                                      qreal flightLengthMeters);
+
+    static void logMouseMetrics(UserStudyEventLogger * logger,
+                                const QString &log,
+                                MouseMetrics * metrics);
     
 public slots:
     void addLine(const QString& log, const QString& line);

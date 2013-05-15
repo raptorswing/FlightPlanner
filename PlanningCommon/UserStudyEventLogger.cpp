@@ -45,6 +45,22 @@ void UserStudyEventLogger::logFlightPerformance(UserStudyEventLogger *logger,
     logger->addTimestampedCSVLine(log, parts);
 }
 
+void UserStudyEventLogger::logMouseMetrics(UserStudyEventLogger *logger,
+                                           const QString &log,
+                                           MouseMetrics *metrics)
+{
+    if (logger == 0)
+        return;
+    else if (metrics == 0)
+        return;
+
+    QStringList parts;
+    parts.append(QString::number(metrics->presses()));
+    parts.append(QString::number(metrics->releases()));
+    parts.append(QString::number(metrics->doubleClicks()));
+    logger->addCSVLine(log, parts);
+}
+
 //public slot
 void UserStudyEventLogger::addLine(const QString &log, const QString &line)
 {
