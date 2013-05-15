@@ -20,7 +20,7 @@ void MouseMetrics::addPress()
 
 void MouseMetrics::addRelease()
 {
-    qDebug() << ++_release;
+    ++_release;
 }
 
 void MouseMetrics::addDoubleClick()
