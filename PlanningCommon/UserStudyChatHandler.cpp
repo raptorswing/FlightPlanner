@@ -90,7 +90,7 @@ QString UserStudyChatHandler::toString() const
 {
     QString toRet;
 
-    QListIterator<QPair<QDateTime, QDateTime >> iter(_response2Stimulus);
+    QListIterator<QPair<QDateTime, QDateTime > > iter(_response2Stimulus);
     while (iter.hasNext())
     {
         const QPair<QDateTime, QDateTime>& pair = iter.next();
