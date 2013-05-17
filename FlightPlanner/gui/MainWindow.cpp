@@ -99,7 +99,7 @@ void MainWindow::updateDisplayedFlight()
     {
         QMessageBox::warning(this,
                              "Planning Failed",
-                             "The planner was unable to find a flight that does everything you've specified. Please check your tasks and constraints.");
+                             "The planner was unable to find a satisfactory flight. Please double-check check your task areas, tasks, and settings (such as timing and dependency constraints).");
     }
 
     const Wayset& bestSoFar = _planner->bestFlightSoFar();
