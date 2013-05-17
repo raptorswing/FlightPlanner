@@ -9,15 +9,20 @@
 class PLANNINGCOMMONSHARED_EXPORT UAVParameters
 {
 public:
-    UAVParameters(qreal airspeed = 13.0, qreal minTurningRadius = 30.0, qreal waypointInterval = 30.0);
+    UAVParameters(qreal airspeed = 13.0,
+                  qreal minTurningRadius = 30.0,
+                  qreal waypointInterval = 30.0,
+                  qreal directionalSensorViewAngle = 359.9);
 
     qreal airspeed() const;
     qreal minTurningRadius() const;
     qreal waypointInterval() const;
+    qreal directionalSensorViewAngle() const;
 
     void setAirspeed(qreal nSpeed);
     void setMinTurningRadius(qreal nRad);
     void setWaypointInterval(qreal interval);
+    void setDirectionalSensorViewAngle(qreal angle);
 
     /**
      * @brief maxTurnAngle returns the maximum turn angle (in radians) that can be achieved in the distance
@@ -30,6 +35,7 @@ private:
     qreal _airspeed;
     qreal _minTurningRadius;
     qreal _waypointInterval;
+    qreal _directionalSensorViewAngle;
 };
 
 QDataStream& operator<<(QDataStream& stream, const UAVParameters& params);
