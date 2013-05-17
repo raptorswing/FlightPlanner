@@ -2,7 +2,7 @@
 
 FlightPlanner::FlightPlanner(QSharedPointer<PlanningProblem> prob,
                              QObject *parent) :
-    QObject(parent), _prob(prob), _iterations(0), _currentStatus(FlightPlanner::Stopped)
+    QObject(parent), _prob(prob), _currentStatus(FlightPlanner::Stopped), _iterations(0)
 {
     _planningTimer = new QTimer(this);
     connect(_planningTimer,
