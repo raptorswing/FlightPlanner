@@ -291,8 +291,14 @@ bool HierarchicalPlanner::_buildSchedule()
     QList<QVectorND> schedule;
 
     bool solutionFound = false;
-    while (!worklist.isEmpty() && startTime.secsTo(QTime::currentTime()) < SCHEDULING_TIMEOUT_SECONDS)
+    while (!worklist.isEmpty())
     {
+        const QTime currentTime = QTime::currentTime();
+        if (startTime.secsTo(currentTime) >= SCHEDULING_TIMEOUT_SECONDS)
+            break;
+        else
+            qDebug() << startTime.secsTo(currentTime) << "seconds elapsed";
+
         const qreal costKey = worklist.keys().first();
         const QVectorND state = worklist.value(costKey);
         worklist.remove(costKey, state);
