@@ -118,33 +118,25 @@ void SamplingTask::setTimeRequired(qreal nTime)
 void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
 {
     _bins.clear();
-    //_xyzBins.clear();
     _lastGeoPoly = geoPoly;
 
     const QRectF boundingRect = geoPoly.boundingRect().normalized();
 
-    const QVector3D topLeftXYZ(Conversions::lla2xyz(boundingRect.topRight()));
-    const QVector3D bottomLeftXYZ(Conversions::lla2xyz(boundingRect.bottomRight()));
-    const QVector3D topRightXYZ(Conversions::lla2xyz(boundingRect.topLeft()));
+    const Position topLeft = boundingRect.topLeft();
+    const Position bottomLeft = boundingRect.bottomLeft();
+    const Position topRight = boundingRect.topRight();
 
-    const qreal widthMeters = (topLeftXYZ - topRightXYZ).length();
-    const qreal heightMeters = (topLeftXYZ - bottomLeftXYZ).length();
-    const qreal lonPerMeter = Conversions::degreesLonPerMeter(boundingRect.center().y());
-    const qreal latPerMeter = Conversions::degreesLatPerMeter(boundingRect.center().y());
-
-    const int offset = GRANULARITY / 2;
+    const qreal widthMeters = topLeft.flatDistanceEstimate(topRight);
+    const qreal heightMeters = topLeft.flatDistanceEstimate(bottomLeft);
 
     for (int x = 0; x < widthMeters / GRANULARITY; x++)
     {
         for (int y = 0; y < heightMeters / GRANULARITY; y++)
         {
-            qreal lon = boundingRect.topLeft().x() + x * GRANULARITY * lonPerMeter;
-            lon += offset * lonPerMeter;
+            const QPointF offset(x * GRANULARITY + GRANULARITY / 2.0,
+                                  y * GRANULARITY + GRANULARITY / 2.0);
 
-            qreal lat = boundingRect.topLeft().y() + y * GRANULARITY * latPerMeter;
-            lat += offset * latPerMeter;
-
-            Position lla(lon, lat);
+            const Position lla = topLeft.flatOffsetToPosition(offset);
             if (geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
                 _bins.append(lla);
         }
