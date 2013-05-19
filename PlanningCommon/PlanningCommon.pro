@@ -45,8 +45,6 @@ SOURCES += \
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp \
     Exporters/GPXExporter.cpp \
     Exporters/Exporter.cpp \
     Importers/importer.cpp \
@@ -66,7 +64,9 @@ SOURCES += \
     HierarchicalPlanner/SmartIntermediatePlanner.cpp \
     UserStudyEventLogger.cpp \
     MouseMetrics.cpp \
-    AngleRange.cpp
+    AngleRange.cpp \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.cpp \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -92,8 +92,6 @@ HEADERS +=\
     HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h \
     HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h \
     Exporters/GPXExporter.h \
     Exporters/Exporter.h \
     Importers/Importer.h \
@@ -113,7 +111,9 @@ HEADERS +=\
     HierarchicalPlanner/SmartIntermediatePlanner.h \
     UserStudyEventLogger.h \
     MouseMetrics.h \
-    AngleRange.h
+    AngleRange.h \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.h \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.h
 
 unix:!symbian {
     maemo5 {

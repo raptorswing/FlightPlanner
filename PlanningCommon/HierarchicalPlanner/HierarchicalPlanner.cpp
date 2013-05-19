@@ -3,8 +3,8 @@
 #include "guts/Conversions.h"
 
 #include "QVectorND.h"
-#include "SubFlightPlanner/SubFlightPlanner.h"
-#include "SubFlightPlanner/SubFlightNode.h"
+#include "SubFlightPlanner/GreedySubFlightPlanner.h"
+#include "SubFlightPlanner/GreedySubFlightNode.h"
 #include "SmartIntermediatePlanner.h"
 
 #include <QMap>
@@ -236,7 +236,7 @@ void HierarchicalPlanner::_buildSubFlights()
 
         qDebug() << "Build sub-flight for" << task->taskName() << area->areaName() << start << startPose;
 
-        SubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
+        GreedySubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
         planner.plan();
 
         _taskSubFlights.insert(task, planner.results());

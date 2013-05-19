@@ -1,11 +1,11 @@
-#include "SubFlightPlanner.h"
+#include "GreedySubFlightPlanner.h"
 
 #include <QMap>
 #include <QMutableMapIterator>
 #include <QtDebug>
 #include <cmath>
 
-#include "SubFlightNode.h"
+#include "GreedySubFlightNode.h"
 #include "FlightTasks/FlightTask.h"
 #include "FlightTasks/CoverageTask.h"
 
@@ -13,7 +13,7 @@
 
 const qreal PI = 3.1415926535;
 
-SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
+GreedySubFlightPlanner::GreedySubFlightPlanner(const UAVParameters &uavParams,
                                    const QSharedPointer<FlightTask> &task,
                                    const QSharedPointer<FlightTaskArea> &area,
                                    const Position &startPos,
@@ -22,24 +22,24 @@ SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
 {
 }
 
-void SubFlightPlanner::plan()
+void GreedySubFlightPlanner::plan()
 {
     _results.clear();
 
     _greedyPlan();
 }
 
-const Wayset& SubFlightPlanner::results() const
+const Wayset& GreedySubFlightPlanner::results() const
 {
     return _results;
 }
 
 //private
-void SubFlightPlanner::_greedyPlan()
+void GreedySubFlightPlanner::_greedyPlan()
 {
-    QMultiMap<qreal, QSharedPointer<SubFlightNode> > frontier;
+    QMultiMap<qreal, QSharedPointer<GreedySubFlightNode> > frontier;
 
-    QSharedPointer<SubFlightNode> rootNode(new SubFlightNode(_startPos, _startPose));
+    QSharedPointer<GreedySubFlightNode> rootNode(new GreedySubFlightNode(_startPos, _startPose));
     frontier.insert(0.0, rootNode);
 
     while (!frontier.isEmpty())
@@ -47,10 +47,10 @@ void SubFlightPlanner::_greedyPlan()
         //Find the node in the frontier with the best fitness. Grab it and remove it
         const QList<qreal> scores = frontier.keys();
         const qreal score = scores.last();
-        QList<QSharedPointer<SubFlightNode> > nodes = frontier.values(score);
+        QList<QSharedPointer<GreedySubFlightNode> > nodes = frontier.values(score);
 
         //If there are several nodes with the same fitness, choose one randomly
-        QSharedPointer<SubFlightNode> node = nodes[qrand() % nodes.size()];
+        QSharedPointer<GreedySubFlightNode> node = nodes[qrand() % nodes.size()];
         frontier.remove(score, node);
 
         //If we've accomplished our task we can quit
@@ -84,7 +84,7 @@ void SubFlightPlanner::_greedyPlan()
             const qreal forwardAngle = newAngle + PI / 2.0;
 
             const Position posLatLon = node->position().flatOffsetToPosition(pos.toPointF());
-            QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
+            QSharedPointer<GreedySubFlightNode> s(new GreedySubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
             const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);
@@ -104,7 +104,7 @@ void SubFlightPlanner::_greedyPlan()
             const qreal forwardAngle = newAngle - PI / 2.0;
 
             const Position posLatLon = node->position().flatOffsetToPosition(pos.toPointF());
-            QSharedPointer<SubFlightNode> s(new SubFlightNode(posLatLon,
+            QSharedPointer<GreedySubFlightNode> s(new GreedySubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
             const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);

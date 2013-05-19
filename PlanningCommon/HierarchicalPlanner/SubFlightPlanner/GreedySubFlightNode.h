@@ -7,19 +7,19 @@
 #include "UAVOrientation.h"
 #include "guts/Conversions.h"
 
-class SubFlightNode
+class GreedySubFlightNode
 {
 public:
-    SubFlightNode(const Position& pos,
+    GreedySubFlightNode(const Position& pos,
                   const UAVOrientation& pose,
-                  const QSharedPointer<SubFlightNode>& parent = QSharedPointer<SubFlightNode>());
+                  const QSharedPointer<GreedySubFlightNode>& parent = QSharedPointer<GreedySubFlightNode>());
 
     const Position& position() const;
 
     const UAVOrientation& orientation() const;
 
-    QSharedPointer<SubFlightNode> parent() const;
-    void setParent(const QSharedPointer<SubFlightNode>& parent);
+    QSharedPointer<GreedySubFlightNode> parent() const;
+    void setParent(const QSharedPointer<GreedySubFlightNode>& parent);
 
     const Wayset& path() const;
 
@@ -28,7 +28,7 @@ public:
 private:
     Position _position;
     UAVOrientation _orientation;
-    QSharedPointer<SubFlightNode> _parent;
+    QSharedPointer<GreedySubFlightNode> _parent;
 
     Wayset _path;
 

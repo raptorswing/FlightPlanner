@@ -16,7 +16,7 @@
 
 #include "FlightTaskArea.h"
 #include "FlightTasks/CoverageTask.h"
-#include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
+#include "HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.h"
 #include "SimulatedFlier.h"
 
 
@@ -179,11 +179,11 @@ void WaypointPlannerMainWindow::finishCoverageHelper()
 
     QSharedPointer<FlightTaskArea> area(new FlightTaskArea(_coveragePolygon->geoPoly()));
     QSharedPointer<CoverageTask> task(new CoverageTask());
-    SubFlightPlanner planner(_problem->uavParameters(),
-                             task,
-                             area,
-                             startPos,
-                             startAngle);
+    GreedySubFlightPlanner planner(_problem->uavParameters(),
+                                   task,
+                                   area,
+                                   startPos,
+                                   startAngle);
     planner.plan();
 
     const Wayset& result = planner.results();

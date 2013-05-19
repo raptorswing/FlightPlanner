@@ -1,5 +1,5 @@
-#ifndef SUBFLIGHTPLANNER_H
-#define SUBFLIGHTPLANNER_H
+#ifndef GreedySubFlightPlanner_H
+#define GreedySubFlightPlanner_H
 
 #include <QSharedPointer>
 #include <QList>
@@ -12,10 +12,10 @@
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT SubFlightPlanner
+class PLANNINGCOMMONSHARED_EXPORT GreedySubFlightPlanner
 {
 public:
-    SubFlightPlanner(const UAVParameters& uavParams,
+    GreedySubFlightPlanner(const UAVParameters& uavParams,
                      const QSharedPointer<FlightTask>& task,
                      const QSharedPointer<FlightTaskArea>& area,
                      const Position& startPos,
@@ -35,4 +35,4 @@ private:
     Wayset _results;
 };
 
-#endif // SUBFLIGHTPLANNER_H
+#endif // GreedySubFlightPlanner_H
