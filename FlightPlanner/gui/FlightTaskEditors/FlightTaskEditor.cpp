@@ -40,6 +40,9 @@ FlightTaskEditor::FlightTaskEditor(QSharedPointer<PlanningProblem> problem,
 
         _directionalConstraintEditor = new DirectionalConstraintEditor(this);
         this->addEditorWidget(_directionalConstraintEditor);
+
+        _distanceConstraintEditor = new MinSensingDistEditor(this);
+        this->addEditorWidget(_distanceConstraintEditor);
     }
 
     _timingConstraintsEditor = new TimingConstraintEditor(this);
@@ -79,6 +82,7 @@ void FlightTaskEditor::load()
     {
         _sensorTypeEditor->setSensorType(strong->sensorType());
         _directionalConstraintEditor->setRange(strong->validSensorAngleRange());
+        _distanceConstraintEditor->setRange(strong->minSensingDistance(), strong->maxSensingDistance());
     }
     _timingConstraintsEditor->setTimingConstraints(strong->timingConstraints());
     _dependencyConstraintsEditor->setDependencies(strong->dependencyConstraints());
@@ -99,6 +103,7 @@ void FlightTaskEditor::save()
     {
         strong->setSensorType(_sensorTypeEditor->sensorType());
         strong->setValidSensorAngleRange(_directionalConstraintEditor->range());
+        strong->setSensingRange(_distanceConstraintEditor->min(), _distanceConstraintEditor->max());
     }
 
     strong->setTimingConstraints(_timingConstraintsEditor->timingConstraints());
