@@ -20,7 +20,14 @@ class PLANNINGCOMMONSHARED_EXPORT FlightTask : public QObject, public Serializab
 {
     Q_OBJECT
 public:
-    FlightTask();
+    enum SensorType
+    {
+        DirectionalSensor,
+        OmnidirectionalSensor
+    };
+
+public:
+    FlightTask(SensorType sensorType = DirectionalSensor);
     virtual ~FlightTask();
 
     //for de-serializing
@@ -58,10 +65,16 @@ public:
     void setDependencyConstraints(const QList<QWeakPointer<FlightTask> >& nConstraints);
     void addDependencyContraint(const QSharedPointer<FlightTask>& other);
 
+    SensorType sensorType() const;
+    void setSensorType(SensorType nType);
+
     quint64 uuid() const;
     void resolveDependencies();
 
     static QHash<quint64, QWeakPointer<FlightTask> > _uuidToWeakTask;
+
+    static QString sensorType2String(FlightTask::SensorType type);
+    static FlightTask::SensorType string2SensorType(const QString& typeString);
 
 private slots:
     void handleDependencyDeleted();
@@ -76,6 +89,7 @@ private:
     QList<TimingConstraint> _timingConstraints;
     QString _taskName;
     QList<QWeakPointer<FlightTask> > _dependencyConstraints;
+    SensorType _sensorType;
     quint64 _uuid;
 
     QSet<quint64> _unresolvedDependencies;

@@ -11,10 +11,11 @@ const qreal SQRT2PI = sqrt(2.0*PI);
 //static public
 QHash<quint64, QWeakPointer<FlightTask> > FlightTask::_uuidToWeakTask = QHash<quint64, QWeakPointer<FlightTask> >();
 
-FlightTask::FlightTask()
+FlightTask::FlightTask(SensorType sensorType)
 {
     _taskName = "Untitled";
     this->addTimingConstraint(TimingConstraint(0, 3600));
+    this->setSensorType(sensorType);
 
     const quint32 r1 = qrand();
     const quint32 r2 = qrand();
@@ -32,6 +33,11 @@ FlightTask::~FlightTask()
 FlightTask::FlightTask(QDataStream &stream)
 {
     stream >> _taskName;
+
+    QString sensorTypeString;
+    stream >> sensorTypeString;
+    _sensorType = FlightTask::string2SensorType(sensorTypeString);
+
     stream >> _timingConstraints;
 
     int numDependencies;
@@ -49,6 +55,7 @@ FlightTask::FlightTask(QDataStream &stream)
 void FlightTask::serialize(QDataStream &stream) const
 {
     stream << _taskName;
+    stream << FlightTask::sensorType2String(_sensorType);
     stream << _timingConstraints;
 
     stream << this->dependencyConstraints().size();
@@ -153,6 +160,16 @@ void FlightTask::addDependencyContraint(const QSharedPointer<FlightTask> &other)
     _dependencyConstraints.append(other);
 }
 
+FlightTask::SensorType FlightTask::sensorType() const
+{
+    return _sensorType;
+}
+
+void FlightTask::setSensorType(FlightTask::SensorType nType)
+{
+    _sensorType = nType;
+}
+
 quint64 FlightTask::uuid() const
 {
     return _uuid;
@@ -173,6 +190,32 @@ void FlightTask::resolveDependencies()
         else
             qWarning() << "Unresolved task dependency" << depUUID;
     }
+}
+
+//static
+QString FlightTask::sensorType2String(FlightTask::SensorType type)
+{
+    QString toRet;
+    if (type == DirectionalSensor)
+        toRet = "Directional";
+    else if (type == OmnidirectionalSensor)
+        toRet = "Omnidirectional";
+    else
+        toRet = "Error";
+
+    return toRet;
+}
+
+//static
+FlightTask::SensorType FlightTask::string2SensorType(const QString &typeString)
+{
+    FlightTask::SensorType toRet;
+    if (typeString.toLower() == "omnidirectional")
+        toRet = OmnidirectionalSensor;
+    else
+        toRet = DirectionalSensor;
+
+    return toRet;
 }
 
 //private slot
