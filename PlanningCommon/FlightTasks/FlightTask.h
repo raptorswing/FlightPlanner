@@ -13,6 +13,7 @@
 #include "UAVParameters.h"
 #include "Serializable.h"
 #include "Wayset.h"
+#include "AngleRange.h"
 
 #include "PlanningCommon_global.h"
 
@@ -68,6 +69,9 @@ public:
     SensorType sensorType() const;
     void setSensorType(SensorType nType);
 
+    const AngleRange& validSensorAngleRange() const;
+    void setValidSensorAngleRange(const AngleRange& vRange);
+
     quint64 uuid() const;
     void resolveDependencies();
 
@@ -90,8 +94,9 @@ private:
     QString _taskName;
     QList<QWeakPointer<FlightTask> > _dependencyConstraints;
     SensorType _sensorType;
-    quint64 _uuid;
+    AngleRange _validSensorAngleRange;
 
+    quint64 _uuid;
     QSet<quint64> _unresolvedDependencies;
 };
 

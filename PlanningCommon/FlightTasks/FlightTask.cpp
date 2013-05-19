@@ -16,6 +16,7 @@ FlightTask::FlightTask(SensorType sensorType)
     _taskName = "Untitled";
     this->addTimingConstraint(TimingConstraint(0, 3600));
     this->setSensorType(sensorType);
+    _validSensorAngleRange = AngleRange(UAVOrientation(), PI * 2.0);
 
     const quint32 r1 = qrand();
     const quint32 r2 = qrand();
@@ -37,6 +38,7 @@ FlightTask::FlightTask(QDataStream &stream)
     QString sensorTypeString;
     stream >> sensorTypeString;
     _sensorType = FlightTask::string2SensorType(sensorTypeString);
+    _validSensorAngleRange = AngleRange(stream);
 
     stream >> _timingConstraints;
 
@@ -56,6 +58,7 @@ void FlightTask::serialize(QDataStream &stream) const
 {
     stream << _taskName;
     stream << FlightTask::sensorType2String(_sensorType);
+    _validSensorAngleRange.serialize(stream);
     stream << _timingConstraints;
 
     stream << this->dependencyConstraints().size();
@@ -168,6 +171,16 @@ FlightTask::SensorType FlightTask::sensorType() const
 void FlightTask::setSensorType(FlightTask::SensorType nType)
 {
     _sensorType = nType;
+}
+
+const AngleRange &FlightTask::validSensorAngleRange() const
+{
+    return _validSensorAngleRange;
+}
+
+void FlightTask::setValidSensorAngleRange(const AngleRange &vRange)
+{
+    _validSensorAngleRange = vRange;
 }
 
 quint64 FlightTask::uuid() const
