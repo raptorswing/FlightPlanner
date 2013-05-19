@@ -72,6 +72,14 @@ public:
     const AngleRange& validSensorAngleRange() const;
     void setValidSensorAngleRange(const AngleRange& vRange);
 
+    qreal minSensingDistance() const;
+    void setMinSensingDistance(qreal minDist);
+
+    qreal maxSensingDistance() const;
+    void setMaxSensingDistance(qreal maxDist);
+
+    void setSensingRange(qreal min, qreal max);
+
     quint64 uuid() const;
     void resolveDependencies();
 
@@ -95,6 +103,8 @@ private:
     QList<QWeakPointer<FlightTask> > _dependencyConstraints;
     SensorType _sensorType;
     AngleRange _validSensorAngleRange;
+    qreal _minDistMeters;
+    qreal _maxDistMeters;
 
     quint64 _uuid;
     QSet<quint64> _unresolvedDependencies;

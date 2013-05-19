@@ -17,6 +17,8 @@ FlightTask::FlightTask(SensorType sensorType)
     this->addTimingConstraint(TimingConstraint(0, 3600));
     this->setSensorType(sensorType);
     _validSensorAngleRange = AngleRange(UAVOrientation(), PI * 2.0);
+    this->setMinSensingDistance(0);
+    this->setMaxSensingDistance(100.0);
 
     const quint32 r1 = qrand();
     const quint32 r2 = qrand();
@@ -39,6 +41,8 @@ FlightTask::FlightTask(QDataStream &stream)
     stream >> sensorTypeString;
     _sensorType = FlightTask::string2SensorType(sensorTypeString);
     _validSensorAngleRange = AngleRange(stream);
+    stream >> _minDistMeters;
+    stream >> _maxDistMeters;
 
     stream >> _timingConstraints;
 
@@ -59,6 +63,9 @@ void FlightTask::serialize(QDataStream &stream) const
     stream << _taskName;
     stream << FlightTask::sensorType2String(_sensorType);
     _validSensorAngleRange.serialize(stream);
+    stream << _minDistMeters;
+    stream << _maxDistMeters;
+
     stream << _timingConstraints;
 
     stream << this->dependencyConstraints().size();
@@ -181,6 +188,32 @@ const AngleRange &FlightTask::validSensorAngleRange() const
 void FlightTask::setValidSensorAngleRange(const AngleRange &vRange)
 {
     _validSensorAngleRange = vRange;
+}
+
+qreal FlightTask::minSensingDistance() const
+{
+    return _minDistMeters;
+}
+
+void FlightTask::setMinSensingDistance(qreal minDist)
+{
+    _minDistMeters = qBound<qreal>(0.0, minDist, 100000);
+}
+
+qreal FlightTask::maxSensingDistance() const
+{
+    return _maxDistMeters;
+}
+
+void FlightTask::setMaxSensingDistance(qreal maxDist)
+{
+    _maxDistMeters = qBound<qreal>(0, maxDist, 100000);
+}
+
+void FlightTask::setSensingRange(qreal min, qreal max)
+{
+    this->setMinSensingDistance(min);
+    this->setMaxSensingDistance(max);
 }
 
 quint64 FlightTask::uuid() const
