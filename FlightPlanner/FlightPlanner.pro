@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
     gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
-    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.cpp
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.cpp \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.cpp
 
 HEADERS  += \
     gui/MainWindow.h \
@@ -63,7 +64,8 @@ HEADERS  += \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.h \
     gui/FlightTaskEditors/FlyThroughTaskEditor.h \
-    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.h
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.h \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -79,7 +81,8 @@ FORMS    += gui/MainWindow.ui \
     gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.ui \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.ui \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.ui \
-    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.ui
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.ui \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.ui
 
 RESOURCES += \
     resources.qrc
