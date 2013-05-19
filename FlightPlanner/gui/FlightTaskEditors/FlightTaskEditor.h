@@ -8,6 +8,7 @@
 
 #include "SubWidgets/TaskNameEditor.h"
 #include "SubWidgets/SensorTypeEditor.h"
+#include "SubWidgets/DirectionalConstraintEditor.h"
 #include "SubWidgets/TimingConstraintEditor.h"
 #include "SubWidgets/DependencyConstraintEditor.h"
 
@@ -53,6 +54,7 @@ private:
 
     TaskNameEditor * _taskNameEditor;
     SensorTypeEditor * _sensorTypeEditor;
+    DirectionalConstraintEditor * _directionalConstraintEditor;
     TimingConstraintEditor * _timingConstraintsEditor;
     DependencyConstraintEditor * _dependencyConstraintsEditor;
 
