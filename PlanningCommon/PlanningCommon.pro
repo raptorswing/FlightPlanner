@@ -7,7 +7,15 @@
 QT       += gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-#QMAKE_CXXFLAGS += -std=c++0x
+#If using mingw, add flags to enable C++11 or whatever dumb name they're giving it
+windows {
+    *-g++* {
+        QMAKE_CXXFLAGS += -std=c++0x
+    }
+    *-msvc* {
+        # MSVC
+    }
+}
 
 TARGET = PlanningCommon
 TEMPLATE = lib
