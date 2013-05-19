@@ -4,8 +4,8 @@
 
 #include "guts/Conversions.h"
 
-CoverageTask::CoverageTask(qreal coverageGranularity, qreal maxSatisfyingDistance) :
-    _granularity(coverageGranularity), _maxDistance(maxSatisfyingDistance)
+CoverageTask::CoverageTask(qreal coverageGranularity) :
+    _granularity(coverageGranularity)
 {
 }
 
@@ -14,7 +14,6 @@ CoverageTask::CoverageTask(QDataStream &stream) :
     FlightTask(stream)
 {
     stream >> _granularity;
-    stream >> _maxDistance;
 }
 
 //pure-virtual from Serializable
@@ -28,7 +27,6 @@ void CoverageTask::serialize(QDataStream &stream) const
 {
     FlightTask::serialize(stream);
     stream << _granularity;
-    stream << _maxDistance;
 }
 
 QString CoverageTask::taskType() const
@@ -66,7 +64,7 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
 
             const qreal distance = pos.flatDistanceEstimate(_bins.at(j));
 
-            if (distance < _maxDistance)
+            if (distance < this->maxSensingDistance())
             {
                 satisfiedBins.insert(j);
 
@@ -132,20 +130,6 @@ qreal CoverageTask::granularity() const
 void CoverageTask::setGranularity(qreal nGran)
 {
     _granularity = qBound<qreal>(1.0, nGran, 1000.0);
-
-    //Reset bins so that they are forced to recalculate next time
-    _bins.clear();
-    this->flightTaskChanged();
-}
-
-qreal CoverageTask::maxDistance() const
-{
-    return _maxDistance;
-}
-
-void CoverageTask::setMaxDistance(qreal maxDist)
-{
-    _maxDistance = qBound<qreal>(1.0, maxDist, 1000.0);
 
     //Reset bins so that they are forced to recalculate next time
     _bins.clear();

@@ -25,7 +25,6 @@ void CoverageTaskEditor::loadSub()
         return;
 
     _myWidgets->setGranularity(task->granularity());
-    _myWidgets->setMaxDistance(task->maxDistance());
 }
 
 //protected slot
@@ -36,5 +35,4 @@ void CoverageTaskEditor::saveSub()
         return;
 
     task->setGranularity(_myWidgets->granularity());
-    task->setMaxDistance(_myWidgets->maxDistance());
 }

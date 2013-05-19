@@ -13,7 +13,7 @@ class PLANNINGCOMMONSHARED_EXPORT CoverageTask : public FlightTask
 {
     Q_OBJECT
 public:
-    CoverageTask(qreal coverageGranularity = 100.0, qreal maxSatisfyingDistance = 50.0);
+    CoverageTask(qreal coverageGranularity = 100.0);
 
     //for de-serializing
     CoverageTask(QDataStream& stream);
@@ -37,9 +37,6 @@ public:
 
     qreal granularity() const;
     void setGranularity(qreal nGran);
-
-    qreal maxDistance() const;
-    void setMaxDistance(qreal maxDist);
     
 private:
     void _calculateBins(const QPolygonF& geoPoly);
@@ -48,7 +45,6 @@ private:
     QVector<Position> _bins;
 
     qreal _granularity;
-    qreal _maxDistance;
     
 };
 
