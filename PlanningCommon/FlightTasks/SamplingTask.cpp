@@ -75,6 +75,11 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
             if (dist < this->minSensingDistance() || dist > this->maxSensingDistance())
                 continue;
 
+            //Check the angle from the bin position to the plane
+            const qreal angleFromBin = binPos.angleTo(pos);
+            if (this->minSensingDistance() > 0.0 && !this->validSensorAngleRange().withinRange(UAVOrientation(angleFromBin)))
+                continue;
+
             //If directional sensor, check that UAV is facing the thing it is trying to sense
             if (this->sensorType() == DirectionalSensor)
             {
