@@ -73,7 +73,7 @@ void AngleRange::setRangeRadians(qreal nRangeRadians)
     _rangeRadians = qBound<qreal>(0, nRangeRadians, 2.0 * PI);
 }
 
-bool AngleRange::withinRange(const UAVOrientation &orientation)
+bool AngleRange::withinRange(const UAVOrientation &orientation) const
 {
     //Use dot product to get angle between
     const qreal dp = cos(orientation.radians()) * cos(_center.radians())

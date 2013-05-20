@@ -32,7 +32,7 @@ public:
     void setRangeDegrees(qreal nRangeDegrees);
     void setRangeRadians(qreal nRangeRadians);
 
-    bool withinRange(const UAVOrientation& orientation);
+    bool withinRange(const UAVOrientation& orientation) const;
 
 private:
     UAVOrientation _center;
