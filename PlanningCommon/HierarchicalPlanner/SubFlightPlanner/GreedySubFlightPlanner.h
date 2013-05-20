@@ -21,11 +21,11 @@ public:
                            const Position& startPos,
                            const UAVOrientation& startPose);
 
-    void plan();
+    bool plan();
     const Wayset &results() const;
 
 private:
-    void _greedyPlan();
+    bool _greedyPlan();
     const UAVParameters& _uavParams;
     const QSharedPointer<FlightTask>& _task;
     const QSharedPointer<FlightTaskArea>& _area;

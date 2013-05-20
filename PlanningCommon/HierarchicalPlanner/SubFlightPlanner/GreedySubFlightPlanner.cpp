@@ -22,11 +22,11 @@ GreedySubFlightPlanner::GreedySubFlightPlanner(const UAVParameters &uavParams,
 {
 }
 
-void GreedySubFlightPlanner::plan()
+bool GreedySubFlightPlanner::plan()
 {
     _results.clear();
 
-    _greedyPlan();
+    return _greedyPlan();
 }
 
 const Wayset& GreedySubFlightPlanner::results() const
@@ -35,7 +35,7 @@ const Wayset& GreedySubFlightPlanner::results() const
 }
 
 //private
-void GreedySubFlightPlanner::_greedyPlan()
+bool GreedySubFlightPlanner::_greedyPlan()
 {
     QMultiMap<qreal, QSharedPointer<GreedySubFlightNode> > frontier;
 
@@ -67,7 +67,7 @@ void GreedySubFlightPlanner::_greedyPlan()
             qDebug() << score;
             _results = node->path();
             qDebug() << _results.last();
-            break;
+            return false;
         }
 
         //Build successors to the current node. Add them to frontier.
@@ -111,6 +111,7 @@ void GreedySubFlightPlanner::_greedyPlan()
             frontier.insert(sScore, s);
         }
     }
+    return true;
 }
 
 
