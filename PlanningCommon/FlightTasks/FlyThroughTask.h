@@ -28,10 +28,18 @@ public:
                                              bool includeEnticement = true,
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
+
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
     
 signals:
     
 public slots:
+
+private:
+    QPolygonF _lastGeoPoly;
+    QList<Position> _bins;
+
+    void _calculateBins(const QPolygonF& geoPoly);
     
 };
 

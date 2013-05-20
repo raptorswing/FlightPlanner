@@ -29,7 +29,7 @@ void UAVParametersWidget::setParameters(const UAVParameters &params)
     this->ui->airspeedSpinbox->setValue(params.airspeed());
     this->ui->turnRadiusSpinbox->setValue(params.minTurningRadius());
     this->ui->waypointIntervalSpinbox->setValue(params.waypointInterval());
-    this->ui->angleOfViewSpinbox->setValue(params.directionalSensorViewAngle());
+    this->ui->angleOfViewSpinbox->setValue(params.directionalSensorViewAngleDegrees());
 }
 
 UAVParameters UAVParametersWidget::parameters() const
@@ -37,7 +37,8 @@ UAVParameters UAVParametersWidget::parameters() const
     return UAVParameters(this->ui->airspeedSpinbox->value(),
                          this->ui->turnRadiusSpinbox->value(),
                          this->ui->waypointIntervalSpinbox->value(),
-                         this->ui->angleOfViewSpinbox->value());
+                         this->ui->angleOfViewSpinbox->value(),
+                         false);
 }
 
 //private slot

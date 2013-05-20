@@ -32,6 +32,8 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
 
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
+
     virtual qreal maxTaskPerformance() const;
 
     qreal timeRequired() const;
@@ -42,7 +44,7 @@ private:
     qreal _timeRequired;
 
     QPolygonF _lastGeoPoly;
-    QVector<Position> _bins;
+    QList<Position> _bins;
     
 };
 

@@ -64,3 +64,9 @@ qreal NoFlyFlightTask::calculateFlightPerformance(const Wayset &wayset,
 
     return fitness;
 }
+
+const QList<Position> &NoFlyFlightTask::bins(const QPolygonF &geoPoly)
+{
+    Q_UNUSED(geoPoly)
+    return _bins;
+}

@@ -2,7 +2,7 @@
 #define COVERAGETASK_H
 
 #include <QObject>
-#include <QVector>
+#include <QList>
 #include <QVector3D>
 
 #include "FlightTask.h"
@@ -33,6 +33,8 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
 
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
+
     virtual qreal maxTaskPerformance() const;
 
     qreal granularity() const;
@@ -42,7 +44,7 @@ private:
     void _calculateBins(const QPolygonF& geoPoly);
 
     QPolygonF _lastGeoPoly;
-    QVector<Position> _bins;
+    QList<Position> _bins;
 
     qreal _granularity;
     

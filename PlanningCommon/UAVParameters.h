@@ -12,17 +12,20 @@ public:
     UAVParameters(qreal airspeed = 13.0,
                   qreal minTurningRadius = 30.0,
                   qreal waypointInterval = 30.0,
-                  qreal directionalSensorViewAngle = 359.9);
+                  qreal directionalSensorViewAngle = 359.9,
+                  bool radians = true);
 
     qreal airspeed() const;
     qreal minTurningRadius() const;
     qreal waypointInterval() const;
-    qreal directionalSensorViewAngle() const;
+    qreal directionalSensorViewAngleRadians() const;
+    qreal directionalSensorViewAngleDegrees() const;
 
     void setAirspeed(qreal nSpeed);
     void setMinTurningRadius(qreal nRad);
     void setWaypointInterval(qreal interval);
-    void setDirectionalSensorViewAngle(qreal angle);
+    void setDirectionalSensorViewAngleRadians(qreal angle);
+    void setDirectionalSensorViewAngleDegrees(qreal angle);
 
     /**
      * @brief maxTurnAngle returns the maximum turn angle (in radians) that can be achieved in the distance

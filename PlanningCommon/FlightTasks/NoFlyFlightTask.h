@@ -33,6 +33,16 @@ public:
                                              bool includeEnticement = true,
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
+
+    //pure-virtual from FlightTask
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
+
+private:
+    /*
+     *This exists just to be empty and be returned (by reference). Yeah, I know.
+     *I rue the day I decided to model obstacles as tasks in this object hierarchy.
+    */
+    QList<Position> _bins;
 };
 
 #endif // NOFLYFLIGHTTASK_H

@@ -48,6 +48,8 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0)=0;
 
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly)=0;
+
     virtual qreal priority() const;
 
     virtual qreal maxTaskPerformance() const;
