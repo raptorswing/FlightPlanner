@@ -26,6 +26,7 @@ public:
 
 private:
     bool _greedyPlan();
+
     const UAVParameters& _uavParams;
     const QSharedPointer<FlightTask>& _task;
     const QSharedPointer<FlightTaskArea>& _area;
