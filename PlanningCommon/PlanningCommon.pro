@@ -66,7 +66,9 @@ SOURCES += \
     MouseMetrics.cpp \
     AngleRange.cpp \
     HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.cpp \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.cpp
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -113,7 +115,9 @@ HEADERS +=\
     MouseMetrics.h \
     AngleRange.h \
     HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.h \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.h
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner.h
 
 unix:!symbian {
     maemo5 {
