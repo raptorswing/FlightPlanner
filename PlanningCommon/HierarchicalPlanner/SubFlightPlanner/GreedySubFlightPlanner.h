@@ -16,10 +16,10 @@ class PLANNINGCOMMONSHARED_EXPORT GreedySubFlightPlanner
 {
 public:
     GreedySubFlightPlanner(const UAVParameters& uavParams,
-                     const QSharedPointer<FlightTask>& task,
-                     const QSharedPointer<FlightTaskArea>& area,
-                     const Position& startPos,
-                     const UAVOrientation& startPose);
+                           const QSharedPointer<FlightTask>& task,
+                           const QSharedPointer<FlightTaskArea>& area,
+                           const Position& startPos,
+                           const UAVOrientation& startPose);
 
     void plan();
     const Wayset &results() const;
