@@ -36,7 +36,7 @@ QString CoverageTask::taskType() const
 
 qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
                                                const QPolygonF &geoPoly,
-                                               const UAVParameters & params,
+                                               const UAVParameters & uavParams,
                                                bool includeEnticement,
                                                qreal *progressStartOut,
                                                qreal *progressEndOut)
@@ -62,17 +62,34 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
             if (satisfiedBins.contains(j))
                 continue;
 
-            const qreal distance = pos.flatDistanceEstimate(_bins.at(j));
+            const Position& binPos = _bins.at(j);
+            const qreal distance = pos.flatDistanceEstimate(binPos);
 
-            if (distance < this->maxSensingDistance())
+            //Check minimum and maximum distance
+            if (distance > this->maxSensingDistance() || distance < this->minSensingDistance())
+                continue;
+
+            //Check the angle from the bin position to the plane
+            const qreal angleFromBin = binPos.angleTo(pos);
+            if (this->minSensingDistance() > 0.0 && !this->validSensorAngleRange().withinRange(UAVOrientation(angleFromBin)))
+                continue;
+
+            //If directional sensor, check that UAV is facing the thing it is trying to sense
+            if (this->sensorType() == DirectionalSensor)
             {
-                satisfiedBins.insert(j);
-
-                //Record progress timing info...
-                if (firstProgressIndex == -1)
-                    firstProgressIndex = i;
-                lastProgressIndex = i;
+                AngleRange directionalAngleRange(UAVOrientation(0), uavParams.directionalSensorViewAngleRadians(),true);
+                directionalAngleRange.setCenter(pose.angle());
+                const qreal angleRads = pos.angleTo(binPos);
+                if (!directionalAngleRange.withinRange(UAVOrientation(angleRads)))
+                    continue;
             }
+
+            satisfiedBins.insert(j);
+
+            //Record progress timing info...
+            if (firstProgressIndex == -1)
+                firstProgressIndex = i;
+            lastProgressIndex = i;
         }
     }
 
@@ -100,14 +117,14 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
     {
         *progressStartOut = -1.0;
         if (firstProgressIndex != -1)
-            *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, params) / params.airspeed();
+            *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
     }
 
     if (progressEndOut != 0)
     {
         *progressEndOut = -1.0;
         if (lastProgressIndex != -1)
-            *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, params) / params.airspeed();
+            *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
     }
 
     if (includeEnticement)
