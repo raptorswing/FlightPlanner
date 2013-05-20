@@ -144,7 +144,8 @@ void CoverageTask::setGranularity(qreal nGran)
     this->flightTaskChanged();
 }
 
-//private
+//protected
+//virtual from FlightTask
 void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 {
     _bins.clear();

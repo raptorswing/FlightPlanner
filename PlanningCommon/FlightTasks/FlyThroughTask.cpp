@@ -89,7 +89,8 @@ const QList<Position> &FlyThroughTask::bins(const QPolygonF &geoPoly)
     return _bins;
 }
 
-//private
+//protected
+//virtual from FlightTask
 void FlyThroughTask::_calculateBins(const QPolygonF &geoPoly)
 {
     _bins.clear();

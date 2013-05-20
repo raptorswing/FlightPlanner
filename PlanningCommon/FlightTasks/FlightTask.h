@@ -97,7 +97,11 @@ signals:
     void flightTaskChanged();
 
 protected:
+    virtual void _calculateBins(const QPolygonF& geoPoly);
+    virtual void _clearBins();
     static qreal normal(qreal x, qreal stdDev, qreal scaleFactor=1000.0);
+
+    QList<Position> _bins;
 
 private:
     QList<TimingConstraint> _timingConstraints;

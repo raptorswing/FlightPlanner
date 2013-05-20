@@ -154,7 +154,8 @@ void SamplingTask::setTimeRequired(qreal nTime)
     this->flightTaskChanged();
 }
 
-//private
+//protected
+//virtual from FlightTask
 void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
 {
     _bins.clear();

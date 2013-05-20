@@ -39,12 +39,13 @@ public:
 
     qreal granularity() const;
     void setGranularity(qreal nGran);
+
+protected:
+    //virtual from FlightTask
+    void _calculateBins(const QPolygonF& geoPoly);
     
 private:
-    void _calculateBins(const QPolygonF& geoPoly);
-
     QPolygonF _lastGeoPoly;
-    QList<Position> _bins;
 
     qreal _granularity;
     

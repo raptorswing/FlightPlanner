@@ -188,6 +188,7 @@ const AngleRange &FlightTask::validSensorAngleRange() const
 void FlightTask::setValidSensorAngleRange(const AngleRange &vRange)
 {
     _validSensorAngleRange = vRange;
+    _clearBins();
 }
 
 qreal FlightTask::minSensingDistance() const
@@ -198,6 +199,7 @@ qreal FlightTask::minSensingDistance() const
 void FlightTask::setMinSensingDistance(qreal minDist)
 {
     _minDistMeters = qBound<qreal>(0.0, minDist, 100000);
+    _clearBins();
 }
 
 qreal FlightTask::maxSensingDistance() const
@@ -208,6 +210,7 @@ qreal FlightTask::maxSensingDistance() const
 void FlightTask::setMaxSensingDistance(qreal maxDist)
 {
     _maxDistMeters = qBound<qreal>(0, maxDist, 100000);
+    _clearBins();
 }
 
 void FlightTask::setSensingRange(qreal min, qreal max)
@@ -291,4 +294,15 @@ qreal FlightTask::normal(qreal x, qreal stdDev, qreal scaleFactor)
     qreal expPart = exp(-0.5 * pow(x / stdDev, 2.0) / scaleFactor);
     qreal otherPart = stdDev * SQRT2PI;
     return (1.0 / otherPart) * expPart;
+}
+
+
+void FlightTask::_calculateBins(const QPolygonF &geoPoly)
+{
+    Q_UNUSED(geoPoly)
+}
+
+void FlightTask::_clearBins()
+{
+    _bins.clear();
 }

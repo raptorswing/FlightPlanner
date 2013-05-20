@@ -38,13 +38,15 @@ public:
 
     qreal timeRequired() const;
     void setTimeRequired(qreal nTime);
+
+protected:
+    //virtual from FlightTask
+    void _calculateBins(const QPolygonF& geoPoly);
     
 private:
-    void _calculateBins(const QPolygonF& geoPoly);
     qreal _timeRequired;
 
     QPolygonF _lastGeoPoly;
-    QList<Position> _bins;
     
 };
 
