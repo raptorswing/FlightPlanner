@@ -55,7 +55,9 @@ bool DubinSubFlightPlanner::plan()
             return false;
         }
 
-        const Position toAdd = bins.takeAt(bestBinIndex);
+        const Position toAdd = bins.at(bestBinIndex);
+        if (_task->taskType() != "Sampling")
+            bins.removeAt(bestBinIndex);
         current.append(toAdd, approachAngle);
     }
 
