@@ -46,6 +46,16 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
 
 WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
 {
+    //If we are in user study mode, write stuff out before we exit
+    if (!CommonFileHandling::resultsPrefix().isEmpty())
+    {
+        QString filename = CommonFileHandling::resultsPrefix() % " " % QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()) % "-" % "FINAL";
+        CommonFileHandling::doExport(_waysetManager->wayset(),
+                                     filename % ".wst",
+                                     this);
+    }
+
+
     CommonWindowHandling::storeGeometry(this);
 
     //Write user study results

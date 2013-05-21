@@ -48,6 +48,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+
+    //If we are in user study mode, write stuff out before we exit
+    if (!CommonFileHandling::resultsPrefix().isEmpty())
+    {
+        QString filename = CommonFileHandling::resultsPrefix() % " " % QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()) % "-" % "FINAL";
+        this->saveProblem(filename % ".prb");
+        CommonFileHandling::doExport(_planner->bestFlightSoFar(),
+                                     filename % ".wst",
+                                     this);
+    }
+
     //Store window geometry
     CommonWindowHandling::storeGeometry(this);
 
