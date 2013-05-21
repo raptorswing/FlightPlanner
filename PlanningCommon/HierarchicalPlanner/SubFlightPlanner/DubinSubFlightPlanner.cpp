@@ -59,8 +59,8 @@ bool DubinSubFlightPlanner::plan()
         current.append(toAdd, approachAngle);
     }
 
-    //_toRet = current.resample(_uavParams.waypointInterval(), fudgeParams);
-    _toRet = current;
+    _toRet = current.resample(_uavParams.waypointInterval(), fudgeParams);
+    //_toRet = current;
 
 
     return true;
