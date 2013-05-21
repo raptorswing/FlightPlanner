@@ -18,12 +18,17 @@ bool DubinSubFlightPlanner::plan()
     QList<Position> bins = _task->bins(_area->geoPoly());
     UAVOrientation approachAngle(_task->validSensorAngleRange().center().degrees() + 180.0, false);
 
+    UAVParameters fudgeParams = _uavParams;
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+
     Wayset current;
     current.append(_startPos, _startPose);
 
-    while (!bins.isEmpty())
+    qreal bestScore = -500;
+
+    while (!bins.isEmpty() && bestScore < _task->maxTaskPerformance())
     {
-        qreal bestScore = -500;
+        bestScore = -500;
         int bestBinIndex = -1;
 
         for (int i = 0; i < bins.size(); i++)
@@ -32,15 +37,17 @@ bool DubinSubFlightPlanner::plan()
             Wayset toTest = current;
             toTest.append(binPos, approachAngle);
 
-            toTest = toTest.resample(_uavParams.waypointInterval(), _uavParams);
+            toTest = toTest.resample(_uavParams.waypointInterval(), fudgeParams);
 
-            const qreal score = _task->calculateFlightPerformance(toTest, _area->geoPoly(), _uavParams, true) / toTest.lengthMeters(_uavParams);
+            const qreal score = _task->calculateFlightPerformance(toTest, _area->geoPoly(), _uavParams, false);
             if (score > bestScore)
             {
                 bestScore = score;
                 bestBinIndex = i;
             }
         }
+
+        qDebug() << bestScore << "/" << _task->maxTaskPerformance();
 
         if (bestBinIndex < 0 || bestBinIndex >= bins.size())
         {
@@ -52,6 +59,7 @@ bool DubinSubFlightPlanner::plan()
         current.append(toAdd, approachAngle);
     }
 
+    //_toRet = current.resample(_uavParams.waypointInterval(), fudgeParams);
     _toRet = current;
 
 
