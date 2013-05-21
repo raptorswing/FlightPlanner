@@ -347,6 +347,7 @@ CircleObject *PolygonObject::constructAddVertexCircle()
             SLOT(handleAddVertexCircleSelected()));
 
     this->newObjectGenerated(toRet);
+    toRet->setToolTip("Single-click (don't drag!) to add vertex.");
     return toRet;
 }
 
