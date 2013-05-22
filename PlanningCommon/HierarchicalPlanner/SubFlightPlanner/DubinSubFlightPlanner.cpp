@@ -47,7 +47,7 @@ bool DubinSubFlightPlanner::plan()
             }
         }
 
-        qDebug() << bestScore << "/" << _task->maxTaskPerformance();
+        //qDebug() << bestScore << "/" << _task->maxTaskPerformance();
 
         if (bestBinIndex < 0 || bestBinIndex >= bins.size())
         {
