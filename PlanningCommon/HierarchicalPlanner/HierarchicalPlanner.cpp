@@ -10,8 +10,10 @@
 #include <QtCore>
 #include <cmath>
 #include <limits>
+#include <QTime>
 
 const qreal TIMESLICE = 15.0; //seconds
+const int SCHEDULING_TIMEOUT_SECONDS = 35;
 
 HierarchicalPlanner::HierarchicalPlanner(QSharedPointer<PlanningProblem> prob,
                                          QObject *parent) :
@@ -246,6 +248,9 @@ void HierarchicalPlanner::_buildSubFlights()
 //private
 bool HierarchicalPlanner::_buildSchedule()
 {
+
+    const QTime startTime = QTime::currentTime();
+
     const UAVParameters& params = this->problem()->uavParameters();
 
     //First we need to know how long each of our sub-flights takes
@@ -287,6 +292,12 @@ bool HierarchicalPlanner::_buildSchedule()
     bool solutionFound = false;
     while (!worklist.isEmpty())
     {
+        const QTime currentTime = QTime::currentTime();
+        if (startTime.secsTo(currentTime) >= SCHEDULING_TIMEOUT_SECONDS)
+            break;
+        else
+            qDebug() << startTime.secsTo(currentTime) << "seconds elapsed";
+
         const qreal costKey = worklist.keys().first();
         const QVectorND state = worklist.value(costKey);
         worklist.remove(costKey, state);

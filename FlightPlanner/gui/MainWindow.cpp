@@ -48,6 +48,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+
+    //If we are in user study mode, write stuff out before we exit
+    if (!CommonFileHandling::resultsPrefix().isEmpty())
+    {
+        QString filename = CommonFileHandling::resultsPrefix() % " " % QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()) % "-" % "FINAL";
+        this->saveProblem(filename % ".prb");
+        CommonFileHandling::doExport(_planner->bestFlightSoFar(),
+                                     filename % ".wst",
+                                     this);
+    }
+
     //Store window geometry
     CommonWindowHandling::storeGeometry(this);
 
@@ -99,7 +110,7 @@ void MainWindow::updateDisplayedFlight()
     {
         QMessageBox::warning(this,
                              "Planning Failed",
-                             "The planner was unable to find a flight that does everything you've specified. Please check your tasks and constraints.");
+                             "The planner was unable to find a satisfactory flight. Please double-check check your task areas, tasks, and settings (such as timing and dependency constraints).");
     }
 
     const Wayset& bestSoFar = _planner->bestFlightSoFar();
