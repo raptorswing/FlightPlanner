@@ -71,9 +71,6 @@ private:
     QPointer<ProblemViewAdapter> _viewAdapter;
 
     QPointer<WaysetDisplayManager> _waysetManager;
-
-    UserStudyChatHandler * _chatHandler;
-    UserStudyEventLogger * _eventLogger;
 };
 
 #endif // MAINWINDOW_H

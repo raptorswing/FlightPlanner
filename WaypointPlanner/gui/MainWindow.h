@@ -73,9 +73,6 @@ private:
     WaysetDisplayManager * _waysetManager;
 
     QPointer<PolygonObject> _coveragePolygon;
-
-    UserStudyChatHandler * _chatHandler;
-    UserStudyEventLogger * _eventLogger;
 };
 
 #endif // WAYPOINTPLANNERMAINWINDOW_H

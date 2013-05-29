@@ -27,10 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    //GRAB ALL THE MOUSE CLICKS
-    MouseMetrics::buildInstance();
-    this->installEventFilter(MouseMetrics::instance());
-
     ui->setupUi(this);
 
     //Restore window geometry
@@ -40,10 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initPlanningProblem();
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
-
-    //Do chat messages for the user study...
-    _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
-    _eventLogger = new UserStudyEventLogger(CommonFileHandling::resultsPrefix(), this);
 }
 
 MainWindow::~MainWindow()
@@ -61,12 +53,6 @@ MainWindow::~MainWindow()
 
     //Store window geometry
     CommonWindowHandling::storeGeometry(this);
-
-    //Write user study results
-    CommonFileHandling::writeChatResponseResults(_chatHandler);
-
-    UserStudyEventLogger::logMouseMetrics(_eventLogger, "clicks.csv", MouseMetrics::instance());
-    MouseMetrics::destroyInstance();
 
     delete ui;
 }
@@ -89,12 +75,6 @@ void MainWindow::openHiddenProblem(const QString &filePath)
         _view->centerOn(_hiddenProblem->startingPosition().lonLat());
 
     qDebug() << "Hidden problem" << filePath << "opened";
-
-    _eventLogger->addTimestampedLine(GENERAL_LOG, "Opened " + filePath);
-
-    QStringList parts;
-    _eventLogger->addTimestampedCSVLine(PERF_LOG, parts);
-
 }
 
 //private slot
@@ -318,12 +298,6 @@ void MainWindow::on_actionTest_Flight_triggered()
                                      filename % ".wst",
                                      this);
     }
-
-    const qreal lengthMeters = _planner->bestFlightSoFar().lengthMeters(_problem->uavParameters());
-    UserStudyEventLogger::logFlightPerformance(_eventLogger,
-                                               PERF_LOG,
-                                               results,
-                                               lengthMeters);
 }
 
 

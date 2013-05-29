@@ -27,10 +27,6 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    //Mouse analytics
-    MouseMetrics::buildInstance();
-    this->installEventFilter(MouseMetrics::instance());
-
     this->ui->setupUi(this);
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -39,9 +35,6 @@ WaypointPlannerMainWindow::WaypointPlannerMainWindow(QWidget *parent) :
     this->initProblem();
     this->initMap();
     this->enableDisableFlightActions();
-
-    _chatHandler = new UserStudyChatHandler(this->ui->chatWidget, this);
-    _eventLogger = new UserStudyEventLogger(CommonFileHandling::resultsPrefix(), this);
 }
 
 WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
@@ -58,13 +51,7 @@ WaypointPlannerMainWindow::~WaypointPlannerMainWindow()
 
     CommonWindowHandling::storeGeometry(this);
 
-    //Write user study results
-    CommonFileHandling::writeChatResponseResults(_chatHandler);
-
     delete ui;
-
-    UserStudyEventLogger::logMouseMetrics(_eventLogger, "clicks.csv", MouseMetrics::instance());
-    MouseMetrics::destroyInstance();
 }
 
 //public slot
@@ -133,11 +120,6 @@ void WaypointPlannerMainWindow::openProblem(const QString &filePath)
         _view->centerOn(_problem->startingPosition().lonLat());
         _waysetManager->appendWaypoint(_problem->startingPosition());
     }
-
-    _eventLogger->addTimestampedLine(GENERAL_LOG, "Opened " + filePath);
-
-    QStringList parts;
-    _eventLogger->addTimestampedCSVLine(PERF_LOG, parts);
 }
 
 //private slot
@@ -322,12 +304,6 @@ void WaypointPlannerMainWindow::on_actionTest_Flight_triggered()
                                      filename % ".wst",
                                      this);
     }
-
-    const qreal lengthMeters = flight.lengthMeters(fudgeParams);
-    UserStudyEventLogger::logFlightPerformance(_eventLogger,
-                                               PERF_LOG,
-                                               results,
-                                               lengthMeters);
 }
 
 //private slot
