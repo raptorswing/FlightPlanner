@@ -51,6 +51,11 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
     if (wayset.isEmpty())
         return 0.0;
 
+    UAVParameters fudgeParams = uavParams;
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+    fudgeParams.setWaypointInterval(10.0);
+    Wayset resampled = wayset.resample(fudgeParams.waypointInterval(), fudgeParams);
+
     if (geoPoly != _lastGeoPoly || _bins.isEmpty())
         _calculateBins(geoPoly);
 
@@ -58,8 +63,8 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
     int lastProgressIndex = -1;
 
     qreal toRet = 0.0;
-    const QList<UAVPose> poses = wayset.poses();
-    for (int i = 0; i < wayset.size(); i++)
+    const QList<UAVPose> poses = resampled.poses();
+    for (int i = 0; i < resampled.size(); i++)
     {
         const UAVPose& pose = poses.at(i);
         const Position& pos = pose.pos();
@@ -105,36 +110,27 @@ qreal SamplingTask::calculateFlightPerformance(const Wayset &wayset,
             lastProgressIndex = i;
 
         //Estimate the amount of time flown within the area, presumably sampling while doing so
-        toRet += uavParams.waypointInterval() / uavParams.airspeed();
+        toRet += fudgeParams.waypointInterval() / uavParams.airspeed();
     }
 
-    if (includeEnticement && !_bins.isEmpty())
+    if (includeEnticement && !_transformedBins.isEmpty())
     {
         qreal enticement = 0.0;
 
-        const Position& toEntice = _bins.at(wayset.size() % _bins.size());
+        const Position& toEntice = _transformedBins.at(resampled.size() % _transformedBins.size());
         const qreal distance = toEntice.flatDistanceEstimate(poses.last().pos());
         enticement += FlightTask::normal(distance, 200.0, 10.0);
 
         toRet += enticement;
     }
 
-
     if (progressStartOut != 0 && firstProgressIndex != -1)
-        *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
+        *progressStartOut = resampled.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
 
     if (progressEndOut != 0 && lastProgressIndex != -1)
-        *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
+        *progressEndOut = resampled.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
 
     return qMin<qreal>(toRet, this->maxTaskPerformance());
-}
-
-const QList<Position> &SamplingTask::bins(const QPolygonF &geoPoly)
-{
-    if (geoPoly != _lastGeoPoly || _bins.isEmpty())
-        _calculateBins(geoPoly);
-
-    return _bins;
 }
 
 //virtual from FlightTask
@@ -158,7 +154,7 @@ void SamplingTask::setTimeRequired(qreal nTime)
 //virtual from FlightTask
 void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
 {
-    _bins.clear();
+    _clearBins();
     _lastGeoPoly = geoPoly;
 
     const QRectF boundingRect = geoPoly.boundingRect().normalized();
@@ -170,7 +166,8 @@ void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
     const qreal widthMeters = topLeft.flatDistanceEstimate(topRight);
     const qreal heightMeters = topLeft.flatDistanceEstimate(bottomLeft);
 
-    const QPointF finalOffset = this->minSensingDistance()
+    const qreal avgSensingDistance = (this->minSensingDistance() + this->maxSensingDistance()) / 2.0;
+    const QPointF finalOffset = avgSensingDistance
             * QPointF(cos(this->validSensorAngleRange().center().radians()),
                       sin(this->validSensorAngleRange().center().radians()));
 
@@ -182,8 +179,10 @@ void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
                                  y * GRANULARITY + GRANULARITY / 2.0);
 
             const Position lla = topLeft.flatOffsetToPosition(offset);
-            if (geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
-                _bins.append(lla.flatOffsetToPosition(finalOffset));
+            if (!geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
+                continue;
+            _bins.append(lla);
+            _transformedBins.append(lla.flatOffsetToPosition(finalOffset));
         }
     }
 

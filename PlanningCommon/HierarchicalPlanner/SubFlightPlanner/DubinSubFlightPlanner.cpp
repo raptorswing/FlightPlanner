@@ -15,7 +15,13 @@ bool DubinSubFlightPlanner::plan()
 {
     _toRet.clear();
 
-    QList<Position> bins = _task->bins(_area->geoPoly());
+    const QList<Position> bins = _task->bins(_area->geoPoly());
+    const QList<Position> tBins = _task->transformedBins(_area->geoPoly());
+
+    QList<Position> binsToUse = tBins;
+    if (binsToUse.isEmpty())
+        binsToUse = bins;
+
     UAVOrientation approachAngle(_task->validSensorAngleRange().center().degrees() + 180.0, false);
 
     UAVParameters fudgeParams = _uavParams;
@@ -26,18 +32,18 @@ bool DubinSubFlightPlanner::plan()
 
     qreal bestScore = -500;
 
-    while (!bins.isEmpty() && bestScore < _task->maxTaskPerformance())
+    while (!binsToUse.isEmpty() && bestScore < _task->maxTaskPerformance())
     {
         bestScore = -500;
         int bestBinIndex = -1;
 
-        for (int i = 0; i < bins.size(); i++)
+        for (int i = 0; i < binsToUse.size(); i++)
         {
-            const Position& binPos = bins.at(i);
+            const Position& binPos = binsToUse.at(i);
             Wayset toTest = current;
             toTest.append(binPos, approachAngle);
 
-            toTest = toTest.resample(_uavParams.waypointInterval(), fudgeParams);
+            //toTest = toTest.resample(3.0, fudgeParams);
 
             const qreal score = _task->calculateFlightPerformance(toTest, _area->geoPoly(), _uavParams, false);
             if (score > bestScore)
@@ -49,17 +55,19 @@ bool DubinSubFlightPlanner::plan()
 
         //qDebug() << bestScore << "/" << _task->maxTaskPerformance();
 
-        if (bestBinIndex < 0 || bestBinIndex >= bins.size())
+        if (bestBinIndex < 0 || bestBinIndex >= binsToUse.size())
         {
             qWarning() << "best bin index is out of range";
             return false;
         }
 
-        const Position toAdd = bins.at(bestBinIndex);
+        const Position toAdd = binsToUse.at(bestBinIndex);
         if (_task->taskType() != "Sampling")
-            bins.removeAt(bestBinIndex);
+            binsToUse.removeAt(bestBinIndex);
         current.append(toAdd, approachAngle);
     }
+
+    qDebug() << bestScore;
 
     _toRet = current.resample(_uavParams.waypointInterval(), fudgeParams);
     //_toRet = current;

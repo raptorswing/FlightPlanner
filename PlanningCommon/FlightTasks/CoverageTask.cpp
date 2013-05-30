@@ -44,6 +44,11 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
     if (wayset.isEmpty())
         return 0.0;
 
+    UAVParameters fudgeParams = uavParams;
+    fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
+    fudgeParams.setWaypointInterval(10.0);
+    Wayset resampled = wayset.resample(fudgeParams.waypointInterval(), fudgeParams);
+
     if (geoPoly != _lastGeoPoly || _bins.isEmpty())
         _calculateBins(geoPoly);
 
@@ -52,9 +57,9 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
 
 
     QSet<int> satisfiedBins;
-    for (int i = 0; i < wayset.size(); i++)
+    for (int i = 0; i < resampled.size(); i++)
     {
-        const UAVPose& pose = wayset.at(i);
+        const UAVPose& pose = resampled.at(i);
         const Position& pos = pose.pos();
 
         for (int j = 0; j < _bins.size(); j++)
@@ -101,7 +106,7 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
         if (satisfiedBins.contains(i))
             continue;
 
-        const qreal distance = wayset.last().pos().flatDistanceEstimate(_bins.at(i));
+        const qreal distance = resampled.last().pos().flatDistanceEstimate(_transformedBins.at(i));
         const qreal currentEnticement = FlightTask::normal(distance, 200.0, 10.0);
         if (currentEnticement > enticement)
             enticement = currentEnticement;
@@ -117,27 +122,19 @@ qreal CoverageTask::calculateFlightPerformance(const Wayset &wayset,
     {
         *progressStartOut = -1.0;
         if (firstProgressIndex != -1)
-            *progressStartOut = wayset.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
+            *progressStartOut = resampled.distToPoseIndex(firstProgressIndex, uavParams) / uavParams.airspeed();
     }
 
     if (progressEndOut != 0)
     {
         *progressEndOut = -1.0;
         if (lastProgressIndex != -1)
-            *progressEndOut = wayset.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
+            *progressEndOut = resampled.distToPoseIndex(lastProgressIndex, uavParams) / uavParams.airspeed();
     }
 
     if (includeEnticement)
         return reward + enticement;
     return reward;
-}
-
-const QList<Position> &CoverageTask::bins(const QPolygonF &geoPoly)
-{
-    if (_bins.isEmpty() || geoPoly != _lastGeoPoly)
-        _calculateBins(geoPoly);
-
-    return _bins;
 }
 
 qreal CoverageTask::maxTaskPerformance() const
@@ -165,7 +162,7 @@ void CoverageTask::setGranularity(qreal nGran)
 //virtual from FlightTask
 void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 {
-    _bins.clear();
+    _clearBins();
     _lastGeoPoly = geoPoly;
 
     const QRectF boundingRect = geoPoly.boundingRect().normalized();
@@ -177,7 +174,8 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
     const qreal widthMeters = topLeft.flatDistanceEstimate(topRight);
     const qreal heightMeters = topLeft.flatDistanceEstimate(bottomLeft);
 
-    const QPointF finalOffset = this->minSensingDistance()
+    const qreal avgSensingDistance = (this->minSensingDistance() + this->maxSensingDistance()) / 2.0;
+    const QPointF finalOffset = avgSensingDistance
             * QPointF(cos(this->validSensorAngleRange().center().radians()),
                       sin(this->validSensorAngleRange().center().radians()));
 
@@ -189,8 +187,10 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
                                  y * _granularity + _granularity / 2.0);
 
             const Position lla = topLeft.flatOffsetToPosition(offset);
-            if (geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
-                _bins.append(lla.flatOffsetToPosition(finalOffset));
+            if (!geoPoly.containsPoint(lla.lonLat(), Qt::OddEvenFill))
+                continue;
+            _bins.append(lla);
+            _transformedBins.append(lla.flatOffsetToPosition(finalOffset));
         }
     }
 

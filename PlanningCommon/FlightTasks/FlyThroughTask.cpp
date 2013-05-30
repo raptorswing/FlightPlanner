@@ -81,19 +81,11 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &wayset,
     return 0.0;
 }
 
-const QList<Position> &FlyThroughTask::bins(const QPolygonF &geoPoly)
-{
-    if (_lastGeoPoly != geoPoly || _bins.isEmpty())
-        _calculateBins(geoPoly);
-
-    return _bins;
-}
-
 //protected
 //virtual from FlightTask
 void FlyThroughTask::_calculateBins(const QPolygonF &geoPoly)
 {
-    _bins.clear();
+    _clearBins();
     _lastGeoPoly = geoPoly;
 
     const QRectF boundingRect = geoPoly.boundingRect().normalized();

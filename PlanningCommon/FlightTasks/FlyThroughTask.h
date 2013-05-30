@@ -29,8 +29,6 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
 
-    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
-
 protected:
     //virtual from FlightTask
     void _calculateBins(const QPolygonF& geoPoly);
@@ -40,7 +38,6 @@ signals:
 public slots:
 
 private:
-    QPolygonF _lastGeoPoly;
     
 };
 

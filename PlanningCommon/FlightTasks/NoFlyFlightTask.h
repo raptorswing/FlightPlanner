@@ -34,9 +34,6 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
 
-    //pure-virtual from FlightTask
-    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
-
 private:
 };
 

@@ -48,7 +48,8 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0)=0;
 
-    virtual const QList<Position>& bins(const QPolygonF& geoPoly)=0;
+    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
+    virtual const QList<Position>& transformedBins(const QPolygonF& geoPoly);
 
     virtual qreal priority() const;
 
@@ -102,6 +103,8 @@ protected:
     static qreal normal(qreal x, qreal stdDev, qreal scaleFactor=1000.0);
 
     QList<Position> _bins;
+    QList<Position> _transformedBins;
+    QPolygonF _lastGeoPoly;
 
 private:
     QList<TimingConstraint> _timingConstraints;

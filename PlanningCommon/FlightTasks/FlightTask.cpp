@@ -90,6 +90,22 @@ bool FlightTask::shortnessRewardApplies() const
     return true;
 }
 
+const QList<Position> &FlightTask::bins(const QPolygonF &geoPoly)
+{
+    if (_bins.isEmpty() || geoPoly != _lastGeoPoly)
+        _calculateBins(geoPoly);
+
+    return _bins;
+}
+
+const QList<Position> &FlightTask::transformedBins(const QPolygonF &geoPoly)
+{
+    if (_bins.isEmpty() || geoPoly != _lastGeoPoly)
+        _calculateBins(geoPoly);
+
+    return _transformedBins;
+}
+
 qreal FlightTask::priority() const
 {
     return 1.0;
@@ -305,4 +321,5 @@ void FlightTask::_calculateBins(const QPolygonF &geoPoly)
 void FlightTask::_clearBins()
 {
     _bins.clear();
+    _transformedBins.clear();
 }

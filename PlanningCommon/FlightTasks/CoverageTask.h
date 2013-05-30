@@ -33,8 +33,6 @@ public:
                                              qreal * progressStartOut = 0,
                                              qreal * progressEndOut = 0);
 
-    virtual const QList<Position>& bins(const QPolygonF& geoPoly);
-
     virtual qreal maxTaskPerformance() const;
 
     qreal granularity() const;
@@ -45,8 +43,6 @@ protected:
     void _calculateBins(const QPolygonF& geoPoly);
     
 private:
-    QPolygonF _lastGeoPoly;
-
     qreal _granularity;
     
 };
