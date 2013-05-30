@@ -4,6 +4,7 @@
 #include <QSharedPointer>
 #include <QList>
 
+#include "SubFlightPlanner.h"
 #include "FlightTaskArea.h"
 #include "FlightTasks/FlightTask.h"
 #include "Position.h"
@@ -12,7 +13,7 @@
 
 #include "PlanningCommon_global.h"
 
-class PLANNINGCOMMONSHARED_EXPORT GreedySubFlightPlanner
+class PLANNINGCOMMONSHARED_EXPORT GreedySubFlightPlanner : public SubFlightPlanner
 {
 public:
     GreedySubFlightPlanner(const UAVParameters& uavParams,
@@ -21,19 +22,11 @@ public:
                            const Position& startPos,
                            const UAVOrientation& startPose);
 
-    bool plan();
-    const Wayset &results() const;
+    //virtual from SubFlightPlanner
+    virtual bool plan();
 
 private:
     bool _greedyPlan();
-
-    const UAVParameters& _uavParams;
-    const QSharedPointer<FlightTask>& _task;
-    const QSharedPointer<FlightTaskArea>& _area;
-    const Position& _startPos;
-    const UAVOrientation& _startPose;
-
-    Wayset _results;
 };
 
 #endif // GreedySubFlightPlanner_H

@@ -8,7 +8,9 @@
 
 #include <QSharedPointer>
 
-class SubFlightPlanner
+#include "PlanningCommon_global.h"
+
+class PLANNINGCOMMONSHARED_EXPORT SubFlightPlanner
 {
 public:
     SubFlightPlanner(const UAVParameters& uavParams,
@@ -16,9 +18,19 @@ public:
                      const QSharedPointer<FlightTaskArea>& area,
                      const Position& startPos,
                      const UAVOrientation& startPose);
+    virtual ~SubFlightPlanner();
 
-    bool plan();
+    virtual bool plan();
     const Wayset &results() const;
+
+protected:
+    const UAVParameters& uavParams() const;
+    const QSharedPointer<FlightTask>& task() const;
+    const QSharedPointer<FlightTaskArea>& area() const;
+    const Position& startPos() const;
+    const UAVOrientation& startPose() const;
+
+    void setResults(const Wayset& results);
 
 private:
     UAVParameters _uavParams;

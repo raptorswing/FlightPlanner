@@ -18,20 +18,15 @@ GreedySubFlightPlanner::GreedySubFlightPlanner(const UAVParameters &uavParams,
                                    const QSharedPointer<FlightTaskArea> &area,
                                    const Position &startPos,
                                    const UAVOrientation &startPose) :
-    _uavParams(uavParams), _task(task), _area(area), _startPos(startPos), _startPose(startPose)
+    SubFlightPlanner(uavParams, task, area, startPos, startPose)
 {
 }
 
 bool GreedySubFlightPlanner::plan()
 {
-    _results.clear();
+    this->setResults(Wayset());
 
     return _greedyPlan();
-}
-
-const Wayset& GreedySubFlightPlanner::results() const
-{
-    return _results;
 }
 
 //private
@@ -39,7 +34,8 @@ bool GreedySubFlightPlanner::_greedyPlan()
 {
     QMultiMap<qreal, QSharedPointer<GreedySubFlightNode> > frontier;
 
-    QSharedPointer<GreedySubFlightNode> rootNode(new GreedySubFlightNode(_startPos, _startPose));
+    QSharedPointer<GreedySubFlightNode> rootNode(new GreedySubFlightNode(this->startPos(),
+                                                                         this->startPose()));
     frontier.insert(0.0, rootNode);
 
     while (!frontier.isEmpty())
@@ -54,10 +50,10 @@ bool GreedySubFlightPlanner::_greedyPlan()
         frontier.remove(score, node);
 
         //If we've accomplished our task we can quit
-        if (score >= _task->maxTaskPerformance())
+        if (score >= this->task()->maxTaskPerformance())
         {
             qDebug() << "Done. Performance of" << score << "on sub flight";
-            _results = node->path();
+            this->setResults(node->path());
             break;
         }
         //If our task gets to long we give up
@@ -65,16 +61,16 @@ bool GreedySubFlightPlanner::_greedyPlan()
         {
             qDebug() << "Failed";
             qDebug() << score;
-            _results = node->path();
-            qDebug() << _results.last();
+            this->setResults(node->path());
+            qDebug() << this->results().last();
             return false;
         }
 
         //Build successors to the current node. Add them to frontier.
         for (qreal i = 1.1; i <= 6.0 * 1.5; i += 1.5)
         {
-            const qreal radius = _uavParams.minTurningRadius() * i;
-            const qreal arc = _uavParams.waypointInterval() / radius;
+            const qreal radius = this->uavParams().minTurningRadius() * i;
+            const qreal arc = this->uavParams().waypointInterval() / radius;
             const qreal leftCircleAngle = node->orientation().radians() + PI / 2.0;
             const QVector2D leftCenterPos(radius * cos(leftCircleAngle),
                                           radius * sin(leftCircleAngle));
@@ -87,14 +83,16 @@ bool GreedySubFlightPlanner::_greedyPlan()
             QSharedPointer<GreedySubFlightNode> s(new GreedySubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
-            const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);
+            const qreal sScore = this->task()->calculateFlightPerformance(s->path(),
+                                                                   this->area()->geoPoly(),
+                                                                   this->uavParams());
             frontier.insert(sScore, s);
         }
 
         for (qreal i = 1.1; i <= 6.0 * 1.5; i += 1.5)
         {
-            const qreal radius = _uavParams.minTurningRadius() * i;
-            const qreal arc = _uavParams.waypointInterval() / radius;
+            const qreal radius = this->uavParams().minTurningRadius() * i;
+            const qreal arc = this->uavParams().waypointInterval() / radius;
             const qreal rightCircleAngle = node->orientation().radians() - PI / 2.0;
             const QVector2D rightCenterPos(radius * cos(rightCircleAngle),
                                            radius * sin(rightCircleAngle));
@@ -107,7 +105,9 @@ bool GreedySubFlightPlanner::_greedyPlan()
             QSharedPointer<GreedySubFlightNode> s(new GreedySubFlightNode(posLatLon,
                                                               UAVOrientation(forwardAngle),
                                                               node));
-            const qreal sScore = _task->calculateFlightPerformance(s->path(), _area->geoPoly(), _uavParams);
+            const qreal sScore = this->task()->calculateFlightPerformance(s->path(),
+                                                                          this->area()->geoPoly(),
+                                                                          this->uavParams());
             frontier.insert(sScore, s);
         }
     }

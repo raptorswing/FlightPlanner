@@ -5,10 +5,11 @@
 #include "FlightTaskArea.h"
 #include "FlightTasks/FlightTask.h"
 #include "Position.h"
+#include "SubFlightPlanner.h"
 
 #include <QSharedPointer>
 
-class DubinSubFlightPlanner
+class DubinSubFlightPlanner : public SubFlightPlanner
 {
 public:
     DubinSubFlightPlanner(const UAVParameters& uavParams,
@@ -17,17 +18,10 @@ public:
                           const Position& startPos,
                           const UAVOrientation& startPose);
 
-    bool plan();
-    const Wayset &results() const;
+    //virtual from SubFlightPlanner
+    virtual bool plan();
 
 private:
-    const UAVParameters& _uavParams;
-    const QSharedPointer<FlightTask>& _task;
-    const QSharedPointer<FlightTaskArea>& _area;
-    const Position& _startPos;
-    const UAVOrientation& _startPose;
-
-    Wayset _toRet;
 };
 
 #endif // DUBINSUBFLIGHTPLANNER_H

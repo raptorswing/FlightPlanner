@@ -12,6 +12,10 @@ SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
 {
 }
 
+SubFlightPlanner::~SubFlightPlanner()
+{
+}
+
 bool SubFlightPlanner::plan()
 {
     _toRet.clear();
@@ -47,4 +51,40 @@ bool SubFlightPlanner::plan()
 const Wayset &SubFlightPlanner::results() const
 {
     return _toRet;
+}
+
+//protected
+const UAVParameters &SubFlightPlanner::uavParams() const
+{
+    return _uavParams;
+}
+
+//protected
+const QSharedPointer<FlightTask> &SubFlightPlanner::task() const
+{
+    return _task;
+}
+
+//protected
+const QSharedPointer<FlightTaskArea> &SubFlightPlanner::area() const
+{
+    return _area;
+}
+
+//protected
+const Position &SubFlightPlanner::startPos() const
+{
+    return _startPos;
+}
+
+//protected
+const UAVOrientation &SubFlightPlanner::startPose() const
+{
+    return _startPose;
+}
+
+//protected
+void SubFlightPlanner::setResults(const Wayset &results)
+{
+    _toRet = results;
 }
