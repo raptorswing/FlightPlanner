@@ -4,6 +4,10 @@
 #include "DubinSubFlightPlanner/DubinSubFlightPlanner.h"
 #include "GeneticSubFlightPlanner/GSFPlanner.h"
 
+#include <QSharedPointer>
+
+const int WHICH_PLANNER = 1;
+
 SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
                                    const QSharedPointer<FlightTask> &task,
                                    const QSharedPointer<FlightTaskArea> &area,
@@ -21,25 +25,41 @@ bool SubFlightPlanner::plan()
 {
     _toRet.clear();
 
-    //    GSFPlanner planner(this->uavParams(),
-    //                       this->task(),
-    //                       this->area(),
-    //                       this->startPos(),
-    //                       this->startPose());
-    //    if (!planner.plan())
-    //        return false;
-    //    this->setResults(planner.results());
-    //    return true;
+    QSharedPointer<SubFlightPlanner> planner;
 
-    DubinSubFlightPlanner planner(_uavParams,
-                                  _task,
-                                  _area,
-                                  _startPos,
-                                  _startPose);
-    if (!planner.plan())
+    if (WHICH_PLANNER == 0)
+    {
+    planner = QSharedPointer<SubFlightPlanner>(new GSFPlanner(this->uavParams(),
+                                                              this->task(),
+                                                              this->area(),
+                                                              this->startPos(),
+                                                              this->startPose()));
+    }
+    else if (WHICH_PLANNER == 1)
+    {
+        planner = QSharedPointer<SubFlightPlanner>(new DubinSubFlightPlanner(this->uavParams(),
+                                                                             this->task(),
+                                                                             this->area(),
+                                                                             this->startPos(),
+                                                                             this->startPose()));
+    }
+    else if (WHICH_PLANNER == 2)
+    {
+        planner = QSharedPointer<SubFlightPlanner>(new GreedySubFlightPlanner(this->uavParams(),
+                                                                              this->task(),
+                                                                              this->area(),
+                                                                              this->startPos(),
+                                                                              this->startPose()));
+    }
+    else
+    {
+        qWarning() << "Warning: No sub-flight planner selected";
         return false;
+    }
 
-    _toRet = planner.results();
+    if (!planner->plan())
+        return false;
+    this->setResults(planner->results());
 
     return true;
 }
