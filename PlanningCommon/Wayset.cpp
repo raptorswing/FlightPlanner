@@ -383,7 +383,7 @@ void Wayset::clear()
 
 void Wayset::append(const UAVPose &pose)
 {
-    if (this->isEmpty() || this->last() != pose)
+    if (this->isEmpty() || this->last().pos() != pose.pos())
         _poses.append(pose);
 }
 

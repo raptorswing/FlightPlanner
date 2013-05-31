@@ -2,6 +2,7 @@
 
 #include "GreedySubFlightPlanner.h"
 #include "DubinSubFlightPlanner.h"
+#include "GeneticSubFlightPlanner/GSFPlanner.h"
 
 SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
                                    const QSharedPointer<FlightTask> &task,
@@ -20,32 +21,42 @@ bool SubFlightPlanner::plan()
 {
     _toRet.clear();
 
-    if (_task->sensorType() == FlightTask::OmnidirectionalSensor)
-    {
-        GreedySubFlightPlanner planner(_uavParams,
-                                       _task,
-                                       _area,
-                                       _startPos,
-                                       _startPose);
-        if (!planner.plan())
-            return false;
-
-        _toRet = planner.results();
-    }
-    else if (_task->sensorType() == FlightTask::DirectionalSensor)
-    {
-        DubinSubFlightPlanner planner(_uavParams,
-                                      _task,
-                                      _area,
-                                      _startPos,
-                                      _startPose);
-        if (!planner.plan())
-            return false;
-
-        _toRet = planner.results();
-    }
-
+    GSFPlanner planner(this->uavParams(),
+                       this->task(),
+                       this->area(),
+                       this->startPos(),
+                       this->startPose());
+    if (!planner.plan())
+        return false;
+    this->setResults(planner.results());
     return true;
+
+//    if (_task->sensorType() == FlightTask::OmnidirectionalSensor)
+//    {
+//        GreedySubFlightPlanner planner(_uavParams,
+//                                       _task,
+//                                       _area,
+//                                       _startPos,
+//                                       _startPose);
+//        if (!planner.plan())
+//            return false;
+
+//        _toRet = planner.results();
+//    }
+//    else if (_task->sensorType() == FlightTask::DirectionalSensor)
+//    {
+//        DubinSubFlightPlanner planner(_uavParams,
+//                                      _task,
+//                                      _area,
+//                                      _startPos,
+//                                      _startPose);
+//        if (!planner.plan())
+//            return false;
+
+//        _toRet = planner.results();
+//    }
+
+//    return true;
 }
 
 const Wayset &SubFlightPlanner::results() const

@@ -73,8 +73,6 @@ bool DubinSubFlightPlanner::plan()
     qDebug() << bestScore;
 
     this->setResults(current.resample(this->uavParams().waypointInterval(), fudgeParams));
-    //_toRet = current;
-
 
     return true;
 }
