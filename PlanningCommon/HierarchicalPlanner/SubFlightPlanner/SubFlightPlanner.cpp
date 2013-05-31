@@ -1,7 +1,7 @@
 #include "SubFlightPlanner.h"
 
-#include "GreedySubFlightPlanner.h"
-#include "DubinSubFlightPlanner.h"
+#include "GreedySubFlightPlanner/GreedySubFlightPlanner.h"
+#include "DubinSubFlightPlanner/DubinSubFlightPlanner.h"
 #include "GeneticSubFlightPlanner/GSFPlanner.h"
 
 SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,

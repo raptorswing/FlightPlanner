@@ -5,7 +5,7 @@
 #include "FlightTaskArea.h"
 #include "FlightTasks/FlightTask.h"
 #include "Position.h"
-#include "SubFlightPlanner.h"
+#include "HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h"
 
 #include <QSharedPointer>
 

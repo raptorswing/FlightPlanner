@@ -65,10 +65,10 @@ SOURCES += \
     UserStudyEventLogger.cpp \
     MouseMetrics.cpp \
     AngleRange.cpp \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.cpp \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightNode.cpp \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner/DubinSubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.cpp
 
 HEADERS +=\
@@ -115,10 +115,10 @@ HEADERS +=\
     UserStudyEventLogger.h \
     MouseMetrics.h \
     AngleRange.h \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightNode.h \
-    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightNode.h \
+    HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner/DubinSubFlightPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.h
 
 unix:!symbian {
