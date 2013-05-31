@@ -45,7 +45,6 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &wayset,
         _calculateBins(geoPoly);
 
     //First, see if one of the points is within the polygon
-    int count = 0;
     const QList<Position> positions = wayset.positions();
     for (int i = 0; i < wayset.size(); i++)
     {
@@ -53,9 +52,6 @@ qreal FlyThroughTask::calculateFlightPerformance(const Wayset &wayset,
 
         if (geoPoly.containsPoint(pos.lonLat(), Qt::OddEvenFill))
         {
-            if (includeEnticement && count++ < 5)
-                continue;
-
             if (progressStartOut != 0)
                 *progressStartOut = wayset.distToPoseIndex(i, params) / params.airspeed();
             if (progressEndOut != 0)
