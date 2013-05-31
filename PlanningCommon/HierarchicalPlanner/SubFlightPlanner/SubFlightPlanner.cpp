@@ -21,42 +21,27 @@ bool SubFlightPlanner::plan()
 {
     _toRet.clear();
 
-    GSFPlanner planner(this->uavParams(),
-                       this->task(),
-                       this->area(),
-                       this->startPos(),
-                       this->startPose());
+    //    GSFPlanner planner(this->uavParams(),
+    //                       this->task(),
+    //                       this->area(),
+    //                       this->startPos(),
+    //                       this->startPose());
+    //    if (!planner.plan())
+    //        return false;
+    //    this->setResults(planner.results());
+    //    return true;
+
+    DubinSubFlightPlanner planner(_uavParams,
+                                  _task,
+                                  _area,
+                                  _startPos,
+                                  _startPose);
     if (!planner.plan())
         return false;
-    this->setResults(planner.results());
+
+    _toRet = planner.results();
+
     return true;
-
-//    if (_task->sensorType() == FlightTask::OmnidirectionalSensor)
-//    {
-//        GreedySubFlightPlanner planner(_uavParams,
-//                                       _task,
-//                                       _area,
-//                                       _startPos,
-//                                       _startPose);
-//        if (!planner.plan())
-//            return false;
-
-//        _toRet = planner.results();
-//    }
-//    else if (_task->sensorType() == FlightTask::DirectionalSensor)
-//    {
-//        DubinSubFlightPlanner planner(_uavParams,
-//                                      _task,
-//                                      _area,
-//                                      _startPos,
-//                                      _startPose);
-//        if (!planner.plan())
-//            return false;
-
-//        _toRet = planner.results();
-//    }
-
-//    return true;
 }
 
 const Wayset &SubFlightPlanner::results() const
