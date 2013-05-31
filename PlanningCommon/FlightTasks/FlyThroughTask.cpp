@@ -122,6 +122,7 @@ void FlyThroughTask::_calculateBins(const QPolygonF &geoPoly)
         }
     }
     _bins.append(best);
+    _transformedBins.append(best);
 
     if (_bins.isEmpty())
         qWarning() << "Warning:" << this << "has empty bins";
