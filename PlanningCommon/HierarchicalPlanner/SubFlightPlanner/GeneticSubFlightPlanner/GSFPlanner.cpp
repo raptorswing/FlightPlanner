@@ -42,7 +42,7 @@ bool GSFPlanner::plan()
 
     qreal bestScore = 0;
     Wayset bestFlight;
-    QMap<qreal, Wayset> individuals;
+    QMultiMap<qreal, Wayset> individuals;
     int generationCount = 0;
     while (bestScore < this->task()->maxTaskPerformance() || generationCount++ < MIN_GENERATIONS)
     {
@@ -52,6 +52,7 @@ bool GSFPlanner::plan()
         while (individuals.size() < 20)
         {
             Wayset newGuy;
+            newGuy.append(this->startPos(), this->startPose());
             for (int i = 0; i < locations.size(); i++)
             {
                 newGuy.append(locations.at(qrand() % locations.size()),
@@ -91,6 +92,7 @@ bool GSFPlanner::plan()
             const int endB = startB + (qrand() % (B.size() - startB));
 
             Wayset newGuy;
+            newGuy.append(this->startPos(), this->startPose());
             for (int j = startA; j < endA; j++)
                 newGuy.append(A.at(j));
             for (int j = startB; j < endB; j++)
@@ -108,7 +110,6 @@ bool GSFPlanner::plan()
     UAVParameters fudgeParams = this->uavParams();
     fudgeParams.setMinTurningRadius(fudgeParams.minTurningRadius() * 1.02);
 
-    bestFlight.prepend(this->startPos(), this->startPose());
     this->setResults(bestFlight.resample(this->uavParams().waypointInterval(), fudgeParams));
 
     return true;
