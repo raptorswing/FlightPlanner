@@ -6,6 +6,7 @@
 #include "GreedyBacktrackDubinsSFP/GreedyBacktrackDubinsSFP.h"
 
 #include <QSharedPointer>
+#include <QTime>
 
 const int WHICH_PLANNER = 3;
 
@@ -66,9 +67,14 @@ bool SubFlightPlanner::plan()
         return false;
     }
 
+    QTime startTime = QTime::currentTime();
     if (!planner->plan())
         return false;
     this->setResults(planner->results());
+    qDebug() << "Sub-flight took" << (startTime.msecsTo(QTime::currentTime())) << "ms";
+    qDebug() << "Sub-flight is of length" << planner->results().lengthMeters(this->uavParams());
+    qDebug() << "Sub-flight score is" << this->task()->calculateFlightPerformance(planner->results(), this->area()->geoPoly(),
+                                                                                  this->uavParams()) << "out of" << this->task()->maxTaskPerformance();
 
     return true;
 }
