@@ -69,7 +69,8 @@ SOURCES += \
     HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
     HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner/DubinSubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.cpp
+    HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.cpp \
+    HierarchicalPlanner/SubFlightPlanner/GreedyBacktrackDubinsSFP/GreedyBacktrackDubinsSFP.cpp
 
 HEADERS +=\
         PlanningCommon_global.h \
@@ -119,7 +120,8 @@ HEADERS +=\
     HierarchicalPlanner/SubFlightPlanner/GreedySubFlightPlanner/GreedySubFlightPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
     HierarchicalPlanner/SubFlightPlanner/DubinSubFlightPlanner/DubinSubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.h
+    HierarchicalPlanner/SubFlightPlanner/GeneticSubFlightPlanner/GSFPlanner.h \
+    HierarchicalPlanner/SubFlightPlanner/GreedyBacktrackDubinsSFP/GreedyBacktrackDubinsSFP.h
 
 unix:!symbian {
     maemo5 {
