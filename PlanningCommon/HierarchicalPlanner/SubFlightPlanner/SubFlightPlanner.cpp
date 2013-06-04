@@ -3,10 +3,11 @@
 #include "GreedySubFlightPlanner/GreedySubFlightPlanner.h"
 #include "DubinSubFlightPlanner/DubinSubFlightPlanner.h"
 #include "GeneticSubFlightPlanner/GSFPlanner.h"
+#include "GreedyBacktrackDubinsSFP/GreedyBacktrackDubinsSFP.h"
 
 #include <QSharedPointer>
 
-const int WHICH_PLANNER = 1;
+const int WHICH_PLANNER = 3;
 
 SubFlightPlanner::SubFlightPlanner(const UAVParameters &uavParams,
                                    const QSharedPointer<FlightTask> &task,
@@ -50,6 +51,14 @@ bool SubFlightPlanner::plan()
                                                                               this->area(),
                                                                               this->startPos(),
                                                                               this->startPose()));
+    }
+    else if (WHICH_PLANNER == 3)
+    {
+        planner = QSharedPointer<SubFlightPlanner>(new GreedyBacktrackDubinsSFP(this->uavParams(),
+                                                                                this->task(),
+                                                                                this->area(),
+                                                                                this->startPos(),
+                                                                                this->startPose()));
     }
     else
     {
