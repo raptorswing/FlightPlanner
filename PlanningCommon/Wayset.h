@@ -28,6 +28,9 @@ public:
     int size() const;
     bool isEmpty() const;
 
+    bool contains(const UAVPose& pose) const;
+    bool contains(const Position& pos) const;
+
     qreal lengthMeters(const UAVParameters& uavParams) const;
     QList<qreal> waypointSubLengthsMeters(const UAVParameters& uavParams) const;
     qreal timeToFly(const UAVParameters& uavParams) const;

@@ -65,6 +65,27 @@ bool Wayset::isEmpty() const
     return _poses.isEmpty();
 }
 
+bool Wayset::contains(const UAVPose &pose) const
+{
+    foreach(const UAVPose& p, _poses)
+    {
+        if (p == pose)
+            return true;
+    }
+    return false;
+}
+
+bool Wayset::contains(const Position &pos) const
+{
+    const QList<Position> positions = this->positions();
+    foreach(const Position& p, positions)
+    {
+        if (p == pos)
+            return true;
+    }
+    return false;
+}
+
 qreal Wayset::lengthMeters(const UAVParameters &uavParams) const
 {
     qreal toRet = 0.0;
