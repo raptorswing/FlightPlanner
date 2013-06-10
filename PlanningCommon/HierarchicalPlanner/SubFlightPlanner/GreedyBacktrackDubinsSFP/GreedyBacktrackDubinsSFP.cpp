@@ -57,6 +57,8 @@ bool GreedyBacktrackDubinsSFP::plan()
 
     while (!frontier.isEmpty() && bestScoreSoFar < stopScore)
     {
+        if (frontier.keys().last() < bestScoreSoFar)
+            break;
         bestScoreSoFar = frontier.keys().last();
         bestSoFar = frontier.take(bestScoreSoFar);
 
@@ -64,8 +66,8 @@ bool GreedyBacktrackDubinsSFP::plan()
 
         foreach(const Position& enticePos, locations)
         {
-            if (bestSoFar.contains(enticePos))
-                continue;
+//            if (bestSoFar.contains(enticePos))
+//                continue;
 
             foreach(const UAVOrientation& enticePose, orientations)
             {
@@ -73,7 +75,7 @@ bool GreedyBacktrackDubinsSFP::plan()
                 newGuy.append(enticePos, enticePose);
 
                 qreal score = this->task()->calculateFlightPerformance(newGuy, this->area()->geoPoly(),
-                                                                             this->uavParams(), true);
+                                                                             this->uavParams(), false);
                 score += (score / newGuy.lengthMeters(this->uavParams()));
                 frontier.insert(score, newGuy);
             }
