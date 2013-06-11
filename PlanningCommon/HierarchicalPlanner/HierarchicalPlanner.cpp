@@ -13,7 +13,7 @@
 #include <QTime>
 
 const qreal TIMESLICE = 15.0; //seconds
-const int SCHEDULING_TIMEOUT_SECONDS = 35;
+const int SCHEDULING_TIMEOUT_SECONDS = 600;
 
 HierarchicalPlanner::HierarchicalPlanner(QSharedPointer<PlanningProblem> prob,
                                          QObject *parent) :
