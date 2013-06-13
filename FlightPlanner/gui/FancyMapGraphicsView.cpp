@@ -59,7 +59,13 @@ void FancyMapGraphicsView::handleChildMouseRelease(QMouseEvent *event)
     _drawnPolygon.clear();
 
     foreach(CircleObject * tempMarker, _tempDrawMarkers)
-        tempMarker->deleteLater();
+    {
+        /*
+         * We don't need to remove before we delete
+        */
+        //this->scene()->removeObject(tempMarker);
+        delete tempMarker;
+    }
     _tempDrawMarkers.clear();
 
     if (poly.size() < 3)
