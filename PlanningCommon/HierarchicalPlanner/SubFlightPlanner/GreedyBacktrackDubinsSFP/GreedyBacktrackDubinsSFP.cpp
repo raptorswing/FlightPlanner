@@ -1,8 +1,12 @@
 #include "GreedyBacktrackDubinsSFP.h"
 
 #include <QMultiMap>
+#include <QTime>
+#include <QtDebug>
 
 const qreal ANGLE_INTERVAL = 3.14159265 / 8.0;
+
+const int TIMEOUT_SECONDS = 600;
 
 GreedyBacktrackDubinsSFP::GreedyBacktrackDubinsSFP(const UAVParameters &uavParams,
                                                    const QSharedPointer<FlightTask> &task,
@@ -55,8 +59,15 @@ bool GreedyBacktrackDubinsSFP::plan()
 
     const qreal stopScore = this->task()->maxTaskPerformance();
 
+    QTime startTime = QTime::currentTime();
     while (!frontier.isEmpty() && bestScoreSoFar < stopScore)
     {
+        if (startTime.secsTo(QTime::currentTime()) >= TIMEOUT_SECONDS)
+        {
+            qWarning() << "Sub-flight timeout";
+            return false;
+        }
+
         if (frontier.keys().last() < bestScoreSoFar)
             break;
         bestScoreSoFar = frontier.keys().last();
