@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QHash>
+#include <QTime>
 
 #include "FlightPlanner.h"
 #include "PlanningProblem.h"
@@ -42,6 +43,8 @@ private:
     QHash<QSharedPointer<FlightTask>, Wayset > _taskSubFlights;
     QHash<QSharedPointer<FlightTaskArea>, Wayset > _startTransitionSubFlights;
     QList<QPolygonF> _obstacles;
+
+    QTime _startTime;
     
 };
 

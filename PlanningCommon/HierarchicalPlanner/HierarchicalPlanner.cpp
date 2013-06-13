@@ -10,10 +10,9 @@
 #include <QtCore>
 #include <cmath>
 #include <limits>
-#include <QTime>
 
 const qreal TIMESLICE = 15.0; //seconds
-const int SCHEDULING_TIMEOUT_SECONDS = 600;
+const int SCHEDULING_TIMEOUT_SECONDS = 900; //15 minutes
 
 HierarchicalPlanner::HierarchicalPlanner(QSharedPointer<PlanningProblem> prob,
                                          QObject *parent) :
@@ -32,6 +31,7 @@ void HierarchicalPlanner::doStart()
 //pure-virtual from FlightPlanner
 void HierarchicalPlanner::doIteration()
 {
+    _startTime = QTime::currentTime();
     /*
      * Decide on arbitrary start and end points for each task (except no-fly).
      * They should be on edges of the polygon.
@@ -49,6 +49,12 @@ void HierarchicalPlanner::doIteration()
      * These sub-flights start and end at the arbitrary start/end points of the tasks.
     */
     _buildSubFlights();
+
+    if (_startTime.secsTo(QTime::currentTime()) >= SCHEDULING_TIMEOUT_SECONDS)
+    {
+        this->pausePlanning();
+        return;
+    }
 
 
     /*
@@ -238,7 +244,12 @@ void HierarchicalPlanner::_buildSubFlights()
         qDebug() << "Build sub-flight for" << task->taskName() << area->areaName() << start << startPose;
 
         SubFlightPlanner planner(this->problem()->uavParameters(), task, area, start, startPose);
-        planner.plan();
+        if (!planner.plan())
+        {
+            qWarning() << "Sub flight planning failed";
+            this->resetPlanning();
+            return;
+        }
 
         _taskSubFlights.insert(task, planner.results());
         qDebug() << "Sub-flight should take" << planner.results().timeToFly(this->problem()->uavParameters()) << " seconds";
@@ -248,8 +259,6 @@ void HierarchicalPlanner::_buildSubFlights()
 //private
 bool HierarchicalPlanner::_buildSchedule()
 {
-
-    const QTime startTime = QTime::currentTime();
 
     const UAVParameters& params = this->problem()->uavParameters();
 
@@ -289,14 +298,38 @@ bool HierarchicalPlanner::_buildSchedule()
 
     QList<QVectorND> schedule;
 
+    bool allowInterTaskTransitions = false;
+    if (_tasks.size() >= 2)
+    {
+        for (int i = 0; i < _tasks.size() - 1; i++)
+        {
+            QList<TimingConstraint> a = _tasks.at(i)->timingConstraints();
+            QList<TimingConstraint> b = _tasks.at(i+1)->timingConstraints();
+
+            if (a.size() != 1 || b.size() != 1)
+            {
+                allowInterTaskTransitions = true;
+                break;
+            }
+            else if (a.first() != b.first())
+            {
+                allowInterTaskTransitions = true;
+                break;
+            }
+        }
+    }
+
+    qDebug() << "Allow inter-task transitions? " << allowInterTaskTransitions;
+
+
     bool solutionFound = false;
     while (!worklist.isEmpty())
     {
         const QTime currentTime = QTime::currentTime();
-        if (startTime.secsTo(currentTime) >= SCHEDULING_TIMEOUT_SECONDS)
+        if (_startTime.secsTo(currentTime) >= SCHEDULING_TIMEOUT_SECONDS)
             break;
         else
-            qDebug() << startTime.secsTo(currentTime) << "seconds elapsed";
+            qDebug() << _startTime.secsTo(currentTime) << "seconds elapsed";
 
         const qreal costKey = worklist.keys().first();
         const QVectorND state = worklist.value(costKey);
@@ -352,6 +385,16 @@ bool HierarchicalPlanner::_buildSchedule()
             }
             if (dependencyViolation)
                 continue;
+
+            if (lastTasks.contains(state) && !allowInterTaskTransitions)
+            {
+                const int lastTaskIndex = lastTasks.value(state);
+                if (state[lastTaskIndex] < endState[lastTaskIndex]
+                        && i != lastTaskIndex)
+                    continue;
+            }
+
+
 
             //The time at which the subflight flying begins and ends.
             qreal startTime;
