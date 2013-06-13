@@ -15,6 +15,7 @@ FlightTaskArea::FlightTaskArea()
 FlightTaskArea::FlightTaskArea(const QPolygonF &geoPoly) :
     _geoPoly(geoPoly)
 {
+    this->setAreaName("Untitled");
 }
 
 //for de-serializing
