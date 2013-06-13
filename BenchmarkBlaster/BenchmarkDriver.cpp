@@ -8,23 +8,35 @@
 #include <QFile>
 #include <QDataStream>
 #include <QPolygonF>
+#include <QDateTime>
+#include <QStringList>
+#include <QThread>
 
 #include "PlanningProblem.h"
 #include "Position.h"
 
 #include "FlightTasks/FlyThroughTask.h"
+#include "FlightTasks/NoFlyFlightTask.h"
+#include "FlightTasks/SamplingTask.h"
+#include "FlightTasks/CoverageTask.h"
+
+#include "HierarchicalPlanner/HierarchicalPlanner.h"
+
+#include "gui/CommonFileHandling.h"
 
 const int MIN_TASKS = 1;
-const int MAX_TASKS = 20;
+const int MAX_TASKS = 15;
 const int TRIALS_PER_LEVEL = 5;
 
-const int MAX_DISTANCE_METERS = 1000;
+const int MAX_DISTANCE_METERS = 1500;
 
-const int MIN_WIDTH_METERS = 150;
-const int MIN_HEIGHT_METERS = 150;
+const int MIN_WIDTH_METERS = 300;
+const int MIN_HEIGHT_METERS = 300;
 
 const int MAX_MORE_WIDTH_METERS = 150;
 const int MAX_MORE_HEIGHT_METERS = 150;
+
+const QString LOGNAME = "Benchmarks.csv";
 
 
 const Position START_POS(-111.658684, 40.233722);
@@ -33,6 +45,8 @@ BenchmarkDriver::BenchmarkDriver(QObject *parent) :
     QObject(parent)
 {
     _logger = new UserStudyEventLogger("Benchmark", this);
+
+    qsrand(663458226535);
 
     QTimer::singleShot(1,this, SLOT(start()));
 }
@@ -80,6 +94,9 @@ void BenchmarkDriver::doTrial(int numTasks, int trialNum)
                                               (qrand() % (2 * MAX_DISTANCE_METERS)) - MAX_DISTANCE_METERS - heightMeters/2.0);
             const QRectF meterRect(topLeftOffsetMeters, QSize(widthMeters, heightMeters));
 
+            if (meterRect.contains(QPointF(0.0, 0.0)))
+                continue;
+
             bool intersection = false;
             foreach(const QRectF& other, rects)
             {
@@ -105,10 +122,22 @@ void BenchmarkDriver::doTrial(int numTasks, int trialNum)
             geoPolys.append(geoPoly);
         }
 
+        //Assign a task to each task area.
         foreach(const QPolygonF& geoPoly, geoPolys)
         {
             QSharedPointer<FlightTaskArea> area(new FlightTaskArea(geoPoly));
-            QSharedPointer<FlightTask> task(new FlyThroughTask());
+            QSharedPointer<FlightTask> task;
+
+            const int taskNum = (qrand() % 100) + 1;
+            if (taskNum <= 10 && problem->areas().size() > 0 && false)
+                task = QSharedPointer<FlightTask>(new NoFlyFlightTask());
+            else if (taskNum <= 33)
+                task = QSharedPointer<FlightTask>(new CoverageTask());
+            else if (taskNum <= 66)
+                task = QSharedPointer<FlightTask>(new SamplingTask(100.0));
+            else
+                task = QSharedPointer<FlightTask>(new FlyThroughTask());
+
             area->addTask(task);
             problem->addTaskArea(area);
         }
@@ -131,5 +160,57 @@ void BenchmarkDriver::doTrial(int numTasks, int trialNum)
             problem->serialize(stream);
             qDebug() << "Wrote" << filename;
         }
+    }
+
+    //Try to build a flight
+    {
+        const QTime startTime = QTime::currentTime();
+
+        QThread * thread = new QThread(this);
+
+        QSharedPointer<HierarchicalPlanner> planner(new HierarchicalPlanner(problem));
+        planner->moveToThread(thread);
+        connect(thread,
+                SIGNAL(started()),
+                planner.data(),
+                SLOT(startPlanning()));
+        connect(planner.data(),
+                SIGNAL(plannerPaused()),
+                thread,
+                SLOT(quit()));
+
+        //planner->startPlanning();
+        thread->start();
+        while (thread->isRunning())
+        {
+            thread->wait(50);
+            QCoreApplication::processEvents();
+        }
+
+        const QTime stopTime = QTime::currentTime();
+        const qreal msecs = startTime.msecsTo(stopTime);
+
+        QStringList csvParts;
+        csvParts.append(QString::number(numTasks));
+        csvParts.append(QString::number(trialNum));
+        if (planner->bestFlightSoFar().isEmpty())
+        {
+            csvParts.append("FALSE");
+            csvParts.append("");
+        }
+        else
+        {
+            csvParts.append("TRUE");
+            csvParts.append(QString::number(msecs/1000.0));
+
+            const QString filename = QString::number(numTasks).rightJustified(4, '0')
+                    % " trial "
+                    % QString::number(trialNum).rightJustified(4, '0')
+                    % ".wst";
+            CommonFileHandling::doExport(planner->bestFlightSoFar(), filename);
+        }
+
+        _logger->addCSVLine(LOGNAME, csvParts);
+        _logger->flush();
     }
 }
