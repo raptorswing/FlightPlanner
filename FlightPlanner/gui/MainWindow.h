@@ -38,6 +38,8 @@ private slots:
     void saveProblem(const QString& filePath);
     void resetAll();
 
+    void handleFlightTaskAreaDrawn(const QSharedPointer<FlightTaskArea> area);
+
     //MainWindow actions
     void on_actionOpen_triggered();
     void on_actionSave_Planning_Problem_triggered();

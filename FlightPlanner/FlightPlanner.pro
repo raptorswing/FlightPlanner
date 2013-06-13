@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.cpp \
-    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.cpp
+    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.cpp \
+    gui/FancyMapGraphicsView.cpp
 
 HEADERS  += \
     gui/MainWindow.h \
@@ -67,7 +68,8 @@ HEADERS  += \
     gui/FlightTaskEditors/FlyThroughTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.h \
     gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.h \
-    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.h
+    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.h \
+    gui/FancyMapGraphicsView.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
