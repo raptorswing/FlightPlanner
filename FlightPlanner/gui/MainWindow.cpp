@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include <QDateTime>
 
-#include "MapGraphicsView.h"
+#include "FancyMapGraphicsView.h"
 #include "MapGraphicsScene.h"
 #include "tileSources/CompositeTileSource.h"
 #include "tileSources/OSMTileSource.h"
@@ -177,6 +177,12 @@ void MainWindow::resetAll()
 }
 
 //private slot
+void MainWindow::handleFlightTaskAreaDrawn(const QSharedPointer<FlightTaskArea> &area)
+{
+    _problem->addTaskArea(area);
+}
+
+//private slot
 void MainWindow::on_actionOpen_triggered()
 {
     const QString filePath = CommonWindowHandling::getOpenProblemFilename(this);
@@ -332,7 +338,14 @@ void MainWindow::initMap()
 {
     //Setup MapGraphicsScene and View
     _scene = new MapGraphicsScene(this);
-    _view = new MapGraphicsView(_scene,this);
+
+    FancyMapGraphicsView * fancy = new FancyMapGraphicsView(_scene, this);
+    connect(fancy,
+            SIGNAL(flightTaskAreaDrawn(QSharedPointer<FlightTaskArea>)),
+            this,
+            SLOT(handleFlightTaskAreaDrawn(QSharedPointer<FlightTaskArea>)));
+    _view = fancy;
+
     this->setCentralWidget(_view);
 
     //Setup Map tile sources
