@@ -17,6 +17,8 @@ windows {
     }
 }
 
+INCLUDEPATH += .
+
 TARGET = PlanningCommon
 TEMPLATE = lib
 
