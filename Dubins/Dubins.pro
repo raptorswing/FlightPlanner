@@ -11,6 +11,8 @@ TEMPLATE = lib
 
 DEFINES += DUBINS_LIBRARY
 
+INCLUDEPATH += .
+
 SOURCES += \
     Dubins.cpp \
     dubinGuts/dubinsSolver.cpp

@@ -13,6 +13,8 @@ CONFIG += console
 TARGET = WaypointPlanner
 TEMPLATE = app
 
+INCLUDEPATH += .
+
 
 SOURCES += main.cpp\
     gui/WaypointMapView.cpp \

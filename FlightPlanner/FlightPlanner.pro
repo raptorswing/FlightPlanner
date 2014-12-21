@@ -12,6 +12,8 @@ CONFIG += console
 TARGET = FlightPlanner
 TEMPLATE = app
 
+INCLUDEPATH += .
+
 
 SOURCES += main.cpp\
     gui/MainWindow.cpp \
