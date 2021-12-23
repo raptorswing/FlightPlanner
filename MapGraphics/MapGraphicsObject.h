@@ -8,6 +8,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsItem>
+#include <QString>
 
 #include "MapGraphics_global.h"
 
@@ -72,7 +73,7 @@ public:
     MapGraphicsObject * parent() const;
     void setParent(MapGraphicsObject *);
 
-    QPointF pos() const;
+    const QPointF& pos() const;
     virtual void setPos(const QPointF&);
 
     qreal rotation() const;
@@ -92,6 +93,9 @@ public:
 
     bool isSelected() const;
     void setSelected(bool);
+
+    QString toolTip() const;
+    void setToolTip(const QString& toolTip);
 
     void setFlag(MapGraphicsObjectFlag, bool enabled=true);
     void setFlags(MapGraphicsObject::MapGraphicsObjectFlags);
@@ -117,6 +121,7 @@ signals:
     void rotationChanged();
     void visibleChanged();
     void zValueChanged();
+    void toolTipChanged(const QString& toolTip);
 
     void flagsChanged();
 
@@ -138,6 +143,9 @@ signals:
     
 public slots:
 
+private slots:
+    void setConstructed();
+
 private:
     bool _sizeIsZoomInvariant;
 
@@ -150,7 +158,11 @@ private:
     qreal _zValue;
     bool _selected;
 
+    QString _toolTip;
+
     MapGraphicsObject::MapGraphicsObjectFlags _flags;
+
+    bool _constructed;
     
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(MapGraphicsObject::MapGraphicsObjectFlags)
