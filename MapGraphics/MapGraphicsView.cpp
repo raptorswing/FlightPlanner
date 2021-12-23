@@ -190,6 +190,9 @@ void MapGraphicsView::setScene(MapGraphicsScene * scene)
         delete this->layout();
     this->setLayout(new QVBoxLayout(this));
     this->layout()->addWidget(childView);
+    // set resize anchor of child QGraphicsView to center so the center
+    // position doesn't change when the view gets resized
+    childView->setResizeAnchor(QGraphicsView::AnchorViewCenter);    
 
 
     //Delete old stuff if applicable
@@ -307,6 +310,11 @@ void MapGraphicsView::zoomOut(ZoomMode zMode)
 
     if (this->zoomLevel() > _tileSource->minZoomLevel())
         this->setZoomLevel(this->zoomLevel()-1,zMode);
+}
+
+void MapGraphicsView::rotate(qreal rotation)
+{
+    _childView->rotate(rotation);
 }
 
 //protected slot

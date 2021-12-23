@@ -5,11 +5,14 @@
 #-------------------------------------------------
 
 QT       += network sql
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MapGraphics
 TEMPLATE = lib
 
 DEFINES += MAPGRAPHICS_LIBRARY
+
+INCLUDEPATH += .
 
 SOURCES += MapGraphicsScene.cpp \
     MapGraphicsObject.cpp \
