@@ -292,9 +292,7 @@ void MainWindow::initMap()
     //Setup Map tile sources
     QSharedPointer<CompositeTileSource> composite(new CompositeTileSource());
     QSharedPointer<MapTileSource> osm(new OSMTileSource());
-    QSharedPointer<MapTileSource> mqSat(new OSMTileSource(OSMTileSource::MapQuestAerialTiles));
-    composite->addSourceBottom(osm,0.75);
-    composite->addSourceBottom(mqSat);
+    composite->addSourceBottom(osm);
     _view->setTileSource(composite);
 
     //Provide our "map layers" dock widget with the composite tile source to be configured

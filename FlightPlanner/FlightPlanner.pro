@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = FlightPlanner
 TEMPLATE = app
@@ -12,6 +13,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     FlightTasks/FlightTask.cpp \
+    Importers/Importer.cpp \
     gui/MainWindow.cpp \
     gui/PaletteWidget.cpp \
     gui/PlanningControlWidget.cpp \
@@ -60,7 +62,6 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
     gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
     Serializable.cpp \
-    Importers/Importer.cpp \
     Importers/GPXImporter.cpp
 
 HEADERS  += \
