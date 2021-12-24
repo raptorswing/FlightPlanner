@@ -2,6 +2,8 @@
 
 #include "guts/Conversions.h"
 
+#include <cmath>
+
 const qreal GRANULARITY = 50.0;
 
 SamplingTask::SamplingTask(const qreal timeRequired) : _timeRequired(timeRequired)
@@ -168,8 +170,8 @@ void SamplingTask::_calculateBins(const QPolygonF &geoPoly)
 
     const qreal avgSensingDistance = (this->minSensingDistance() + this->maxSensingDistance()) / 2.0;
     const QPointF finalOffset = avgSensingDistance
-            * QPointF(cos(this->validSensorAngleRange().center().radians()),
-                      sin(this->validSensorAngleRange().center().radians()));
+            * QPointF(::cos(this->validSensorAngleRange().center().radians()),
+                      ::sin(this->validSensorAngleRange().center().radians()));
 
     for (int x = 0; x < widthMeters / GRANULARITY; x++)
     {

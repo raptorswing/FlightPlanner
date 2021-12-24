@@ -1,6 +1,7 @@
 #include "AngleRange.h"
 
 #include <QtGlobal>
+#include <cmath>
 
 const qreal PI = 3.141592653589793238462643383279;
 
@@ -76,11 +77,11 @@ void AngleRange::setRangeRadians(qreal nRangeRadians)
 bool AngleRange::withinRange(const UAVOrientation &orientation) const
 {
     //Use dot product to get angle between
-    const qreal dp = cos(orientation.radians()) * cos(_center.radians())
-            + sin(orientation.radians()) * sin(_center.radians());
+    const qreal dp = ::cos(orientation.radians()) * ::cos(_center.radians())
+            + ::sin(orientation.radians()) * ::sin(_center.radians());
 
     //C++ acos should return from interval [0, pi]
-    const qreal angleBetween = acos(dp);
+    const qreal angleBetween = ::acos(dp);
 
     return angleBetween <= _rangeRadians / 2.0;
 }

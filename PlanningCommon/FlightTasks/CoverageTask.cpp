@@ -1,6 +1,7 @@
 #include "CoverageTask.h"
 
 #include <QSet>
+#include <cmath>
 
 #include "guts/Conversions.h"
 
@@ -176,8 +177,8 @@ void CoverageTask::_calculateBins(const QPolygonF &geoPoly)
 
     const qreal avgSensingDistance = (this->minSensingDistance() + this->maxSensingDistance()) / 2.0;
     const QPointF finalOffset = avgSensingDistance
-            * QPointF(cos(this->validSensorAngleRange().center().radians()),
-                      sin(this->validSensorAngleRange().center().radians()));
+            * QPointF(::cos(this->validSensorAngleRange().center().radians()),
+                      ::sin(this->validSensorAngleRange().center().radians()));
 
     for (int x = 0; x < widthMeters / _granularity; x++)
     {
