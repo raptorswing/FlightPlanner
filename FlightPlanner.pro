@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
-SUBDIRS = MapGraphics FlightPlanner QVectorND QKDTree GPX WaypointPlanner Dubins PlanningCommon \
-    BenchmarkBlaster
+SUBDIRS = MapGraphics QVectorND QKDTree GPX Dubins PlanningCommon \
+    BenchmarkBlaster FlightPlanner WaypointPlanner
 
 FlightPlanner.depends += MapGraphics
 FlightPlanner.depends += QVectorND
@@ -13,6 +13,7 @@ WaypointPlanner.depends += MapGraphics
 WaypointPlanner.depends += GPX
 WaypointPlanner.depends += Dubins
 WaypointPlanner.depends += PlanningCommon
+WaypointPlanner.depends += QKDTree
 
 PlanningCommon.depends += MapGraphics
 PlanningCommon.depends += QVectorND

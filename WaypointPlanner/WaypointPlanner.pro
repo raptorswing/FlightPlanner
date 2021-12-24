@@ -49,6 +49,14 @@ else:unix: LIBS += -L$$OUT_PWD/../GPX/ -lGPX
 INCLUDEPATH += $$PWD/../GPX
 DEPENDPATH += $$PWD/../GPX
 
+#Linkage for QKDTree library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QKDTree/release/ -lQKDTree
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QKDTree/debug/ -lQKDTree
+else:unix: LIBS += -L$$OUT_PWD/../QKDTree/ -lQKDTree
+
+INCLUDEPATH += $$PWD/../QKDTree
+DEPENDPATH += $$PWD/../QKDTree
+
 #Linkage for Dubins
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Dubins/release/ -lDubins
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Dubins/debug/ -lDubins
