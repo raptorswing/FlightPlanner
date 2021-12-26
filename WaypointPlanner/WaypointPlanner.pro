@@ -72,3 +72,11 @@ else:unix: LIBS += -L$$OUT_PWD/../QVectorND/ -lQVectorND
 
 INCLUDEPATH += $$PWD/../QVectorND
 DEPENDPATH += $$PWD/../QVectorND
+
+#Linkage for QKDTree library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../QKDTree/release/ -lQKDTree
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../QKDTree/debug/ -lQKDTree
+else:unix: LIBS += -L$$OUT_PWD/../QKDTree/ -lQKDTree
+
+INCLUDEPATH += $$PWD/../QKDTree
+DEPENDPATH += $$PWD/../QKDTree

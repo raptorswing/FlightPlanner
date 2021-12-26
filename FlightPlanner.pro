@@ -12,6 +12,8 @@ WaypointPlanner.depends += MapGraphics
 WaypointPlanner.depends += GPX
 WaypointPlanner.depends += Dubins
 WaypointPlanner.depends += PlanningCommon
+WaypointPlanner.depends += QVectorND
+WaypointPlanner.depends += QKDTree
 
 PlanningCommon.depends += MapGraphics
 PlanningCommon.depends += QVectorND
