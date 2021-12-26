@@ -1,6 +1,4 @@
 #include <QApplication>
-#include <QtDebug>
-
 #include "gui/MainWindow.h"
 #include "gui/CommonFileHandling.h"
 

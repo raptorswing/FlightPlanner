@@ -325,7 +325,7 @@ void MainWindow::initMap()
 
     //Setup Map tile sources
     QSharedPointer<CompositeTileSource> composite(new CompositeTileSource());
-    QSharedPointer<MapTileSource> osm(new OSMTileSource(OSMTileSource::OSMTiles));
+    QSharedPointer<MapTileSource> osm(new OSMTileSource());
     composite->addSourceBottom(osm);
     _view->setTileSource(composite);
 
