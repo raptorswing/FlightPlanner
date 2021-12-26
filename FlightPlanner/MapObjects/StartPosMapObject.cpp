@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include <cmath>
+
 StartPosMapObject::StartPosMapObject(QWeakPointer<PlanningProblem> prob) :
     CircleObject(10.0, true, QColor(0,255,0)),
     _prob(prob),
