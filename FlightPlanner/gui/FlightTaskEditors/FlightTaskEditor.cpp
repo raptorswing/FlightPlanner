@@ -31,6 +31,20 @@ FlightTaskEditor::FlightTaskEditor(QSharedPointer<PlanningProblem> problem,
     _taskNameEditor = new TaskNameEditor(this);
     this->addEditorWidget(_taskNameEditor);
 
+    //These two editors only for coverage or sampling
+    if (task->taskType() == "Coverage"
+            || task->taskType() == "Sampling")
+    {
+        _sensorTypeEditor = new SensorTypeEditor(this);
+        this->addEditorWidget(_sensorTypeEditor);
+
+        _directionalConstraintEditor = new DirectionalConstraintEditor(this);
+        this->addEditorWidget(_directionalConstraintEditor);
+
+        _distanceConstraintEditor = new MinSensingDistEditor(this);
+        this->addEditorWidget(_distanceConstraintEditor);
+    }
+
     _timingConstraintsEditor = new TimingConstraintEditor(this);
     this->addEditorWidget(_timingConstraintsEditor);
 
@@ -62,6 +76,14 @@ void FlightTaskEditor::load()
         return;
 
     _taskNameEditor->setName(strong->taskName());
+
+    if (strong->taskType() == "Coverage"
+            || strong->taskType() == "Sampling")
+    {
+        _sensorTypeEditor->setSensorType(strong->sensorType());
+        _directionalConstraintEditor->setRange(strong->validSensorAngleRange());
+        _distanceConstraintEditor->setRange(strong->minSensingDistance(), strong->maxSensingDistance());
+    }
     _timingConstraintsEditor->setTimingConstraints(strong->timingConstraints());
     _dependencyConstraintsEditor->setDependencies(strong->dependencyConstraints());
     this->loadSub();
@@ -75,6 +97,15 @@ void FlightTaskEditor::save()
         return;
 
     strong->setTaskName(_taskNameEditor->name());
+
+    if (strong->taskType() == "Coverage"
+            || strong->taskType() == "Sampling")
+    {
+        strong->setSensorType(_sensorTypeEditor->sensorType());
+        strong->setValidSensorAngleRange(_directionalConstraintEditor->range());
+        strong->setSensingRange(_distanceConstraintEditor->min(), _distanceConstraintEditor->max());
+    }
+
     strong->setTimingConstraints(_timingConstraintsEditor->timingConstraints());
     strong->setDependencyConstraints(_dependencyConstraintsEditor->dependencies());
 

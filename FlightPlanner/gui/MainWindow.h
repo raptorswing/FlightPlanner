@@ -4,12 +4,18 @@
 #include <QMainWindow>
 #include <QSharedPointer>
 #include <QList>
+#include <QPointer>
 
-#include "MapGraphicsView.h"
-#include "MapGraphicsScene.h"
-#include "PlanningProblem.h"
-#include "FlightPlanner.h"
 #include "ProblemViewAdapter.h"
+
+#include "PlanningProblem.h"        //From PlanningCommon
+#include "FlightPlanner.h"          //From PlanningCommon
+#include "UserStudyChatHandler.h"   //From PlanningCommon
+#include "WaysetDisplayManager.h"   //From PlanningCommon
+#include "UserStudyEventLogger.h"   //From PlanningCommon
+
+#include "MapGraphicsView.h"        //From MapGraphics
+#include "MapGraphicsScene.h"       //From MapGraphics
 
 namespace Ui {
 class MainWindow;
@@ -22,52 +28,51 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void openHiddenProblem(const QString& filePath);
     
 private slots:
+    void updateDisplayedFlight();
+    void openProblem(const QString& filePath);
+    void saveProblem(const QString& filePath);
+    void resetAll();
+
+    void handleFlightTaskAreaDrawn(const QSharedPointer<FlightTaskArea> area);
+
     //MainWindow actions
     void on_actionOpen_triggered();
     void on_actionSave_Planning_Problem_triggered();
-    void on_actionSave_As_triggered();
     void on_actionNew_triggered();
     void on_actionClose_triggered();
     void on_actionExport_Solution_triggered();
-    void on_actionUndo_triggered();
-    void on_actionRedo_triggered();
     void on_actionExit_triggered();
     void on_actionUAV_Parameters_triggered();
-    void on_actionSensor_Parameters_triggered();
     void on_actionImport_Solution_triggered();
-
-    //Palette Widget actions
-    void handleAddStartPointRequested();
-    void handleAddTaskAreaRequested();
-
-    //Planning control widget actions
-    void handlePlanningStartRequested();
-    void handlePlanningPauseRequested();
-    void handlePlanningClearRequested();
-
-    //Planner events
-    void handlePlannerProgressChanged(qreal fitness, quint32 iterations);
-    void handlePlannerStatusChanged(FlightPlanner::PlanningStatus status);
+    void on_actionPlan_Flight_triggered();
+    void on_actionReset_Flight_triggered();
+    void on_actionPlace_Start_Point_triggered();
+    void on_actionPlace_Task_Area_triggered();
+    void on_actionTest_Flight_triggered();
 
 private:
-    inline void initMap();
-    inline void initPlanningProblem();
-    inline void initPaletteConnections();
-    inline void initPlanningControlConnections();
-    void updateDisplayedFlight();
+    void initMap();
+    void initPlanningProblem();
+    void initPaletteConnections();
+    void enableDisableFlightActions();
+    void loadHiddenProblemAttributes();
 
     Ui::MainWindow *ui;
 
-    MapGraphicsView * _view;
-    MapGraphicsScene * _scene;
+    QPointer<MapGraphicsView> _view;
+    QPointer<MapGraphicsScene> _scene;
 
     QSharedPointer<PlanningProblem> _problem;
-    FlightPlanner * _planner;
-    ProblemViewAdapter * _viewAdapter;
+    QSharedPointer<PlanningProblem> _hiddenProblem;
+    QPointer<FlightPlanner> _planner;
+    QPointer<ProblemViewAdapter> _viewAdapter;
 
-    QList<MapGraphicsObject *> _displayedPathObjects;
+    QPointer<WaysetDisplayManager> _waysetManager;
 };
 
 #endif // MAINWINDOW_H

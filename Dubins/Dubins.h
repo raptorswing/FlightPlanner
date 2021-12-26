@@ -13,22 +13,39 @@ class DUBINSSHARED_EXPORT Dubins
 {
 public:
     Dubins();
-    Dubins(const QVector2D& posA,
-           qreal angleA,
-           const QVector2D& posB,
-           qreal angleB,
+    Dubins(const QVector2D& firstPosition,
+           qreal firstAngle,
+           const QVector2D& secondPosition,
+           qreal secondAngle,
            qreal minTurnRadius);
 
-    Dubins(const QPointF& posA,
-           qreal angleA,
-           const QPointF& posB,
-           qreal angleB,
+    Dubins(const QPointF& firstPosition,
+           qreal firstAngle,
+           const QPointF& secondPosition,
+           qreal secondAngle,
            qreal minTurnRadius);
 
     bool isValid() const;
 
     qreal length() const;
-    bool sample(qreal t, QPointF& outPos, qreal& outAngle);
+    bool sample(qreal t, QPointF& outPos, qreal& outAngle) const;
+
+    const QPointF& firstPosition() const;
+    const QPointF& secondPosition() const;
+
+    void setFirstPosition(const QPointF& firstPos);
+    void setSecondPosition(const QPointF& secondPos);
+    void setPositions(const QPointF& first, const QPointF& second);
+
+    qreal firstAngle() const;
+    qreal secondAngle() const;
+
+    void setFirstAngle(qreal a);
+    void setSecondAngle(qreal b);
+    void setAngles(qreal a, qreal b);
+
+    qreal minTurnRadius() const;
+    void setMinTurnRadius(qreal nRadius);
 
 
 private:

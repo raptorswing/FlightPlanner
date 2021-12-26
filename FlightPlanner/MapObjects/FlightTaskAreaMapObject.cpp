@@ -51,10 +51,7 @@ void FlightTaskAreaMapObject::paint(QPainter *painter, const QStyleOptionGraphic
         return;
 
     if (area->tasks().isEmpty())
-    {
         this->setFillColor(QColor(150, 150, 150, 100));
-        PolygonObject::paint(painter, option, widget);
-    }
     else
     {
         QString taskType = "";
@@ -69,13 +66,15 @@ void FlightTaskAreaMapObject::paint(QPainter *painter, const QStyleOptionGraphic
             }
         }
 
-        QColor fillColor(255, 255, 255, 100);
+        QColor fillColor(255, 255, 255, 150);
         if (taskType == "No-Fly Zone")
             fillColor = QColor(255, 0, 0, 100);
         else if (taskType == "Coverage")
             fillColor = QColor(0, 255, 0, 100);
         else if (taskType == "Sampling")
             fillColor = QColor(0, 0, 255, 100);
+        else if (taskType == "Fly Through")
+            fillColor = QColor(255,255,0,100);
         this->setFillColor(fillColor);
     }
 

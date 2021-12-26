@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit Tasks</string>
+   <string>Manage Tasks</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources.qrc">

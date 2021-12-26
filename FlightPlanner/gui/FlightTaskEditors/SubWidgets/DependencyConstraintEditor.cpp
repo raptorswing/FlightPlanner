@@ -87,6 +87,8 @@ void DependencyConstraintEditor::buildMenu()
                 continue;
             else if (alreadyAdded.contains(task))
                 continue;
+            else if (task->taskType() == "No-Fly Zone")
+                continue;
             atleastOne = true;
             QAction * action = _menu.addAction(task->taskType() + " - " + task->taskName(),
                                                this,

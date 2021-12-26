@@ -2,6 +2,7 @@
 #include "ui_TimingConstraintEditor.h"
 
 #include <QtDebug>
+#include <QMessageBox>
 
 TimingConstraintEditor::TimingConstraintEditor(QWidget *parent) :
     QWidget(parent),
@@ -62,6 +63,12 @@ void TimingConstraintEditor::handleRowRemoveRequested(TimingConstraintSliders *s
     const int index = _sliders.indexOf(slider);
     if (index <= -1)
         return;
+
+    if (_sliders.size() == 1)
+    {
+        QMessageBox::information(this, "Cannot Remove", "Sorry, you can't remove the last time window.\n\nEach task must have at least one duration of time during which it can be flown by the UAV.");
+        return;
+    }
 
     _sliders.removeAt(index);
     slider->deleteLater();

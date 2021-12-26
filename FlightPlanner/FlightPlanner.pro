@@ -10,49 +10,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = FlightPlanner
 TEMPLATE = app
 
+INCLUDEPATH += .
 
 SOURCES += main.cpp\
-    FlightTasks/FlightTask.cpp \
-    Importers/Importer.cpp \
     gui/MainWindow.cpp \
     gui/PaletteWidget.cpp \
     gui/PlanningControlWidget.cpp \
-    FlightPlanner.cpp \
-    PlanningProblem.cpp \
-    UAVOrientation.cpp \
-    FlightTaskArea.cpp \
-    FlightTasks/FlyThroughTask.cpp \
     ProblemViewAdapter.cpp \
-    GreedyPlanner/GreedyFlightPlanner.cpp \
     MapObjects/StartPosMapObject.cpp \
     MapObjects/FlightTaskAreaMapObject.cpp \
     gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.cpp \
     gui/FlightTaskAreaEditor/FlightTaskAreaListModel.cpp \
-    GreedyPlanner/GreedyPlanningNode.cpp \
-    Fitness.cpp \
-    FlightTasks/NoFlyFlightTask.cpp \
-    HierarchicalPlanner/HierarchicalPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.cpp \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.cpp \
-    FlightTasks/CoverageTask.cpp \
-    HierarchicalPlanner/IntermediatePlanner.cpp \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.cpp \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.cpp \
-    HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.cpp \
-    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.cpp \
     gui/FlightTaskAreaEditor/FlightTaskDelegate.cpp \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.cpp \
     gui/UAVParametersWidget.cpp \
     gui/FlightTaskEditors/SubWidgets/TimingConstraintSliders.cpp \
     gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.cpp \
-    FlightTasks/TimingConstraint.cpp \
     gui/FlightTaskEditors/FlightTaskEditorFactory.cpp \
     gui/FlightTaskEditors/CoverageTaskEditor.cpp \
-    UAVParameters.cpp \
-    Exporters/Exporter.cpp \
-    Exporters/GPXExporter.cpp \
-    FlightTasks/SamplingTask.cpp \
-    HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.cpp \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.cpp \
     gui/FlightTaskEditors/FlightTaskEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.cpp \
@@ -61,50 +36,27 @@ SOURCES += main.cpp\
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.cpp \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.cpp \
     gui/FlightTaskEditors/FlyThroughTaskEditor.cpp \
-    Serializable.cpp \
-    Importers/GPXImporter.cpp
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.cpp \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.cpp \
+    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.cpp \
+    gui/FancyMapGraphicsView.cpp
 
 HEADERS  += \
-    FlightTasks/FlightTask.h \
     gui/MainWindow.h \
     gui/PaletteWidget.h \
     gui/PlanningControlWidget.h \
-    FlightPlanner.h \
-    PlanningProblem.h \
-    UAVOrientation.h \
-    FlightTaskArea.h \
-    FlightTasks/FlyThroughTask.h \
     ProblemViewAdapter.h \
-    GreedyPlanner/GreedyFlightPlanner.h \
     MapObjects/StartPosMapObject.h \
     MapObjects/FlightTaskAreaMapObject.h \
     gui/FlightTaskAreaEditor/FlightTaskAreaObjectEditWidget.h \
     gui/FlightTaskAreaEditor/FlightTaskAreaListModel.h \
-    GreedyPlanner/GreedyPlanningNode.h \
-    Fitness.h \
-    FlightTasks/NoFlyFlightTask.h \
-    HierarchicalPlanner/HierarchicalPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightPlanner.h \
-    HierarchicalPlanner/SubFlightPlanner/SubFlightNode.h \
-    FlightTasks/CoverageTask.h \
-    HierarchicalPlanner/IntermediatePlanner.h \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTIntermediatePlanner.h \
-    HierarchicalPlanner/RRTIntermediatePlanner/RRTDistanceMetric.h \
-    HierarchicalPlanner/AstarPRMIntermediatePlanner/AstarPRMIntermediatePlanner.h \
-    HierarchicalPlanner/PhonyIntermediatePlanner/PhonyIntermediatePlanner.h \
     gui/FlightTaskAreaEditor/FlightTaskDelegate.h \
     gui/FlightTaskAreaEditor/FlightTaskRowEditor.h \
     gui/UAVParametersWidget.h \
     gui/FlightTaskEditors/SubWidgets/TimingConstraintSliders.h \
     gui/FlightTaskEditors/SubWidgets/TimingConstraintEditor.h \
-    FlightTasks/TimingConstraint.h \
     gui/FlightTaskEditors/FlightTaskEditorFactory.h \
     gui/FlightTaskEditors/CoverageTaskEditor.h \
-    UAVParameters.h \
-    Exporters/Exporter.h \
-    Exporters/GPXExporter.h \
-    FlightTasks/SamplingTask.h \
-    HierarchicalPlanner/DubinsIntermediate/DubinsIntermediatePlanner.h \
     gui/FlightTaskEditors/SubWidgets/TaskNameEditor.h \
     gui/FlightTaskEditors/FlightTaskEditor.h \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.h \
@@ -113,9 +65,10 @@ HEADERS  += \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.h \
     gui/FlightTaskEditors/SubWidgets/DependencyRow.h \
     gui/FlightTaskEditors/FlyThroughTaskEditor.h \
-    Serializable.h \
-    Importers/Importer.h \
-    Importers/GPXImporter.h
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.h \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.h \
+    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.h \
+    gui/FancyMapGraphicsView.h
 
 FORMS    += gui/MainWindow.ui \
     gui/PaletteWidget.ui \
@@ -130,7 +83,10 @@ FORMS    += gui/MainWindow.ui \
     gui/FlightTaskEditors/SubWidgets/CoverageTaskEditorWidgets.ui \
     gui/FlightTaskEditors/SubWidgets/SamplingTaskEditorWidgets.ui \
     gui/FlightTaskEditors/SubWidgets/DependencyConstraintEditor.ui \
-    gui/FlightTaskEditors/SubWidgets/DependencyRow.ui
+    gui/FlightTaskEditors/SubWidgets/DependencyRow.ui \
+    gui/FlightTaskEditors/SubWidgets/SensorTypeEditor.ui \
+    gui/FlightTaskEditors/SubWidgets/DirectionalConstraintEditor.ui \
+    gui/FlightTaskEditors/SubWidgets/MinSensingDistEditor.ui
 
 RESOURCES += \
     resources.qrc
@@ -176,3 +132,11 @@ else:unix: LIBS += -L$$OUT_PWD/../Dubins/ -lDubins
 
 INCLUDEPATH += $$PWD/../Dubins
 DEPENDPATH += $$PWD/../Dubins
+
+#Linkage for PlanningCommon library.
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../PlanningCommon/release/ -lPlanningCommon
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../PlanningCommon/debug/ -lPlanningCommon
+else:unix: LIBS += -L$$OUT_PWD/../PlanningCommon/ -lPlanningCommon
+
+INCLUDEPATH += $$PWD/../PlanningCommon
+DEPENDPATH += $$PWD/../PlanningCommon

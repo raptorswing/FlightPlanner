@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>251</width>
-    <height>189</height>
+    <width>314</width>
+    <height>257</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -86,6 +86,26 @@
           </property>
           <property name="value">
            <double>30.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Directional angle of view:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="angleOfViewSpinbox">
+          <property name="suffix">
+           <string> degrees</string>
+          </property>
+          <property name="minimum">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>359.899999999999977</double>
           </property>
          </widget>
         </item>

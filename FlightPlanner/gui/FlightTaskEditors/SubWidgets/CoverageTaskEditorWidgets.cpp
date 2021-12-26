@@ -18,17 +18,7 @@ qreal CoverageTaskEditorWidgets::granularity() const
     return this->ui->granularitySpinbox->value();
 }
 
-qreal CoverageTaskEditorWidgets::maxDistance() const
-{
-    return this->ui->maxDistanceSpinbox->value();
-}
-
 void CoverageTaskEditorWidgets::setGranularity(qreal nGran)
 {
     this->ui->granularitySpinbox->setValue(nGran);
-}
-
-void CoverageTaskEditorWidgets::setMaxDistance(qreal nDist)
-{
-    this->ui->maxDistanceSpinbox->setValue(nDist);
 }

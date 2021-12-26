@@ -4,6 +4,9 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QVector2D>
+#include <cmath>
+
+#include <cmath>
 
 #include <cmath>
 

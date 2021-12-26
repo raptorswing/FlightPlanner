@@ -7,6 +7,9 @@
 #include "FlightTasks/FlightTask.h"
 
 #include "SubWidgets/TaskNameEditor.h"
+#include "SubWidgets/SensorTypeEditor.h"
+#include "SubWidgets/DirectionalConstraintEditor.h"
+#include "SubWidgets/MinSensingDistEditor.h"
 #include "SubWidgets/TimingConstraintEditor.h"
 #include "SubWidgets/DependencyConstraintEditor.h"
 
@@ -51,6 +54,9 @@ private:
     QWeakPointer<FlightTask> _baseTask;
 
     TaskNameEditor * _taskNameEditor;
+    SensorTypeEditor * _sensorTypeEditor;
+    DirectionalConstraintEditor * _directionalConstraintEditor;
+    MinSensingDistEditor * _distanceConstraintEditor;
     TimingConstraintEditor * _timingConstraintsEditor;
     DependencyConstraintEditor * _dependencyConstraintsEditor;
 

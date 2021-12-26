@@ -207,7 +207,8 @@ bool QVectorND::operator ==(const QVectorND &other) const
 
     for (int i = 0; i < _dimensions; i++)
     {
-        if (_data[i] != other._data[i])
+        if (!qFuzzyCompare(1.0 + _data[i],
+                           1.0 + other._data[i]))
             return false;
     }
     return true;
@@ -241,7 +242,7 @@ uint qHash(const QVectorND& vec)
     uint toRet = 0;
 
     for (int i = 0; i < vec.dimension(); i++)
-        toRet = toRet ^ (uint)vec[i];
+        toRet = toRet + (uint)vec[i];
 
     return toRet;
 }
