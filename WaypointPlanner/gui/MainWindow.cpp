@@ -326,8 +326,7 @@ void WaypointPlannerMainWindow::initMap()
     _view = this->ui->mapView;
     _view->setScene(_scene);
 
-    //QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::MapQuestOSMTiles));
-    QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::MapQuestAerialTiles));
+    QSharedPointer<MapTileSource> tileSource(new OSMTileSource(OSMTileSource::OSMTiles));
     _view->setTileSource(tileSource);
 
     connect(_view,
